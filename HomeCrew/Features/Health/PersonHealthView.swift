@@ -137,8 +137,7 @@ struct HealthRecordEditor: View {
         NavigationStack {
             Form {
                 Section {
-                    field("exclamationmark.triangle", "Alergias", text: $draft.allergies)
-                        .accessibilityIdentifier("allergies")
+                    field("exclamationmark.triangle", "Alergias", text: $draft.allergies, identifier: "allergies")
                 } footer: {
                     Text("Separa com vírgulas.")
                 }
@@ -179,9 +178,13 @@ struct HealthRecordEditor: View {
         .onAppear { draft = HealthRecordDraft(member) }
     }
 
-    private func field(_ systemImage: String, _ title: LocalizedStringKey, text: Binding<String>) -> some View {
+    private func field(
+        _ systemImage: String, _ title: LocalizedStringKey, text: Binding<String>, identifier: String = ""
+    ) -> some View {
         Label {
+            // On the field itself: on the Label it would also tag the icon, which UI tests then find first.
             TextField(title, text: text, axis: .vertical)
+                .accessibilityIdentifier(identifier)
         } icon: {
             Image(systemName: systemImage)
         }
