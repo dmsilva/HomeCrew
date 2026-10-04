@@ -118,6 +118,7 @@ struct MedicationEditor: View {
                     Label {
                         TextField("Medicamento", text: $draft.name)
                             .textInputAutocapitalization(.words)
+                            .accessibilityIdentifier("medication-name")
                     } icon: {
                         Image(systemName: "pills")
                     }
