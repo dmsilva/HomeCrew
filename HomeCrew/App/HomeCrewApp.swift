@@ -38,7 +38,10 @@ struct RootTabView: View {
         .onChange(of: scenePhase) { _, phase in
             // Catches what changed while away, such as who uses this iPhone.
             if phase == .active {
-                Task { await DoseReminderCenter.shared.refresh() }
+                Task {
+                    await DoseReminderCenter.shared.refresh()
+                    await AgendaReminderCenter.shared.refresh()
+                }
             }
         }
         .fullScreenCover(isPresented: needsFirstRun) {
