@@ -43,12 +43,62 @@
         }
       }
     },
+    "%lld doses: %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld doses: %@"
+          }
+        }
+      }
+    },
     "%lld min": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld min"
+          }
+        }
+      }
+    },
+    "1 ano": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 ano"
+          }
+        }
+      }
+    },
+    "3 meses": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 meses"
+          }
+        }
+      }
+    },
+    "30 dias": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 dias"
+          }
+        }
+      }
+    },
+    "7 dias": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 dias"
           }
         }
       }
@@ -223,6 +273,16 @@
         }
       }
     },
+    "Até": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Até"
+          }
+        }
+      }
+    },
     "Avisar %@": {
       "localizations": {
         "pt-PT": {
@@ -363,6 +423,16 @@
         }
       }
     },
+    "Criar PDF": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Criar PDF"
+          }
+        }
+      }
+    },
     "Criar família": {
       "localizations": {
         "pt-PT": {
@@ -379,6 +449,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Data de nascimento"
+          }
+        }
+      }
+    },
+    "De": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De"
           }
         }
       }
@@ -473,6 +553,26 @@
         }
       }
     },
+    "Episódio de doença": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episódio de doença"
+          }
+        }
+      }
+    },
+    "Episódios": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episódios"
+          }
+        }
+      }
+    },
     "Família": {
       "localizations": {
         "pt-PT": {
@@ -493,12 +593,32 @@
         }
       }
     },
+    "Fechar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
+          }
+        }
+      }
+    },
     "Feita": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Feita"
+          }
+        }
+      }
+    },
+    "Ficha de saúde": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ficha de saúde"
           }
         }
       }
@@ -663,6 +783,16 @@
         }
       }
     },
+    "Máx. %@°": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máx. %@°"
+          }
+        }
+      }
+    },
     "Nada para hoje": {
       "localizations": {
         "pt-PT": {
@@ -753,6 +883,16 @@
         }
       }
     },
+    "Não foi possível criar o PDF.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível criar o PDF."
+          }
+        }
+      }
+    },
     "Opções da família": {
       "localizations": {
         "pt-PT": {
@@ -773,6 +913,16 @@
         }
       }
     },
+    "PDF para o médico": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PDF para o médico"
+          }
+        }
+      }
+    },
     "Parar medicamento": {
       "localizations": {
         "pt-PT": {
@@ -789,6 +939,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Partilhar"
+          }
+        }
+      }
+    },
+    "Partilhar PDF": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partilhar PDF"
           }
         }
       }
@@ -819,6 +979,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Permitir"
+          }
+        }
+      }
+    },
+    "Personalizado": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizado"
+          }
+        }
+      }
+    },
+    "Período": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Período"
+          }
+        }
+      }
+    },
+    "Peso": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso"
           }
         }
       }
@@ -859,6 +1049,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem sou eu?"
+          }
+        }
+      }
+    },
+    "Registado pela família na app HomeCrew. Não substitui a avaliação médica.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registado pela família na app HomeCrew. Não substitui a avaliação médica."
           }
         }
       }
@@ -953,12 +1153,32 @@
         }
       }
     },
+    "Sem doses registadas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem doses registadas"
+          }
+        }
+      }
+    },
     "Sem episódios": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Sem episódios"
+          }
+        }
+      }
+    },
+    "Sem episódios neste período.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem episódios neste período."
           }
         }
       }
@@ -1019,6 +1239,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Separa com vírgulas."
+          }
+        }
+      }
+    },
+    "Sintomas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sintomas"
           }
         }
       }
@@ -1199,6 +1429,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voltar à regra"
+          }
+        }
+      }
+    },
+    "de %lld em %lld h": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "de %lld em %lld h"
+          }
+        }
+      }
+    },
+    "em curso": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "em curso"
           }
         }
       }

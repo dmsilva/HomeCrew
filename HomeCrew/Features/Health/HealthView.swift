@@ -4,6 +4,7 @@ import SwiftUI
 /// One card per person; allergies show on the card so nobody has to open it to see them.
 struct HealthView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
+    @State private var isMakingReport = false
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: Theme.Spacing.m)]
 
@@ -32,6 +33,18 @@ struct HealthView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.hcBackground.ignoresSafeArea())
             .navigationTitle(AppTab.health.title)
+            .toolbar {
+                if !families.flatMap(\.sortedMembers).isEmpty {
+                    Button {
+                        isMakingReport = true
+                    } label: {
+                        Label("PDF para o médico", systemImage: "doc.richtext")
+                    }
+                }
+            }
+            .sheet(isPresented: $isMakingReport) {
+                DoctorReportSheet(members: families.flatMap(\.sortedMembers))
+            }
         }
     }
 }
