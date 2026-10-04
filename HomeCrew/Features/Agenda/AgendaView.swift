@@ -89,10 +89,11 @@ struct ChoresListView: View {
                     .onTapGesture { if access.canEdit { onEdit(chore) } }
                     .listRowBackground(Color.hcCard)
                 }
-                .deleteDisabled(!access.canEdit)
+                // onDelete only exists on the ForEach itself, so it has to come before any other modifier.
                 .onDelete { offsets in
                     offsets.map { chores[$0] }.forEach { persistence.delete($0) }
                 }
+                .deleteDisabled(!access.canEdit)
             }
             .scrollContentBackground(.hidden)
         }
