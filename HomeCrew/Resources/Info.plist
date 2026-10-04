@@ -6,6 +6,11 @@
 	<string>O HomeCrew mostra no Hoje os eventos do teu Calendário, só para leitura. Nunca os altera.</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>O HomeCrew mostra no Hoje os eventos do teu Calendário, só para leitura. Nunca os altera.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Syne.ttf</string>
+		<string>Figtree.ttf</string>
+	</array>
 	<key>CKSharingSupported</key>
 	<true/>
 	<key>UIBackgroundModes</key>

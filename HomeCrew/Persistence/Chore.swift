@@ -186,3 +186,29 @@ extension PersistenceController {
         chore.startDate = Calendar.current.startOfDay(for: draft.startDate)
     }
 }
+
+extension Chore {
+    /// A picture for the chore, guessed from its title, so Today can show icons instead of words.
+    var symbol: String { Self.symbol(for: title ?? "") }
+
+    static func symbol(for title: String) -> String {
+        let words = title.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: Locale(identifier: "pt_PT"))
+        let guesses: [(keys: [String], symbol: String)] = [
+            (["compra", "supermercado", "mercado"], "cart"),
+            (["quarto", "cama"], "bed.double"),
+            (["roupa", "maquina", "estend", "passar a ferro"], "tshirt"),
+            (["loica", "louca", "prato"], "fork.knife"),
+            (["lixo", "reciclagem"], "trash"),
+            (["jantar", "almoco", "cozinh", "refeic"], "frying.pan"),
+            (["aspira", "limp", "varr"], "sparkles"),
+            (["cao", "gato", "passear", "animal"], "pawprint"),
+            (["planta", "rega", "jardim"], "leaf"),
+            (["trabalho de casa", "tpc", "estud", "ler", "leitura"], "book"),
+            (["banho", "dentes"], "drop"),
+            (["carro", "boleia"], "car"),
+            (["conta", "pagar", "fatura"], "eurosign"),
+            (["telefon", "ligar"], "phone"),
+        ]
+        return guesses.first { guess in guess.keys.contains { words.contains($0) } }?.symbol ?? "checkmark"
+    }
+}

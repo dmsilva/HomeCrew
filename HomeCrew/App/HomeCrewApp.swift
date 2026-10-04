@@ -22,6 +22,7 @@ struct RootTabView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
     @State private var selection: AppTab = .today
     @State private var isWaitingForInvite = false
+    @State private var creating: HomeTabBar.CreateAction?
     @AppStorage("meMemberID") private var meMemberID = ""
     @Environment(\.scenePhase) private var scenePhase
 
@@ -32,8 +33,27 @@ struct RootTabView: View {
         TabView(selection: $selection) {
             ForEach(access.tabs) { tab in
                 screen(for: tab)
-                    .tabItem { Label(tab.title, systemImage: tab.systemImage) }
+                    .toolbar(.hidden, for: .tabBar)
+                    // Keeps the last row of every screen clear of the floating bar.
+                    .safeAreaInset(edge: .bottom) { Color.clear.frame(height: HomeTabBar.height) }
                     .tag(tab)
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if !families.isEmpty {
+                HomeTabBar(
+                    tabs: access.tabs,
+                    selection: $selection,
+                    onCreate: access.canEdit ? { creating = $0 } : nil
+                )
+            }
+        }
+        .sheet(item: $creating) { action in
+            if let family = families.first {
+                switch action {
+                case .activity: ActivityEditor(target: .new, family: family, persistence: persistence)
+                case .chore: ChoreEditor(target: .new, family: family, persistence: persistence)
+                }
             }
         }
         .environment(\.access, access)
@@ -124,4 +144,8 @@ struct RootTabView: View {
 #Preview {
     RootTabView()
         .environment(\.managedObjectContext, PersistenceController(inMemory: true).viewContext)
+}
+
+extension HomeTabBar.CreateAction: Identifiable {
+    var id: Self { self }
 }

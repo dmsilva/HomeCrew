@@ -13,15 +13,14 @@ final class ScreenshotTests: XCTestCase {
     }
 
     func testCaptureMainScreens() {
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 15))
+        XCTAssertTrue(app.buttons["tab-today"].waitForExistence(timeout: 15))
         snap("01-hoje")
 
-        for (index, title) in ["Agenda", "Família", "Saúde"].enumerated() {
-            let tab = tabBar.buttons[title]
-            guard tab.waitForExistence(timeout: 5) else { continue }
-            tab.tap()
-            snap(String(format: "%02d-%@", index + 2, title.lowercased()))
+        for (index, tab) in ["agenda", "family", "health"].enumerated() {
+            let button = app.buttons["tab-\(tab)"]
+            guard button.waitForExistence(timeout: 5) else { continue }
+            button.tap()
+            snap(String(format: "%02d-%@", index + 2, tab))
         }
 
         let leonor = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Leonor")).firstMatch

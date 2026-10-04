@@ -1,43 +1,62 @@
 import SwiftUI
 import UIKit
 
-/// Design tokens for Direção A · Clara: the native iOS look picked for the MVP.
-/// Every screen reads colours, type, radii and spacing from here, never from literals.
+/// Design tokens for Direção E: see, don't read. Violet and lime on a pale lilac ground, coral only for illness,
+/// people as colour circles with an initial. Every screen reads colours, type, radii and spacing from here.
 enum Theme {
     enum Palette {
-        static let background = UIColor(light: 0xF2F2F7, dark: 0x000000)
-        static let card = UIColor(light: 0xFFFFFF, dark: 0x1C1C1E)
-        static let ink = UIColor(light: 0x111114, dark: 0xF2F2F7)
-        static let secondaryInk = UIColor(light: 0x5E5E6A, dark: 0xA1A1AA)
-        static let separator = UIColor(light: 0xE4E4EB, dark: 0x2C2C30)
-        static let accent = UIColor(light: 0x2F55D4, dark: 0x7A95FF)
-        static let accentSoft = UIColor(light: 0xE7ECFB, dark: 0x1B2547)
-        /// Health only; never used for ordinary actions.
-        static let warning = UIColor(light: 0xB4380B, dark: 0xFF8A5C)
-        static let warningSoft = UIColor(light: 0xFCEBE3, dark: 0x3A2119)
+        static let background = UIColor(light: 0xF7F5FF, dark: 0x0E0C1F)
+        static let card = UIColor(light: 0xFFFFFF, dark: 0x1C1838)
+        /// Pale chip behind icons and finished things.
+        static let muted = UIColor(light: 0xECE9F8, dark: 0x2A2550)
+        static let ink = UIColor(light: 0x14112B, dark: 0xF7F5FF)
+        static let secondaryInk = UIColor(light: 0x4A4566, dark: 0xB8B2D9)
+        static let separator = UIColor(light: 0xDCD8EE, dark: 0x2E2A4D)
+        /// The one strong colour: the day card, primary buttons, selection.
+        static let accent = UIColor(light: 0x4B2BFF, dark: 0x7B63FF)
+        static let accentSoft = UIColor(light: 0xE6E0FF, dark: 0x251C5C)
+        /// Highlight on dark and violet surfaces: "now", "done", the selected tab.
+        static let lime = UIColor(hex: 0xD7FF3A)
+        /// Illness only; never used for ordinary actions.
+        static let warning = UIColor(light: 0xFF5A3C, dark: 0xFF7A60)
+        static let warningSoft = UIColor(light: 0xFFE1DA, dark: 0x4A1E16)
+        /// Dark surfaces (tab bar, next activity) stay dark in both appearances.
+        static let night = UIColor(hex: 0x14112B)
 
-        /// Colours a family member can pick, as (foreground, soft background) pairs.
+        /// Colours a family member can pick, as (initial colour, circle fill) pairs. Fills are vivid, initials ink.
         static let members: [(foreground: UIColor, soft: UIColor)] = [
-            (accent, accentSoft),
-            (UIColor(light: 0xA3367F, dark: 0xF2A7D8), UIColor(light: 0xF7E6F1, dark: 0x3A1F33)),
-            (UIColor(light: 0x0F7B6C, dark: 0x6FD9C6), UIColor(light: 0xDDF2EE, dark: 0x163330)),
-            (UIColor(light: 0x8A5A00, dark: 0xFFC870), UIColor(light: 0xFBF0D9, dark: 0x3A2D16)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0xD7FF3A)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0xFF8AD8)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0x7FD4FF)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0xFFC53D)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0x6EE7B7)),
+            (UIColor(hex: 0x14112B), UIColor(hex: 0xB9A6FF)),
         ]
     }
 
-    /// Text styles, all built on Dynamic Type so they scale with the user's setting.
+    /// Syne for the few big numbers and titles, Figtree for everything else; both scale with Dynamic Type.
+    /// If the bundled fonts are missing, SwiftUI falls back to the system font.
     enum Typography {
-        static let screenTitle = Font.largeTitle.weight(.bold)
-        static let cardTitle = Font.headline
-        static let body = Font.body
-        static let caption = Font.footnote
+        static func display(_ size: CGFloat, relativeTo style: Font.TextStyle = .largeTitle) -> Font {
+            Font.custom("Syne", size: size, relativeTo: style).weight(.heavy)
+        }
+
+        static func text(_ size: CGFloat, weight: Font.Weight = .bold, relativeTo style: Font.TextStyle = .body) -> Font {
+            Font.custom("Figtree", size: size, relativeTo: style).weight(weight)
+        }
+
+        static let screenTitle = display(34)
+        static let cardTitle = text(17, weight: .heavy, relativeTo: .headline)
+        static let body = text(16, weight: .medium)
+        static let caption = text(13, weight: .bold, relativeTo: .footnote)
         /// Big glyph used where a picture replaces a sentence.
         static let heroIcon = Font.system(size: 56, weight: .regular)
     }
 
     enum Radius {
-        static let card: CGFloat = 18
-        static let control: CGFloat = 12
+        static let hero: CGFloat = 32
+        static let card: CGFloat = 22
+        static let control: CGFloat = 14
     }
 
     enum Spacing {
@@ -55,13 +74,16 @@ enum Theme {
 extension Color {
     static let hcBackground = Color(Theme.Palette.background)
     static let hcCard = Color(Theme.Palette.card)
+    static let hcMuted = Color(Theme.Palette.muted)
     static let hcInk = Color(Theme.Palette.ink)
     static let hcSecondaryInk = Color(Theme.Palette.secondaryInk)
     static let hcSeparator = Color(Theme.Palette.separator)
     static let hcAccent = Color(Theme.Palette.accent)
     static let hcAccentSoft = Color(Theme.Palette.accentSoft)
+    static let hcLime = Color(Theme.Palette.lime)
     static let hcWarning = Color(Theme.Palette.warning)
     static let hcWarningSoft = Color(Theme.Palette.warningSoft)
+    static let hcNight = Color(Theme.Palette.night)
 }
 
 extension UIColor {
