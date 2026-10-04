@@ -10,7 +10,7 @@ struct MedicationSection: View {
 
     var body: some View {
         Section {
-            ForEach(episode.isActive ? episode.activeMedications : episode.sortedMedications) { medication in
+            ForEach(episode.isActive ? episode.activeMedications : episode.sortedMedications, id: \.objectID) { medication in
                 NavigationLink {
                     MedicationDetailView(medication: medication)
                 } label: {
@@ -217,7 +217,7 @@ struct MedicationDetailView: View {
 
             if !medication.sortedDoses.isEmpty {
                 Section {
-                    ForEach(medication.sortedDoses) { dose in
+                    ForEach(medication.sortedDoses, id: \.objectID) { dose in
                         DoseRow(dose: dose)
                             .deleteDisabled(!medication.isActive)
                     }
