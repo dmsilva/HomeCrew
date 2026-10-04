@@ -2,9 +2,12 @@ import SwiftUI
 
 @main
 struct HomeCrewApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         WindowGroup {
             RootTabView()
+                .environment(\.managedObjectContext, PersistenceController.shared.viewContext)
         }
     }
 }
@@ -36,4 +39,5 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView()
+        .environment(\.managedObjectContext, PersistenceController(inMemory: true).viewContext)
 }
