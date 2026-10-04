@@ -24,7 +24,7 @@ final class AppShellUITests: XCTestCase {
             let button = tab(title)
             XCTAssertTrue(button.exists, "Tab \(title) is missing")
             button.tap()
-            XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "Screen \(title) did not open")
+            XCTAssertTrue(waitForScreen(title), "Screen \(title) did not open")
         }
         tab("Hoje").tap()
         XCTAssertTrue(app.descendants(matching: .any)["today-header"].waitForExistence(timeout: 5), "Today did not open")
@@ -53,10 +53,7 @@ final class AppShellUITests: XCTestCase {
         createFamily()
         tab("Agenda").tap()
         app.buttons["Tarefas"].tap()
-
-        let add = app.buttons["Nova tarefa"]
-        XCTAssertTrue(add.waitForExistence(timeout: 5))
-        add.tap()
+        create("Tarefa")
 
         let title = app.textFields["Tarefa"]
         XCTAssertTrue(title.waitForExistence(timeout: 5))
@@ -64,18 +61,18 @@ final class AppShellUITests: XCTestCase {
         title.typeText("Fazer a cama")
         app.buttons["Guardar"].tap()
 
-        XCTAssertTrue(app.staticTexts["Fazer a cama"].waitForExistence(timeout: 5))
-        app.buttons["Por fazer"].firstMatch.tap()
-        XCTAssertTrue(app.buttons["Feita"].waitForExistence(timeout: 5))
+        let today = app.buttons["chore-week-Fazer a cama"]
+        XCTAssertTrue(today.waitForExistence(timeout: 5))
+        XCTAssertEqual(today.value as? String, "Por fazer")
+        today.tap()
+        let done = expectation(for: NSPredicate(format: "value == %@", "Feita"), evaluatedWith: today)
+        wait(for: [done], timeout: 5)
     }
 
     func testAddingAWeeklyActivityShowsItInTheWeek() {
         createFamily()
         tab("Agenda").tap()
-
-        let add = app.buttons["Nova atividade"]
-        XCTAssertTrue(add.waitForExistence(timeout: 5))
-        add.tap()
+        create("Atividade")
 
         let title = app.textFields["Atividade"]
         XCTAssertTrue(title.waitForExistence(timeout: 5))
@@ -93,9 +90,7 @@ final class AppShellUITests: XCTestCase {
 
     func testTickingAChoreFromToday() {
         createFamily()
-        tab("Agenda").tap()
-        app.buttons["Tarefas"].tap()
-        app.buttons["Nova tarefa"].tap()
+        create("Tarefa")
         let title = app.textFields["Tarefa"]
         XCTAssertTrue(title.waitForExistence(timeout: 5))
         title.tap()
@@ -202,6 +197,28 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(tab("Hoje").waitForExistence(timeout: 10))
         let settled = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: create)
         wait(for: [settled], timeout: 10)
+    }
+
+    /// New things are created from the "+" in the middle of the tab bar.
+    private func create(_ kind: String) {
+        let plus = app.buttons["tab-create"]
+        XCTAssertTrue(plus.waitForExistence(timeout: 5))
+        plus.tap()
+        let item = app.buttons[kind]
+        XCTAssertTrue(item.waitForExistence(timeout: 5), "The + menu has no \(kind)")
+        item.tap()
+    }
+
+    /// A screen drawn in Direção E has no navigation bar, so it is found by its header; older screens by their bar.
+    private func waitForScreen(_ title: String, timeout: TimeInterval = 5) -> Bool {
+        let headers = ["Agenda": "agenda-header", "Família": "family-header", "Saúde": "health-header"]
+        let header = app.descendants(matching: .any)[headers[title] ?? title]
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if header.exists || app.navigationBars[title].exists { return true }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+        }
+        return false
     }
 
     /// The app draws its own tab bar, so tabs are found by identifier rather than through `tabBars`.

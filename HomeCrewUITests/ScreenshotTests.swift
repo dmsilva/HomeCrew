@@ -21,6 +21,11 @@ final class ScreenshotTests: XCTestCase {
             guard button.waitForExistence(timeout: 5) else { continue }
             button.tap()
             snap(String(format: "%02d-%@", index + 2, tab))
+            if tab == "agenda", app.buttons["Tarefas"].waitForExistence(timeout: 5) {
+                app.buttons["Tarefas"].tap()
+                snap("02b-tarefas")
+                app.buttons["Atividades"].tap()
+            }
         }
 
         let leonor = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Leonor")).firstMatch
