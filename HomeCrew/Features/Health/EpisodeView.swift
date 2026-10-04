@@ -34,7 +34,7 @@ struct EpisodeView: View {
 
             if !episode.sortedReadings.isEmpty {
                 Section {
-                    ForEach(episode.sortedReadings.reversed()) { reading in
+                    ForEach(episode.sortedReadings.reversed(), id: \.objectID) { reading in
                         ReadingRow(reading: reading)
                             .deleteDisabled(!episode.isActive)
                     }
@@ -115,7 +115,7 @@ struct TemperatureChart: View {
                 RuleMark(y: .value("Febre", IllnessEpisode.feverCelsius))
                     .foregroundStyle(Color.hcWarning.opacity(0.5))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
-                ForEach(readings) { reading in
+                ForEach(readings, id: \.objectID) { reading in
                     LineMark(
                         x: .value("Hora", reading.takenAt ?? .now),
                         y: .value("Temperatura", reading.celsius)
