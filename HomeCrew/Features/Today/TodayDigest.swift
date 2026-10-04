@@ -56,10 +56,16 @@ struct TodayDigest: Equatable {
         externalEvents: [ExternalEvent] = [],
         me: Member? = nil,
         access: AccessPolicy = .full,
+        viewer: Member? = nil,
         calendar: Calendar = .current
     ) -> TodayDigest {
+        // Children at the other house today are left out: Today is about the children who are with you.
+        func isHere(_ member: Member?) -> Bool { member?.isWith(viewer, on: day, calendar: calendar) ?? true }
+
         var occurrences = access.filter(ActivitySchedule.occurrences(of: activities, on: day, calendar: calendar), calendar: calendar)
+            .filter { isHere($0.activity.child) }
         var dueChores = access.filter(chores.filter { $0.occurs(on: day, calendar: calendar) }, on: day, calendar: calendar)
+            .filter { isHere($0.assignee) }
         var shownAlerts = alerts.filter { access.canSee($0.member) }
 
         if let me {

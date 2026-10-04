@@ -97,6 +97,20 @@ private struct FamilySection: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel(Text("Adicionar membro"))
             }
+
+            if family.sortedMembers.contains(where: { $0.kind == .child }) {
+                NavigationLink {
+                    CustodyView(family: family)
+                } label: {
+                    Label("Guarda", systemImage: "calendar")
+                        .font(Theme.Typography.cardTitle)
+                        .foregroundStyle(Color.hcInk)
+                        .frame(maxWidth: .infinity, minHeight: Theme.minimumTapTarget, alignment: .leading)
+                        .padding(.horizontal, Theme.Spacing.l)
+                        .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+                }
+                .buttonStyle(.plain)
+            }
         }
         .sheet(item: $editing) { target in
             MemberEditor(target: target, family: family, persistence: persistence)

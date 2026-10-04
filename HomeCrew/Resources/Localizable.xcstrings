@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@: %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %@"
+          }
+        }
+      }
+    },
     "%lld": {
       "localizations": {
         "pt-PT": {
@@ -189,6 +199,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ainda sem adultos"
+          }
+        }
+      }
+    },
+    "Ainda sem crianças": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda sem crianças"
           }
         }
       }
@@ -403,6 +423,36 @@
         }
       }
     },
+    "Casa 1": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa 1"
+          }
+        }
+      }
+    },
+    "Casa 2": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Casa 2"
+          }
+        }
+      }
+    },
+    "Começa em": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Começa em"
+          }
+        }
+      }
+    },
     "Convidado": {
       "localizations": {
         "pt-PT": {
@@ -499,6 +549,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "De %lld em %lld h"
+          }
+        }
+      }
+    },
+    "Definir guarda": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Definir guarda"
           }
         }
       }
@@ -693,6 +753,16 @@
         }
       }
     },
+    "Guarda": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guarda"
+          }
+        }
+      }
+    },
     "Guardar": {
       "localizations": {
         "pt-PT": {
@@ -843,6 +913,26 @@
         }
       }
     },
+    "Mês anterior": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mês anterior"
+          }
+        }
+      }
+    },
+    "Mês seguinte": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mês seguinte"
+          }
+        }
+      }
+    },
     "Nada para hoje": {
       "localizations": {
         "pt-PT": {
@@ -969,6 +1059,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "PDF para o médico"
+          }
+        }
+      }
+    },
+    "Padrão": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padrão"
           }
         }
       }
@@ -1163,6 +1263,16 @@
         }
       }
     },
+    "Remover guarda": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover guarda"
+          }
+        }
+      }
+    },
     "Remover membro?": {
       "localizations": {
         "pt-PT": {
@@ -1323,6 +1433,16 @@
         }
       }
     },
+    "Semanas alternadas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semanas alternadas"
+          }
+        }
+      }
+    },
     "Separa com vírgulas.": {
       "localizations": {
         "pt-PT": {
@@ -1459,6 +1579,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tipo"
+          }
+        }
+      }
+    },
+    "Toca num dia para mudar de casa.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toca num dia para mudar de casa."
           }
         }
       }
