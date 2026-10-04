@@ -72,6 +72,9 @@ final class Member: NSManagedObject {
     @NSManaged var careWeekdayMask: Int16
     @NSManaged var caredChildren: NSSet?
     @NSManaged var carers: NSSet?
+    @NSManaged var custodyPlans: NSSet?
+    @NSManaged var custodyPlansAsA: NSSet?
+    @NSManaged var custodyPlansAsB: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -118,6 +121,7 @@ enum HomeCrewModel {
         let reading = entity("TemperatureReading", TemperatureReading.self)
         let medication = entity("Medication", Medication.self)
         let dose = entity("DoseGiven", DoseGiven.self)
+        let custody = entity("CustodyPlan", CustodyPlan.self)
 
         family.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -200,6 +204,14 @@ enum HomeCrewModel {
             attribute("createdAt", .dateAttributeType),
             attribute("stoppedAt", .dateAttributeType),
         ]
+        custody.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("patternValue", .stringAttributeType),
+            attribute("startDate", .dateAttributeType),
+            // One letter per day of the 14-day cycle: "A" for the first house, "B" for the second.
+            attribute("customCycle", .stringAttributeType),
+            attribute("createdAt", .dateAttributeType),
+        ]
         dose.properties = [
             attribute("identifier", .UUIDAttributeType),
             attribute("givenAt", .dateAttributeType),
@@ -224,9 +236,12 @@ enum HomeCrewModel {
         link(member, "responsibleMedications", .nullifyDeleteRule, many: medication, "responsible")
         link(member, "givenDoses", .nullifyDeleteRule, many: dose, "givenBy")
         manyToMany(member, "caredChildren", member, "carers")
+        link(member, "custodyPlans", .cascadeDeleteRule, many: custody, "child")
+        link(member, "custodyPlansAsA", .nullifyDeleteRule, many: custody, "parentA")
+        link(member, "custodyPlansAsB", .nullifyDeleteRule, many: custody, "parentB")
 
         let model = NSManagedObjectModel()
-        model.entities = [family, member, chore, completion, activity, exception, episode, reading, medication, dose]
+        model.entities = [family, member, chore, completion, activity, exception, episode, reading, medication, dose, custody]
         return model
     }
 

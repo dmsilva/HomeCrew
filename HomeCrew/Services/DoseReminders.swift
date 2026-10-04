@@ -18,11 +18,16 @@ struct PlannedReminder: Equatable {
 
 enum DoseReminders {
     /// One reminder per active medication with a next dose in the future, only on the iPhone of the person
-    /// responsible for it. With nobody responsible, or before this iPhone knows who uses it, everyone is reminded.
+    /// responsible for it. With nobody responsible, whoever has the child that day per the custody calendar is
+    /// reminded; before this iPhone knows who uses it, it is reminded too.
     static func plan(medications: [Medication], me: Member?, now: Date) -> [PlannedReminder] {
         medications.compactMap { medication in
             guard let id = medication.identifier, let next = medication.nextDoseAt, next > now else { return nil }
             if let responsible = medication.responsible, let me, responsible != me { return nil }
+            // With nobody responsible, the parent who has the child at dose time is the one reminded.
+            if medication.responsible == nil, let child = medication.episode?.member, !child.isWith(me, on: next) {
+                return nil
+            }
             let name = medication.name ?? ""
             let person = medication.episode?.member?.name ?? ""
             return PlannedReminder(
@@ -146,7 +151,7 @@ final class DoseReminderCenter {
         let keys = [NSInsertedObjectsKey, NSUpdatedObjectsKey, NSDeletedObjectsKey, NSRefreshedObjectsKey]
         return keys.contains { key in
             ((note.userInfo?[key] as? Set<NSManagedObject>) ?? []).contains {
-                $0 is Medication || $0 is DoseGiven || $0 is IllnessEpisode
+                $0 is Medication || $0 is DoseGiven || $0 is IllnessEpisode || $0 is CustodyPlan
             }
         }
     }

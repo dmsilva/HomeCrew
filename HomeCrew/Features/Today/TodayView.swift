@@ -27,7 +27,8 @@ struct TodayView: View {
             alerts: TodayAlert.illness(Array(episodes)),
             externalEvents: deviceCalendar.events,
             me: onlyMine ? me : nil,
-            access: access
+            access: access,
+            viewer: me
         )
 
         NavigationStack {
