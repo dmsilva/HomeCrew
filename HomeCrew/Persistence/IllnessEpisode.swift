@@ -80,6 +80,7 @@ final class TemperatureReading: NSManagedObject {
     @NSManaged var takenAt: Date?
     @NSManaged var celsius: Double
     @NSManaged var episode: IllnessEpisode?
+    @NSManaged var recordedBy: Member?
 
     var isFever: Bool { celsius >= IllnessEpisode.feverCelsius }
 }
@@ -121,7 +122,9 @@ extension PersistenceController {
     }
 
     @discardableResult
-    func recordTemperature(_ celsius: Double, in episode: IllnessEpisode, at date: Date = .now) -> TemperatureReading {
+    func recordTemperature(
+        _ celsius: Double, in episode: IllnessEpisode, at date: Date = .now, by member: Member? = nil
+    ) -> TemperatureReading {
         let reading = TemperatureReading(context: viewContext)
         if let store = episode.objectID.persistentStore {
             viewContext.assign(reading, to: store)
@@ -130,6 +133,7 @@ extension PersistenceController {
         reading.takenAt = date
         reading.celsius = (celsius * 10).rounded() / 10
         reading.episode = episode
+        reading.recordedBy = member
         save()
         return reading
     }

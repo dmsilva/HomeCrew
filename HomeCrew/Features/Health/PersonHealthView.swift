@@ -66,18 +66,20 @@ struct PersonHealthView: View {
             }
             .listRowBackground(member.activeEpisode == nil ? Color.hcCard : Color.hcWarningSoft)
 
-            Section {
-                if member.weightKg > 0 {
-                    row("scalemass", Text(member.weightKg, format: .number.precision(.fractionLength(0...1))) + Text(verbatim: " kg"))
+            if access.canSeeFullHealthRecord {
+                Section {
+                    if member.weightKg > 0 {
+                        row("scalemass", Text(member.weightKg, format: .number.precision(.fractionLength(0...1))) + Text(verbatim: " kg"))
+                    }
+                    if let conditions = member.chronicConditions, !conditions.isEmpty {
+                        row("heart.text.square", Text(conditions))
+                    }
+                    if let medication = member.usualMedication, !medication.isEmpty {
+                        row("pills", Text(medication))
+                    }
                 }
-                if let conditions = member.chronicConditions, !conditions.isEmpty {
-                    row("heart.text.square", Text(conditions))
-                }
-                if let medication = member.usualMedication, !medication.isEmpty {
-                    row("pills", Text(medication))
-                }
+                .listRowBackground(Color.hcCard)
             }
-            .listRowBackground(Color.hcCard)
 
             if member.pediatricianCallURL != nil || !(member.pediatricianName ?? "").isEmpty {
                 Section {
@@ -98,7 +100,7 @@ struct PersonHealthView: View {
                 .listRowBackground(Color.hcCard)
             }
 
-            let pastEpisodes = member.episodeHistory.filter { !$0.isActive }
+            let pastEpisodes = access.canSeeFullHealthRecord ? member.episodeHistory.filter { !$0.isActive } : []
             if !pastEpisodes.isEmpty {
                 Section {
                     ForEach(pastEpisodes, id: \.objectID) { episode in
@@ -125,7 +127,9 @@ struct PersonHealthView: View {
                     Label("PDF para o médico", systemImage: "doc.richtext")
                 }
             }
-            Button("Editar") { isEditing = true }
+            if access.canSeeFullHealthRecord {
+                Button("Editar") { isEditing = true }
+            }
         }
         .sheet(isPresented: $isEditing) {
             HealthRecordEditor(member: member)
