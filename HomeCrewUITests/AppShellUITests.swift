@@ -147,9 +147,13 @@ final class AppShellUITests: XCTestCase {
         let episode = app.descendants(matching: .any).matching(identifier: "active-episode").firstMatch
         XCTAssertTrue(episode.waitForExistence(timeout: 5))
         episode.tap()
+        let symptoms = app.buttons["symptoms-edit"]
+        XCTAssertTrue(symptoms.waitForExistence(timeout: 5))
+        symptoms.tap()
         let cough = app.buttons["symptom-0"]
         XCTAssertTrue(cough.waitForExistence(timeout: 5))
         cough.tap()
+        app.buttons["OK"].tap()
 
         tab("Hoje").tap()
         XCTAssertTrue(app.buttons["Rita doente"].waitForExistence(timeout: 5))
@@ -182,11 +186,12 @@ final class AppShellUITests: XCTestCase {
         app.buttons["Brufen"].tap()
         app.buttons["Guardar"].tap()
 
-        XCTAssertTrue(app.staticTexts["Brufen"].waitForExistence(timeout: 5))
+        let saved = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Brufen")).firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 5))
         let give = app.buttons["Dei agora"].firstMatch
         XCTAssertTrue(give.exists)
         give.tap()
-        XCTAssertTrue(app.images["hourglass"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["next-dose"].waitForExistence(timeout: 5))
     }
 
     private func createFamily() {
