@@ -8,7 +8,7 @@ final class AppShellUITests: XCTestCase {
 
     func testAllFourTabsAreReachable() {
         let app = XCUIApplication()
-        app.launchArguments += ["-AppleLanguages", "(pt-PT)", "-AppleLocale", "pt_PT"]
+        app.launchArguments += ["-inMemoryStore", "-AppleLanguages", "(pt-PT)", "-AppleLocale", "pt_PT"]
         app.launch()
 
         let tabBar = app.tabBars.firstMatch

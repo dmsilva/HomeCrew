@@ -33,6 +33,9 @@ targets:
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         LOCALIZATION_PREFERS_STRING_CATALOGS: YES
         SWIFT_EMIT_LOC_STRINGS: YES
+        # Merged with the generated Info.plist: keys that have no INFOPLIST_KEY_ setting.
+        INFOPLIST_FILE: HomeCrew/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: HomeCrew/Resources/HomeCrew.entitlements
 
   HomeCrewTests:
     type: bundle.unit-test
