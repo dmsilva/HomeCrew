@@ -208,7 +208,8 @@ final class AppShellUITests: XCTestCase {
     private func create(_ kind: String) {
         let plus = app.buttons["tab-create"]
         XCTAssertTrue(plus.waitForExistence(timeout: 5))
-        plus.tap()
+        // A Menu floating over the screen cannot be "scrolled to visible", so tap where it is drawn.
+        plus.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
         let item = app.buttons[kind]
         XCTAssertTrue(item.waitForExistence(timeout: 5), "The + menu has no \(kind)")
         item.tap()
