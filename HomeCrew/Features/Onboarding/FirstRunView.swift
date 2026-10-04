@@ -14,6 +14,17 @@ struct FirstRunView: View {
                 .font(Theme.Typography.heroIcon)
                 .foregroundStyle(Color.hcAccent)
                 .accessibilityHidden(true)
+            // What the app does, in pictures: the day, who takes whom, health.
+            HStack(spacing: Theme.Spacing.xl) {
+                ForEach(["calendar", "car.fill", "thermometer.medium", "person.2.fill"], id: \.self) { symbol in
+                    Image(systemName: symbol)
+                        .font(.title2)
+                        .foregroundStyle(Color.hcAccent)
+                        .frame(width: 48, height: 48)
+                        .background(Color.hcAccentSoft, in: Circle())
+                }
+            }
+            .accessibilityHidden(true)
             TextField("Nome da família", text: $name)
                 .font(Theme.Typography.screenTitle)
                 .multilineTextAlignment(.center)
