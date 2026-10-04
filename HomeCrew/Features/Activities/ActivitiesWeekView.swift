@@ -267,7 +267,7 @@ struct ActivityCard: View {
                 Spacer(minLength: 0)
                 if let location = activity.location, !location.isEmpty, let url = Self.mapsURL(for: location) {
                     Link(destination: url) {
-                        Image(systemName: "mappin")
+                        Image(systemName: "mappin.and.ellipse")
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(.white)
                             .frame(width: 44, height: 44)
