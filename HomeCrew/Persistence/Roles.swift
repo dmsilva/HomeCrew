@@ -102,6 +102,10 @@ struct AccessPolicy: Equatable {
 
     var canEdit: Bool { role != .guest }
     var canManageFamily: Bool { role == .parent }
+    /// Weight, conditions, usual medication and past episodes are for parents; carers get what keeps the child safe.
+    var canSeeFullHealthRecord: Bool { role == .parent }
+    /// Ending an episode and setting medicines and doses are the parents' call; carers record fever and doses given.
+    var canManageEpisode: Bool { role == .parent }
 
     func canSee(_ member: Member?) -> Bool {
         guard let children, let member else { return true }

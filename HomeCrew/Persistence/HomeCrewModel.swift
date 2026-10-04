@@ -76,6 +76,7 @@ final class Member: NSManagedObject {
     @NSManaged var custodyPlansAsA: NSSet?
     @NSManaged var custodyPlansAsB: NSSet?
     @NSManaged var requestedSwaps: NSSet?
+    @NSManaged var recordedReadings: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -245,6 +246,7 @@ enum HomeCrewModel {
         link(medication, "doses", .cascadeDeleteRule, many: dose, "medication")
         link(member, "responsibleMedications", .nullifyDeleteRule, many: medication, "responsible")
         link(member, "givenDoses", .nullifyDeleteRule, many: dose, "givenBy")
+        link(member, "recordedReadings", .nullifyDeleteRule, many: reading, "recordedBy")
         manyToMany(member, "caredChildren", member, "carers")
         link(member, "custodyPlans", .cascadeDeleteRule, many: custody, "child")
         link(member, "custodyPlansAsA", .nullifyDeleteRule, many: custody, "parentA")

@@ -9,6 +9,8 @@ struct EpisodeView: View {
     @State private var isAddingTemperature = false
     @State private var isConfirmingEnd = false
     @State private var notes = ""
+    @Environment(\.access) private var access
+    @AppStorage("meMemberID") private var meMemberID = ""
 
     private let persistence = PersistenceController.shared
 
@@ -36,7 +38,7 @@ struct EpisodeView: View {
                 Section {
                     ForEach(episode.sortedReadings.reversed(), id: \.objectID) { reading in
                         ReadingRow(reading: reading)
-                            .deleteDisabled(!episode.isActive)
+                            .deleteDisabled(!episode.isActive || !access.canManageEpisode)
                     }
                     .onDelete(perform: deleteReadings)
                 }
@@ -48,7 +50,7 @@ struct EpisodeView: View {
             }
 
             Section {
-                SymptomGrid(selected: episode.symptoms, isEditable: episode.isActive) { symptom, present in
+                SymptomGrid(selected: episode.symptoms, isEditable: episode.isActive && access.canManageEpisode) { symptom, present in
                     persistence.setSymptom(symptom, present: present, in: episode)
                 }
                 .padding(.vertical, Theme.Spacing.s)
@@ -58,7 +60,7 @@ struct EpisodeView: View {
             Section {
                 TextField("Notas", text: $notes, axis: .vertical)
                     .lineLimit(2...6)
-                    .disabled(!episode.isActive)
+                    .disabled(!episode.isActive || !access.canManageEpisode)
                     .onChange(of: notes) { _, newValue in
                         if newValue != (episode.notes ?? "") {
                             persistence.setNotes(newValue, in: episode)
@@ -67,7 +69,7 @@ struct EpisodeView: View {
             }
             .listRowBackground(Color.hcCard)
 
-            if episode.isActive {
+            if episode.isActive && access.canManageEpisode {
                 Section {
                     Button(role: .destructive) {
                         isConfirmingEnd = true
@@ -85,7 +87,7 @@ struct EpisodeView: View {
         .onAppear { notes = episode.notes ?? "" }
         .sheet(isPresented: $isAddingTemperature) {
             TemperatureEntry(initial: episode.latestReading?.celsius ?? 37.0) { celsius, takenAt in
-                persistence.recordTemperature(celsius, in: episode, at: takenAt)
+                persistence.recordTemperature(celsius, in: episode, at: takenAt, by: me)
             }
             .presentationDetents([.medium])
         }
@@ -96,6 +98,8 @@ struct EpisodeView: View {
             }
         }
     }
+
+    private var me: Member? { episode.member?.family?.member(withID: meMemberID) }
 
     private func deleteReadings(at offsets: IndexSet) {
         let shown = Array(episode.sortedReadings.reversed())
@@ -154,6 +158,9 @@ struct ReadingRow: View {
             Text(reading.takenAt ?? .now, format: .dateTime.weekday(.abbreviated).hour().minute())
                 .font(Theme.Typography.caption)
                 .foregroundStyle(Color.hcSecondaryInk)
+            if let recorder = reading.recordedBy {
+                MemberAvatar(member: recorder, size: 24)
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ struct MedicationSection: View {
     @ObservedObject var episode: IllnessEpisode
     @AppStorage("meMemberID") private var meMemberID = ""
     @State private var editorTarget: MedicationEditorTarget?
+    @Environment(\.access) private var access
 
     private let persistence = PersistenceController.shared
 
@@ -19,7 +20,7 @@ struct MedicationSection: View {
                     }
                 }
             }
-            if episode.isActive {
+            if episode.isActive && access.canManageEpisode {
                 Button {
                     editorTarget = .new
                 } label: {
@@ -204,6 +205,7 @@ struct MedicationDetailView: View {
     @AppStorage("meMemberID") private var meMemberID = ""
     @Environment(\.dismiss) private var dismiss
     @State private var editorTarget: MedicationEditorTarget?
+    @Environment(\.access) private var access
 
     private let persistence = PersistenceController.shared
 
@@ -220,7 +222,7 @@ struct MedicationDetailView: View {
                 Section {
                     ForEach(medication.sortedDoses, id: \.objectID) { dose in
                         DoseRow(dose: dose)
-                            .deleteDisabled(!medication.isActive)
+                            .deleteDisabled(!medication.isActive || !access.canManageEpisode)
                     }
                     .onDelete { offsets in
                         let doses = medication.sortedDoses
@@ -232,7 +234,7 @@ struct MedicationDetailView: View {
                 .listRowBackground(Color.hcCard)
             }
 
-            if medication.isActive {
+            if medication.isActive && access.canManageEpisode {
                 Section {
                     Button(role: .destructive) {
                         persistence.stop(medication)
@@ -248,7 +250,7 @@ struct MedicationDetailView: View {
         .background(Color.hcBackground.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if medication.isActive {
+            if medication.isActive && access.canManageEpisode {
                 Button("Editar") { editorTarget = .existing(medication) }
             }
         }
