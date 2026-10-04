@@ -70,7 +70,10 @@ extension PersistenceController {
         chore("Arrumar o quarto", tomas)
         chore("Roupa", daniel)
 
-        leonor.allergies = "Amendoim"
+        leonor.allergies = "Amendoim, Penicilina"
+        leonor.weightKg = 18
+        leonor.pediatricianName = "Dra. Marta"
+        leonor.pediatricianPhone = "210000000"
         let episode = openEpisode(for: leonor, at: now.addingTimeInterval(-2 * 86_400))
         for (hoursAgo, celsius) in [(48.0, 38.4), (36, 39.1), (24, 38.8), (12, 38.5), (2, 38.2)] {
             recordTemperature(celsius, in: episode, at: now.addingTimeInterval(-hoursAgo * 3600), by: sofia)
