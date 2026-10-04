@@ -13,25 +13,26 @@ final class AppShellUITests: XCTestCase {
 
     func testFirstLaunchAsksToCreateAFamily() {
         createFamily()
-        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(tab("Hoje").waitForExistence(timeout: 5))
     }
 
     func testAllFourTabsAreReachable() {
         createFamily()
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 10))
+        XCTAssertTrue(tab("Hoje").waitForExistence(timeout: 10))
 
-        for title in ["Hoje", "Agenda", "Família", "Saúde"] {
-            let button = tabBar.buttons[title]
+        for title in ["Agenda", "Família", "Saúde"] {
+            let button = tab(title)
             XCTAssertTrue(button.exists, "Tab \(title) is missing")
             button.tap()
             XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 5), "Screen \(title) did not open")
         }
+        tab("Hoje").tap()
+        XCTAssertTrue(app.descendants(matching: .any)["today-header"].waitForExistence(timeout: 5), "Today did not open")
     }
 
     func testAddingAMemberShowsTheirCard() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Família"].tap()
+        tab("Família").tap()
 
         let add = app.buttons["Adicionar membro"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
@@ -50,7 +51,7 @@ final class AppShellUITests: XCTestCase {
 
     func testAddingADailyChoreAndTickingIt() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Agenda"].tap()
+        tab("Agenda").tap()
         app.buttons["Tarefas"].tap()
 
         let add = app.buttons["Nova tarefa"]
@@ -70,7 +71,7 @@ final class AppShellUITests: XCTestCase {
 
     func testAddingAWeeklyActivityShowsItInTheWeek() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Agenda"].tap()
+        tab("Agenda").tap()
 
         let add = app.buttons["Nova atividade"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
@@ -92,7 +93,7 @@ final class AppShellUITests: XCTestCase {
 
     func testTickingAChoreFromToday() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Agenda"].tap()
+        tab("Agenda").tap()
         app.buttons["Tarefas"].tap()
         app.buttons["Nova tarefa"].tap()
         let title = app.textFields["Tarefa"]
@@ -101,15 +102,17 @@ final class AppShellUITests: XCTestCase {
         title.typeText("Lixo")
         app.buttons["Guardar"].tap()
 
-        app.tabBars.firstMatch.buttons["Hoje"].tap()
-        XCTAssertTrue(app.staticTexts["Lixo"].waitForExistence(timeout: 5))
-        app.buttons["Por fazer"].firstMatch.tap()
-        XCTAssertTrue(app.buttons["Feita"].waitForExistence(timeout: 5))
+        tab("Hoje").tap()
+        let chore = app.buttons["chore-Lixo"]
+        XCTAssertTrue(chore.waitForExistence(timeout: 5))
+        chore.tap()
+        let done = expectation(for: NSPredicate(format: "value == %@", "Feita"), evaluatedWith: chore)
+        wait(for: [done], timeout: 5)
     }
 
     func testAllergiesShowOnTheHealthCard() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Família"].tap()
+        tab("Família").tap()
         app.buttons["Adicionar membro"].tap()
         let name = app.textFields["Nome"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
@@ -117,7 +120,7 @@ final class AppShellUITests: XCTestCase {
         name.typeText("Rita")
         app.buttons["Guardar"].tap()
 
-        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        tab("Saúde").tap()
         app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
         app.buttons["Editar"].tap()
         // A multi-line field shows up as a text view, so look it up by identifier.
@@ -132,7 +135,7 @@ final class AppShellUITests: XCTestCase {
 
     func testAnIllnessEpisodeShowsOnToday() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Família"].tap()
+        tab("Família").tap()
         app.buttons["Adicionar membro"].tap()
         let name = app.textFields["Nome"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
@@ -140,7 +143,7 @@ final class AppShellUITests: XCTestCase {
         name.typeText("Rita")
         app.buttons["Guardar"].tap()
 
-        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        tab("Saúde").tap()
         app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
         let open = app.buttons["Abrir episódio"]
         XCTAssertTrue(open.waitForExistence(timeout: 5))
@@ -153,13 +156,13 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(cough.waitForExistence(timeout: 5))
         cough.tap()
 
-        app.tabBars.firstMatch.buttons["Hoje"].tap()
-        XCTAssertTrue(app.staticTexts["Rita"].waitForExistence(timeout: 5))
+        tab("Hoje").tap()
+        XCTAssertTrue(app.buttons["Rita doente"].waitForExistence(timeout: 5))
     }
 
     func testAddingAMedicationAndGivingADose() {
         createFamily()
-        app.tabBars.firstMatch.buttons["Família"].tap()
+        tab("Família").tap()
         app.buttons["Adicionar membro"].tap()
         let name = app.textFields["Nome"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
@@ -167,7 +170,7 @@ final class AppShellUITests: XCTestCase {
         name.typeText("Rita")
         app.buttons["Guardar"].tap()
 
-        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        tab("Saúde").tap()
         app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
         app.buttons["Abrir episódio"].tap()
         let episode = app.descendants(matching: .any).matching(identifier: "active-episode").firstMatch
@@ -196,9 +199,14 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")
         create.tap()
         // The tab bar is there before the cover finishes sliding away; tapping a tab too early misses.
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertTrue(tabBar.waitForExistence(timeout: 10))
+        XCTAssertTrue(tab("Hoje").waitForExistence(timeout: 10))
         let settled = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: create)
         wait(for: [settled], timeout: 10)
+    }
+
+    /// The app draws its own tab bar, so tabs are found by identifier rather than through `tabBars`.
+    private func tab(_ title: String) -> XCUIElement {
+        let ids = ["Hoje": "tab-today", "Agenda": "tab-agenda", "Família": "tab-family", "Saúde": "tab-health"]
+        return app.buttons[ids[title] ?? title]
     }
 }
