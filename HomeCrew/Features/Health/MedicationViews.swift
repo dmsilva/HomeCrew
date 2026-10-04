@@ -1,40 +1,5 @@
 import SwiftUI
 
-/// The medication section of an episode: each medicine with a countdown to its next dose and "Dei agora".
-/// The editor sheet lives on the screen's List: a sheet attached to a row inside a List may never present.
-struct MedicationSection: View {
-    @ObservedObject var episode: IllnessEpisode
-    let me: Member?
-    let onAdd: () -> Void
-    @Environment(\.access) private var access
-
-    private let persistence = PersistenceController.shared
-
-    var body: some View {
-        Section {
-            ForEach(episode.isActive ? episode.activeMedications : episode.sortedMedications, id: \.objectID) { medication in
-                NavigationLink {
-                    MedicationDetailView(medication: medication)
-                } label: {
-                    MedicationRow(medication: medication) {
-                        persistence.giveDose(of: medication, by: me)
-                    }
-                }
-            }
-            if episode.isActive && access.canManageEpisode {
-                Button {
-                    onAdd()
-                } label: {
-                    Label("Adicionar medicamento", systemImage: "plus")
-                }
-            }
-        } header: {
-            Label("Medicação", systemImage: "pills")
-        }
-        .listRowBackground(Color.hcCard)
-    }
-}
-
 struct MedicationRow: View {
     @ObservedObject var medication: Medication
     let onGive: () -> Void
