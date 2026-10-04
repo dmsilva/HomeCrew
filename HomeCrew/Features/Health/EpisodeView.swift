@@ -10,6 +10,7 @@ struct EpisodeView: View {
     @State private var isConfirmingEnd = false
     @State private var notes = ""
     @Environment(\.access) private var access
+    @State private var medicationEditor: MedicationEditorTarget?
     @AppStorage("meMemberID") private var meMemberID = ""
 
     private let persistence = PersistenceController.shared
@@ -46,7 +47,7 @@ struct EpisodeView: View {
             }
 
             if episode.isActive || !episode.sortedMedications.isEmpty {
-                MedicationSection(episode: episode)
+                MedicationSection(episode: episode, me: me) { medicationEditor = .new }
             }
 
             Section {
@@ -90,6 +91,9 @@ struct EpisodeView: View {
                 persistence.recordTemperature(celsius, in: episode, at: takenAt, by: me)
             }
             .presentationDetents([.medium])
+        }
+        .sheet(item: $medicationEditor) { target in
+            MedicationEditor(episode: episode, target: target, me: me)
         }
         .confirmationDialog("Terminar episódio?", isPresented: $isConfirmingEnd, titleVisibility: .visible) {
             Button("Terminar") {

@@ -195,5 +195,10 @@ final class AppShellUITests: XCTestCase {
         let create = app.buttons["Criar família"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")
         create.tap()
+        // The tab bar is there before the cover finishes sliding away; tapping a tab too early misses.
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 10))
+        let settled = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: create)
+        wait(for: [settled], timeout: 10)
     }
 }
