@@ -26,6 +26,8 @@ final class Family: NSManagedObject {
         }
     }
 
+    var adults: [Member] { sortedMembers.filter { $0.kind == .adult } }
+
     /// The first palette colour nobody in the family uses yet, cycling once all are taken.
     var nextColorIndex: Int16 {
         let used = Set(sortedMembers.map(\.colorIndex))
@@ -51,6 +53,10 @@ final class Member: NSManagedObject {
     @NSManaged var assignedChores: NSSet?
     @NSManaged var completions: NSSet?
     @NSManaged var activities: NSSet?
+    @NSManaged var dropOffActivities: NSSet?
+    @NSManaged var pickUpActivities: NSSet?
+    @NSManaged var dropOffExceptions: NSSet?
+    @NSManaged var pickUpExceptions: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -92,6 +98,7 @@ enum HomeCrewModel {
         let chore = entity("Chore", Chore.self)
         let completion = entity("ChoreCompletion", ChoreCompletion.self)
         let activity = entity("Activity", Activity.self)
+        let exception = entity("ActivityException", ActivityException.self)
 
         family.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -137,6 +144,12 @@ enum HomeCrewModel {
             attribute("createdAt", .dateAttributeType),
         ]
 
+        exception.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("occurrenceDate", .dateAttributeType),
+            attribute("isCancelled", .booleanAttributeType, default: false),
+        ]
+
         link(family, "members", .cascadeDeleteRule, many: member, "family")
         link(family, "chores", .cascadeDeleteRule, many: chore, "family")
         link(member, "assignedChores", .nullifyDeleteRule, many: chore, "assignee")
@@ -144,9 +157,14 @@ enum HomeCrewModel {
         link(member, "completions", .nullifyDeleteRule, many: completion, "completedBy")
         link(family, "activities", .cascadeDeleteRule, many: activity, "family")
         link(member, "activities", .nullifyDeleteRule, many: activity, "child")
+        link(member, "dropOffActivities", .nullifyDeleteRule, many: activity, "dropOff")
+        link(member, "pickUpActivities", .nullifyDeleteRule, many: activity, "pickUp")
+        link(activity, "exceptions", .cascadeDeleteRule, many: exception, "activity")
+        link(member, "dropOffExceptions", .nullifyDeleteRule, many: exception, "dropOff")
+        link(member, "pickUpExceptions", .nullifyDeleteRule, many: exception, "pickUp")
 
         let model = NSManagedObjectModel()
-        model.entities = [family, member, chore, completion, activity]
+        model.entities = [family, member, chore, completion, activity, exception]
         return model
     }
 

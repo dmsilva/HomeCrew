@@ -108,3 +108,113 @@ final class ActivityTests: XCTestCase {
         }
     }
 }
+
+final class DropOffPickUpTests: XCTestCase {
+    private var persistence: PersistenceController!
+    private var activity: Activity!
+    private var mum: Member!
+    private var dad: Member!
+    private var grandma: Member!
+    private let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "Europe/Lisbon")!
+        return calendar
+    }()
+
+    private func day(_ d: Int) -> Date {
+        calendar.date(from: DateComponents(year: 2026, month: 10, day: d, hour: 12))!
+    }
+
+    private func adult(_ name: String, in family: Family) -> Member {
+        var draft = MemberDraft()
+        draft.name = name
+        draft.kind = .adult
+        return persistence.addMember(draft, to: family)
+    }
+
+    override func setUp() {
+        super.setUp()
+        persistence = PersistenceController(inMemory: true)
+        let family = persistence.createFamily(named: "Silva")
+        mum = adult("Ana", in: family)
+        dad = adult("Daniel", in: family)
+        grandma = adult("Avó", in: family)
+
+        var draft = ActivityDraft()
+        draft.title = "Futebol"
+        draft.weekdays = [3] // Tuesdays
+        draft.startDate = day(1)
+        draft.dropOff = mum
+        draft.pickUp = dad
+        activity = persistence.addActivity(draft, to: family)
+    }
+
+    func testTheRuleAppliesEveryWeek() {
+        XCTAssertEqual(activity.dropOff(on: day(6), calendar: calendar), mum)
+        XCTAssertEqual(activity.pickUp(on: day(13), calendar: calendar), dad)
+    }
+
+    func testChangingOneDayLeavesTheRuleAlone() {
+        persistence.overrideDrivers(activity, on: day(6), dropOff: grandma, pickUp: nil, calendar: calendar)
+
+        XCTAssertEqual(activity.dropOff(on: day(6), calendar: calendar), grandma)
+        XCTAssertEqual(activity.pickUp(on: day(6), calendar: calendar), dad, "Unchanged side keeps the rule")
+        XCTAssertEqual(activity.dropOff(on: day(13), calendar: calendar), mum)
+        XCTAssertEqual(activity.dropOff, mum)
+    }
+
+    func testClearingTheChangeReturnsTheDayToTheRule() throws {
+        persistence.overrideDrivers(activity, on: day(6), dropOff: grandma, pickUp: nil, calendar: calendar)
+        persistence.overrideDrivers(activity, on: day(6), dropOff: nil, pickUp: nil, calendar: calendar)
+
+        XCTAssertNil(activity.exception(on: day(6), calendar: calendar))
+        let request = NSFetchRequest<ActivityException>(entityName: "ActivityException")
+        XCTAssertEqual(try persistence.viewContext.count(for: request), 0)
+    }
+
+    func testCancellingOneDayShowsInTheSchedule() {
+        persistence.setCancelled(true, activity, on: day(6), calendar: calendar)
+
+        let tuesday = ActivitySchedule.occurrences(of: [activity], on: day(6), calendar: calendar)
+        let nextTuesday = ActivitySchedule.occurrences(of: [activity], on: day(13), calendar: calendar)
+
+        XCTAssertEqual(tuesday.first?.isCancelled, true)
+        XCTAssertEqual(nextTuesday.first?.isCancelled, false)
+    }
+
+    func testRestoringACancelledDayKeepsItsDriverChange() {
+        persistence.overrideDrivers(activity, on: day(6), dropOff: grandma, pickUp: nil, calendar: calendar)
+        persistence.setCancelled(true, activity, on: day(6), calendar: calendar)
+        persistence.setCancelled(false, activity, on: day(6), calendar: calendar)
+
+        XCTAssertFalse(activity.isCancelled(on: day(6), calendar: calendar))
+        XCTAssertEqual(activity.dropOff(on: day(6), calendar: calendar), grandma)
+    }
+
+    func testScheduleCarriesTheRightPeopleForEachDay() {
+        persistence.overrideDrivers(activity, on: day(6), dropOff: grandma, pickUp: grandma, calendar: calendar)
+
+        let tuesday = ActivitySchedule.occurrences(of: [activity], on: day(6), calendar: calendar).first
+        let nextTuesday = ActivitySchedule.occurrences(of: [activity], on: day(13), calendar: calendar).first
+
+        XCTAssertEqual(tuesday?.dropOff, grandma)
+        XCTAssertEqual(tuesday?.pickUp, grandma)
+        XCTAssertEqual(nextTuesday?.dropOff, mum)
+        XCTAssertEqual(nextTuesday?.pickUp, dad)
+    }
+
+    func testRemovingADriverFallsBackToNobody() {
+        persistence.delete(mum)
+        XCTAssertNil(activity.dropOff(on: day(6), calendar: calendar))
+    }
+
+    func testFamilyAdultsExcludeChildren() {
+        var child = MemberDraft()
+        child.name = "Rita"
+        child.kind = .child
+        let family = try! XCTUnwrap(activity.family)
+        persistence.addMember(child, to: family)
+
+        XCTAssertEqual(Set(family.adults), [mum, dad, grandma])
+    }
+}

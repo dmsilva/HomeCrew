@@ -93,6 +93,16 @@
         }
       }
     },
+    "Alterado só neste dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alterado só neste dia"
+          }
+        }
+      }
+    },
     "Apagar": {
       "localizations": {
         "pt-PT": {
@@ -143,12 +153,42 @@
         }
       }
     },
+    "Cancelada": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelada"
+          }
+        }
+      }
+    },
+    "Cancelada neste dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelada neste dia"
+          }
+        }
+      }
+    },
     "Cancelar": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Cancelar"
+          }
+        }
+      }
+    },
+    "Cancelar este dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar este dia"
           }
         }
       }
@@ -283,6 +323,16 @@
         }
       }
     },
+    "Leva": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leva"
+          }
+        }
+      }
+    },
     "Local": {
       "localizations": {
         "pt-PT": {
@@ -319,6 +369,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nada para hoje"
+          }
+        }
+      }
+    },
+    "Ninguém": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninguém"
           }
         }
       }
@@ -439,6 +499,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Repetição"
+          }
+        }
+      }
+    },
+    "Repor este dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repor este dia"
           }
         }
       }
@@ -573,12 +643,32 @@
         }
       }
     },
+    "Traz": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Traz"
+          }
+        }
+      }
+    },
     "Uma vez": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Uma vez"
+          }
+        }
+      }
+    },
+    "Voltar à regra": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voltar à regra"
           }
         }
       }

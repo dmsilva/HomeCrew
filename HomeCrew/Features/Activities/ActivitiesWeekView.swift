@@ -84,8 +84,16 @@ struct ActivityRow: View {
             ActivityIcon(activity: activity, size: 36)
             Text(activity.title ?? "")
                 .font(Theme.Typography.cardTitle)
-                .foregroundStyle(Color.hcInk)
+                .foregroundStyle(occurrence.isCancelled ? Color.hcSecondaryInk : Color.hcInk)
+                .strikethrough(occurrence.isCancelled)
             Spacer()
+            if occurrence.isCancelled {
+                Image(systemName: "xmark.circle")
+                    .foregroundStyle(Color.hcSecondaryInk)
+                    .accessibilityLabel(Text("Cancelada"))
+            } else {
+                DriversBadge(dropOff: occurrence.dropOff, pickUp: occurrence.pickUp)
+            }
             if let child = activity.child {
                 MemberAvatar(member: child, size: 28)
             }
@@ -106,5 +114,32 @@ struct ActivityIcon: View {
             .frame(width: size, height: size)
             .background(Color(colors.soft), in: RoundedRectangle(cornerRadius: Theme.Radius.control))
             .accessibilityHidden(true)
+    }
+}
+
+/// Who takes and who brings, as two small avatars with arrows; nothing when nobody is set.
+struct DriversBadge: View {
+    let dropOff: Member?
+    let pickUp: Member?
+
+    var body: some View {
+        if dropOff != nil || pickUp != nil {
+            HStack(spacing: 2) {
+                driver(dropOff, arrow: "arrow.right")
+                driver(pickUp, arrow: "arrow.left")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func driver(_ member: Member?, arrow: String) -> some View {
+        if let member {
+            HStack(spacing: 1) {
+                Image(systemName: arrow)
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Color.hcSecondaryInk)
+                MemberAvatar(member: member, size: 20)
+            }
+        }
     }
 }
