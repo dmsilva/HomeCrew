@@ -1,0 +1,86 @@
+{
+  "sourceLanguage": "pt-PT",
+  "strings": {
+    "Agenda": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda"
+          }
+        }
+      }
+    },
+    "Ainda sem membros": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda sem membros"
+          }
+        }
+      }
+    },
+    "Família": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Família"
+          }
+        }
+      }
+    },
+    "Hoje": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoje"
+          }
+        }
+      }
+    },
+    "Nada para hoje": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada para hoje"
+          }
+        }
+      }
+    },
+    "Saúde": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saúde"
+          }
+        }
+      }
+    },
+    "Sem atividades": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem atividades"
+          }
+        }
+      }
+    },
+    "Sem episódios": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem episódios"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
