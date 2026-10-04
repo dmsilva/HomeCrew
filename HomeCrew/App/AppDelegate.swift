@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
         DoseReminderCenter.shared.start()
+        SwapNotifier.shared.start()
         return true
     }
 
