@@ -5,6 +5,7 @@ import SwiftUI
 struct PersonHealthView: View {
     @ObservedObject var member: Member
     @State private var isEditing = false
+    @State private var isMakingReport = false
     @State private var affectedActivities: AffectedActivities?
     @AppStorage("meMemberID") private var meMemberID = ""
 
@@ -116,10 +117,18 @@ struct PersonHealthView: View {
         .background(Color.hcBackground.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            Button {
+                isMakingReport = true
+            } label: {
+                Label("PDF para o médico", systemImage: "doc.richtext")
+            }
             Button("Editar") { isEditing = true }
         }
         .sheet(isPresented: $isEditing) {
             HealthRecordEditor(member: member)
+        }
+        .sheet(isPresented: $isMakingReport) {
+            DoctorReportSheet(members: member.family?.sortedMembers ?? [member], selected: member)
         }
         .sheet(item: $affectedActivities) { affected in
             IllnessAgendaSheet(
