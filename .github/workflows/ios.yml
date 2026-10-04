@@ -12,6 +12,8 @@ concurrency:
 jobs:
   test:
     runs-on: macos-15
+    permissions:
+      contents: write
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +46,7 @@ jobs:
             -project HomeCrew.xcodeproj \
             -scheme HomeCrew \
             -destination "id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO \
             | tee build.log | grep -E "error:|warning: .*HomeCrew|Test Suite|Executed|\*\* (TEST|BUILD)"
 
@@ -53,3 +56,33 @@ jobs:
         with:
           name: build-log
           path: build.log
+
+      # Screenshots go to a branch of their own (screenshots/<branch>), so they can be looked at on GitHub
+      # or fetched with git, next to the design, before anything is merged.
+      - name: Publish screenshots
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          [ -d TestResults.xcresult ] || { echo "No result bundle"; exit 0; }
+          mkdir -p raw shots
+          xcrun xcresulttool export attachments --path TestResults.xcresult --output-path raw || exit 0
+          python3 - <<'PY'
+          import json, os, re, shutil
+          manifest = json.load(open("raw/manifest.json"))
+          for test in manifest:
+              for item in test.get("attachments", []):
+                  name = item.get("suggestedHumanReadableName") or item["exportedFileName"]
+                  name = re.sub(r"_\d+_[0-9A-F-]{36}", "", name)
+                  shutil.copy(os.path.join("raw", item["exportedFileName"]), os.path.join("shots", name))
+          PY
+          ls shots
+          [ -n "$(ls shots)" ] || exit 0
+          cd shots
+          git init -q -b main
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Screenshots of ${SOURCE_BRANCH} at ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/screenshots/${SOURCE_BRANCH}"

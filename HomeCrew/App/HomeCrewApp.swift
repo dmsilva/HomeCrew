@@ -4,6 +4,12 @@ import SwiftUI
 struct HomeCrewApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
+    init() {
+        if ProcessInfo.processInfo.arguments.contains("-demoData") {
+            PersistenceController.shared.seedDemoFamilyIfEmpty()
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             RootTabView()
