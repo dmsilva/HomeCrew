@@ -127,6 +127,7 @@ struct MedicationEditor: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(Text(episode.member?.name ?? ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

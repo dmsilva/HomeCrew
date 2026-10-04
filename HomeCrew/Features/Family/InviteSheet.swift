@@ -21,8 +21,8 @@ struct RoleFields: View {
                             Image(systemName: option.systemImage)
                                 .font(.title2)
                                 .frame(width: 52, height: 52)
-                                .background(isSelected ? Color.hcAccent : Color.hcAccentSoft, in: Circle())
-                                .foregroundStyle(isSelected ? Color.white : Color.hcAccent)
+                                .background(isSelected ? Color.hcNight : Color.hcMuted, in: Circle())
+                                .foregroundStyle(isSelected ? Color.hcLime : Color.hcInk)
                             Text(option.title)
                                 .font(Theme.Typography.caption)
                                 .foregroundStyle(Color.hcInk)
@@ -49,9 +49,7 @@ struct RoleFields: View {
                             Button {
                                 if isOn { children.remove(child.objectID) } else { children.insert(child.objectID) }
                             } label: {
-                                MemberAvatar(member: child, size: 44)
-                                    .overlay { Circle().strokeBorder(Color.hcAccent, lineWidth: isOn ? 3 : 0) }
-                                    .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+                                SelectableAvatar(member: child, isSelected: isOn)
                             }
                             .buttonStyle(.plain)
                             .accessibilityLabel(Text(child.name ?? ""))
@@ -97,6 +95,7 @@ struct InviteSheet: View {
                 }
                 RoleFields(family: family, role: $draft.role, children: $draft.children, weekdays: $draft.weekdays)
             }
+            .editorStyle()
             .navigationTitle(Text("Convidar"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

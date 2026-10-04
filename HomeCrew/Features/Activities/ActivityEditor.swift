@@ -26,7 +26,7 @@ struct ActivityEditor: View {
             Form {
                 Section {
                     TextField("Atividade", text: $draft.title)
-                        .font(Theme.Typography.cardTitle)
+                        .font(Theme.Typography.display(26))
                     symbolPicker
                 }
 
@@ -78,6 +78,7 @@ struct ActivityEditor: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(isNew ? Text("Nova atividade") : Text("Editar"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -131,11 +132,11 @@ struct ActivityEditor: View {
                         draft.symbolName = symbol
                     } label: {
                         Image(systemName: symbol)
-                            .font(.title3)
-                            .foregroundStyle(isSelected ? Color.white : Color.hcAccent)
-                            .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(isSelected ? Color.hcLime : Color.hcInk)
+                            .frame(width: 48, height: 48)
                             .background(
-                                isSelected ? Color.hcAccent : Color.hcAccentSoft,
+                                isSelected ? Color.hcNight : Color.hcMuted,
                                 in: RoundedRectangle(cornerRadius: Theme.Radius.control)
                             )
                     }
@@ -151,10 +152,7 @@ struct ActivityEditor: View {
         return Button {
             draft.child = isSelected ? nil : member
         } label: {
-            MemberAvatar(member: member, size: 44)
-                .overlay {
-                    Circle().strokeBorder(Color.hcAccent, lineWidth: isSelected ? 3 : 0)
-                }
+            SelectableAvatar(member: member, isSelected: isSelected)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(member.name ?? ""))
@@ -190,8 +188,8 @@ struct DriverPicker: View {
     var body: some View {
         HStack(spacing: Theme.Spacing.m) {
             Image(systemName: systemImage)
-                .font(.title3)
-                .foregroundStyle(Color.hcAccent)
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(Color.hcInk)
                 .accessibilityLabel(Text(title))
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: Theme.Spacing.s) {
@@ -200,11 +198,7 @@ struct DriverPicker: View {
                         Button {
                             selection = isSelected ? nil : adult
                         } label: {
-                            MemberAvatar(member: adult, size: 40)
-                                .overlay {
-                                    Circle().strokeBorder(Color.hcAccent, lineWidth: isSelected ? 3 : 0)
-                                }
-                                .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+                            SelectableAvatar(member: adult, isSelected: isSelected, size: 40)
                         }
                         .buttonStyle(.plain)
                         .accessibilityLabel(Text(adult.name ?? ""))
