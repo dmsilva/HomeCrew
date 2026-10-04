@@ -41,6 +41,11 @@ struct ActivityEditor: View {
                 }
 
                 Section {
+                    DriverPicker(title: "Leva", systemImage: "arrow.right.circle", adults: family.adults, selection: $draft.dropOff)
+                    DriverPicker(title: "Traz", systemImage: "arrow.left.circle", adults: family.adults, selection: $draft.pickUp)
+                }
+
+                Section {
                     WeekdayPicker(selection: $draft.weekdays)
                     DatePicker("Hora", selection: startTime, displayedComponents: .hourAndMinute)
                     Stepper(value: $draft.durationMinutes, in: 15...480, step: 15) {
@@ -172,5 +177,41 @@ struct ActivityEditor: View {
         case .existing(let activity): persistence.update(activity, with: draft)
         }
         dismiss()
+    }
+}
+
+/// An icon, then one avatar per adult; tapping the selected one clears it.
+struct DriverPicker: View {
+    let title: LocalizedStringKey
+    let systemImage: String
+    let adults: [Member]
+    @Binding var selection: Member?
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: systemImage)
+                .font(.title3)
+                .foregroundStyle(Color.hcAccent)
+                .accessibilityLabel(Text(title))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: Theme.Spacing.s) {
+                    ForEach(adults, id: \.objectID) { adult in
+                        let isSelected = selection == adult
+                        Button {
+                            selection = isSelected ? nil : adult
+                        } label: {
+                            MemberAvatar(member: adult, size: 40)
+                                .overlay {
+                                    Circle().strokeBorder(Color.hcAccent, lineWidth: isSelected ? 3 : 0)
+                                }
+                                .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text(adult.name ?? ""))
+                        .accessibilityAddTraits(isSelected ? .isSelected : [])
+                    }
+                }
+            }
+        }
     }
 }
