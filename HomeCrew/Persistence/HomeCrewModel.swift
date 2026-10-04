@@ -8,6 +8,7 @@ final class Family: NSManagedObject {
     @NSManaged var name: String?
     @NSManaged var createdAt: Date?
     @NSManaged var members: NSSet?
+    @NSManaged var chores: NSSet?
 
     static func all() -> NSFetchRequest<Family> {
         let request = NSFetchRequest<Family>(entityName: "Family")
@@ -46,6 +47,8 @@ final class Member: NSManagedObject {
     @NSManaged var birthDate: Date?
     @NSManaged var createdAt: Date?
     @NSManaged var family: Family?
+    @NSManaged var assignedChores: NSSet?
+    @NSManaged var completions: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -82,24 +85,15 @@ enum HomeCrewModel {
     static let shared: NSManagedObjectModel = make()
 
     private static func make() -> NSManagedObjectModel {
-        let family = NSEntityDescription()
-        family.name = "Family"
-        family.managedObjectClassName = NSStringFromClass(Family.self)
-
-        let member = NSEntityDescription()
-        member.name = "Member"
-        member.managedObjectClassName = NSStringFromClass(Member.self)
-
-        let familyMembers = relationship("members", to: member, toMany: true, deleteRule: .cascadeDeleteRule)
-        let memberFamily = relationship("family", to: family, toMany: false, deleteRule: .nullifyDeleteRule)
-        familyMembers.inverseRelationship = memberFamily
-        memberFamily.inverseRelationship = familyMembers
+        let family = entity("Family", Family.self)
+        let member = entity("Member", Member.self)
+        let chore = entity("Chore", Chore.self)
+        let completion = entity("ChoreCompletion", ChoreCompletion.self)
 
         family.properties = [
             attribute("identifier", .UUIDAttributeType),
             attribute("name", .stringAttributeType),
             attribute("createdAt", .dateAttributeType),
-            familyMembers,
         ]
         member.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -108,12 +102,57 @@ enum HomeCrewModel {
             attribute("colorIndex", .integer16AttributeType, default: 0),
             attribute("birthDate", .dateAttributeType),
             attribute("createdAt", .dateAttributeType),
-            memberFamily,
+        ]
+        chore.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("title", .stringAttributeType),
+            attribute("recurrenceValue", .stringAttributeType),
+            attribute("weekdayMask", .integer16AttributeType, default: 0),
+            attribute("startDate", .dateAttributeType),
+            // Phase 2 (kids' points): stored now so no migration is needed later.
+            attribute("points", .integer16AttributeType, default: 0),
+            attribute("createdAt", .dateAttributeType),
+        ]
+        completion.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("occurrenceDate", .dateAttributeType),
+            attribute("completedAt", .dateAttributeType),
+            attribute("pointsAwarded", .integer16AttributeType, default: 0),
         ]
 
+        link(family, "members", .cascadeDeleteRule, many: member, "family")
+        link(family, "chores", .cascadeDeleteRule, many: chore, "family")
+        link(member, "assignedChores", .nullifyDeleteRule, many: chore, "assignee")
+        link(chore, "completions", .cascadeDeleteRule, many: completion, "chore")
+        link(member, "completions", .nullifyDeleteRule, many: completion, "completedBy")
+
         let model = NSManagedObjectModel()
-        model.entities = [family, member]
+        model.entities = [family, member, chore, completion]
         return model
+    }
+
+    private static func entity(_ name: String, _ type: NSManagedObject.Type) -> NSEntityDescription {
+        let entity = NSEntityDescription()
+        entity.name = name
+        entity.managedObjectClassName = NSStringFromClass(type)
+        return entity
+    }
+
+    /// A one-to-many relationship and its inverse: `parent.<toMany>` ↔ `child.<toOne>`.
+    /// The child side always nullifies, so deleting a child never touches its parent.
+    private static func link(
+        _ parent: NSEntityDescription,
+        _ toMany: String,
+        _ deleteRule: NSDeleteRule,
+        many child: NSEntityDescription,
+        _ toOne: String
+    ) {
+        let children = relationship(toMany, to: child, toMany: true, deleteRule: deleteRule)
+        let owner = relationship(toOne, to: parent, toMany: false, deleteRule: .nullifyDeleteRule)
+        children.inverseRelationship = owner
+        owner.inverseRelationship = children
+        parent.properties.append(children)
+        child.properties.append(owner)
     }
 
     private static func attribute(_ name: String, _ type: NSAttributeType, default value: Any? = nil) -> NSAttributeDescription {
