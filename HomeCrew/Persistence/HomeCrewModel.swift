@@ -50,6 +50,13 @@ final class Member: NSManagedObject {
     @NSManaged var birthDate: Date?
     @NSManaged var createdAt: Date?
     @NSManaged var family: Family?
+    @NSManaged var allergies: String?
+    @NSManaged var weightKg: Double
+    @NSManaged var weightUpdatedAt: Date?
+    @NSManaged var chronicConditions: String?
+    @NSManaged var usualMedication: String?
+    @NSManaged var pediatricianName: String?
+    @NSManaged var pediatricianPhone: String?
     @NSManaged var assignedChores: NSSet?
     @NSManaged var completions: NSSet?
     @NSManaged var activities: NSSet?
@@ -112,6 +119,14 @@ enum HomeCrewModel {
             attribute("colorIndex", .integer16AttributeType, default: 0),
             attribute("birthDate", .dateAttributeType),
             attribute("createdAt", .dateAttributeType),
+            // Health record (one per person, so it lives on the member).
+            attribute("allergies", .stringAttributeType),
+            attribute("weightKg", .doubleAttributeType, default: 0),
+            attribute("weightUpdatedAt", .dateAttributeType),
+            attribute("chronicConditions", .stringAttributeType),
+            attribute("usualMedication", .stringAttributeType),
+            attribute("pediatricianName", .stringAttributeType),
+            attribute("pediatricianPhone", .stringAttributeType),
         ]
         chore.properties = [
             attribute("identifier", .UUIDAttributeType),

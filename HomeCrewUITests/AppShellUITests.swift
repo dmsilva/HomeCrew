@@ -107,6 +107,28 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Feita"].waitForExistence(timeout: 5))
     }
 
+    func testAllergiesShowOnTheHealthCard() {
+        createFamily()
+        app.tabBars.firstMatch.buttons["Família"].tap()
+        app.buttons["Adicionar membro"].tap()
+        let name = app.textFields["Nome"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Rita")
+        app.buttons["Guardar"].tap()
+
+        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
+        app.buttons["Editar"].tap()
+        let allergies = app.textFields["Alergias"]
+        XCTAssertTrue(allergies.waitForExistence(timeout: 5))
+        allergies.tap()
+        allergies.typeText("Amendoim")
+        app.buttons["Guardar"].tap()
+
+        XCTAssertTrue(app.staticTexts["Amendoim"].waitForExistence(timeout: 5))
+    }
+
     private func createFamily() {
         let create = app.buttons["Criar família"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")
