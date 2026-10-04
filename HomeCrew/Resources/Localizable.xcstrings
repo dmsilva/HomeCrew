@@ -1,12 +1,54 @@
 {
   "sourceLanguage": "pt-PT",
   "strings": {
+    "%lld anos": {
+      "localizations": {
+        "pt-PT": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld ano"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld anos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "A nossa família": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "A nossa família"
+          }
+        }
+      }
+    },
+    "Adicionar membro": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar membro"
+          }
+        }
+      }
+    },
+    "Adulto": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adulto"
           }
         }
       }
@@ -31,12 +73,62 @@
         }
       }
     },
+    "Cancelar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        }
+      }
+    },
+    "Cor %lld": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cor %lld"
+          }
+        }
+      }
+    },
+    "Criança": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Criança"
+          }
+        }
+      }
+    },
     "Criar família": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Criar família"
+          }
+        }
+      }
+    },
+    "Data de nascimento": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data de nascimento"
+          }
+        }
+      }
+    },
+    "Editar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Editar"
           }
         }
       }
@@ -51,12 +143,32 @@
         }
       }
     },
+    "Guardar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar"
+          }
+        }
+      }
+    },
     "Hoje": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Hoje"
+          }
+        }
+      }
+    },
+    "Mudar nome": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mudar nome"
           }
         }
       }
@@ -71,6 +183,16 @@
         }
       }
     },
+    "Nome": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome"
+          }
+        }
+      }
+    },
     "Nome da família": {
       "localizations": {
         "pt-PT": {
@@ -81,12 +203,52 @@
         }
       }
     },
+    "Novo membro": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novo membro"
+          }
+        }
+      }
+    },
+    "Opções da família": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opções da família"
+          }
+        }
+      }
+    },
     "Partilhar": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Partilhar"
+          }
+        }
+      }
+    },
+    "Remover": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover"
+          }
+        }
+      }
+    },
+    "Remover membro?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover membro?"
           }
         }
       }
@@ -117,6 +279,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sem episódios"
+          }
+        }
+      }
+    },
+    "Tenho um convite": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tenho um convite"
+          }
+        }
+      }
+    },
+    "Tipo": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipo"
           }
         }
       }
