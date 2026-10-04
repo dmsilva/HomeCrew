@@ -6,6 +6,7 @@ struct TodayView: View {
     @FetchRequest(fetchRequest: Activity.all()) private var activities: FetchedResults<Activity>
     @FetchRequest(fetchRequest: Chore.all()) private var chores: FetchedResults<Chore>
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
+    @FetchRequest(fetchRequest: IllnessEpisode.active()) private var episodes: FetchedResults<IllnessEpisode>
 
     /// Which adult uses this iPhone, chosen once; until accounts map to members (invitations ticket).
     @AppStorage("meMemberID") private var meMemberID = ""
@@ -22,6 +23,7 @@ struct TodayView: View {
             day: today,
             activities: Array(activities),
             chores: Array(chores),
+            alerts: TodayAlert.illness(Array(episodes)),
             externalEvents: deviceCalendar.events,
             me: onlyMine ? me : nil
         )
