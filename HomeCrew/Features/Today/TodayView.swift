@@ -13,6 +13,7 @@ struct TodayView: View {
     @AppStorage("onlyMine") private var onlyMine = false
     @AppStorage("calendarOfferDismissed") private var calendarOfferDismissed = false
     @State private var isChoosingMe = false
+    @State private var isShowingNotificationSettings = false
     @StateObject private var deviceCalendar = DeviceCalendar()
     @Environment(\.access) private var access
 
@@ -73,6 +74,14 @@ struct TodayView: View {
             .navigationTitle(AppTab.today.title)
             .onAppear { deviceCalendar.day = today }
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        isShowingNotificationSettings = true
+                    } label: {
+                        Image(systemName: "bell")
+                    }
+                    .accessibilityLabel(Text("Notificações"))
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         if me == nil {
@@ -94,10 +103,14 @@ struct TodayView: View {
                     }
                 }
             }
+            .sheet(isPresented: $isShowingNotificationSettings) {
+                NotificationSettingsView()
+            }
             .sheet(isPresented: $isChoosingMe) {
                 WhoAmIView(adults: families.first?.adults ?? []) { member in
                     meMemberID = member.identifier?.uuidString ?? ""
                     onlyMine = true
+                    DoseReminderCenter.shared.requestAuthorization()
                     isChoosingMe = false
                 }
                 .presentationDetents([.medium])

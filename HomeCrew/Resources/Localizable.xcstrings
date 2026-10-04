@@ -63,6 +63,16 @@
         }
       }
     },
+    "%lld atividades · %lld tarefas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld atividades · %lld tarefas"
+          }
+        }
+      }
+    },
     "%lld dias": {
       "localizations": {
         "pt-PT": {
@@ -131,6 +141,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "30 dias"
+          }
+        }
+      }
+    },
+    "30 min antes de levar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 min antes de levar"
           }
         }
       }
@@ -291,6 +311,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Alterado só neste dia"
+          }
+        }
+      }
+    },
+    "Alterações feitas por outros": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alterações feitas por outros"
+          }
+        }
+      }
+    },
+    "Alterações na agenda": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alterações na agenda"
           }
         }
       }
@@ -1045,6 +1085,16 @@
         }
       }
     },
+    "Notificações": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notificações"
+          }
+        }
+      }
+    },
     "Nova atividade": {
       "localizations": {
         "pt-PT": {
@@ -1081,6 +1131,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Não foi possível criar o PDF."
+          }
+        }
+      }
+    },
+    "O teu dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O teu dia"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
           }
         }
       }
@@ -1421,6 +1491,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Responsável"
+          }
+        }
+      }
+    },
+    "Resumo do dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resumo do dia"
           }
         }
       }
