@@ -289,6 +289,7 @@ struct HealthRecordEditor: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(Text(member.name ?? ""))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

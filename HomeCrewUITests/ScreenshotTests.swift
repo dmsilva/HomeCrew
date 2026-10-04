@@ -40,6 +40,26 @@ final class ScreenshotTests: XCTestCase {
         }
     }
 
+    func testCaptureEditors() {
+        XCTAssertTrue(app.buttons["tab-today"].waitForExistence(timeout: 15))
+        for (kind, name) in [("Atividade", "07-nova-atividade"), ("Tarefa", "08-nova-tarefa")] {
+            let plus = app.buttons["tab-create"]
+            guard plus.waitForExistence(timeout: 5) else { return }
+            plus.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            let item = app.buttons[kind]
+            guard item.waitForExistence(timeout: 5) else { continue }
+            item.tap()
+            snap(name)
+            app.buttons["Cancelar"].tap()
+        }
+        app.buttons["tab-family"].tap()
+        let daniel = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Daniel")).firstMatch
+        if daniel.waitForExistence(timeout: 5) {
+            daniel.tap()
+            snap("09-editar-membro")
+        }
+    }
+
     private func snap(_ name: String) {
         // Let lists and charts settle before capturing.
         Thread.sleep(forTimeInterval: 1)

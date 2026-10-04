@@ -577,6 +577,7 @@ struct TemperatureEntry: View {
                 .accessibilityIdentifier("temperature")
                 DatePicker("Hora", selection: $takenAt, in: ...Date.now)
             }
+            .editorStyle()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

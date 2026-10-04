@@ -78,6 +78,7 @@ struct DoctorReportSheet: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(Text("PDF para o médico"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

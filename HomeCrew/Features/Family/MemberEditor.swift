@@ -31,9 +31,17 @@ struct MemberEditor: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Nome", text: $draft.name)
-                        .font(Theme.Typography.cardTitle)
-                        .textInputAutocapitalization(.words)
+                    HStack(spacing: Theme.Spacing.m) {
+                        Text(verbatim: draft.name.trimmingCharacters(in: .whitespaces).first.map { String($0).uppercased() } ?? "?")
+                            .font(Theme.Typography.display(26))
+                            .foregroundStyle(Color.hcNight)
+                            .frame(width: 56, height: 56)
+                            .background(Color(Theme.Palette.members[Int(draft.colorIndex) % Theme.Palette.members.count].soft), in: Circle())
+                            .accessibilityHidden(true)
+                        TextField("Nome", text: $draft.name)
+                            .font(Theme.Typography.display(26))
+                            .textInputAutocapitalization(.words)
+                    }
 
                     Picker("Tipo", selection: $draft.kind) {
                         Label("Adulto", systemImage: "person.fill").tag(Member.Kind.adult)
@@ -68,6 +76,7 @@ struct MemberEditor: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(isNew ? Text("Novo membro") : Text("Editar"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -108,13 +117,17 @@ struct MemberEditor: View {
             draft.colorIndex = index
         } label: {
             Circle()
-                .fill(Color(pair.foreground))
-                .frame(width: 32, height: 32)
+                .fill(Color(pair.soft))
+                .frame(width: 36, height: 36)
+                .padding(3)
+                .overlay {
+                    Circle().strokeBorder(Color.hcNight, lineWidth: isSelected ? 3 : 0)
+                }
                 .overlay {
                     if isSelected {
                         Image(systemName: "checkmark")
-                            .font(.footnote.weight(.bold))
-                            .foregroundStyle(.white)
+                            .font(.footnote.weight(.heavy))
+                            .foregroundStyle(Color.hcNight)
                     }
                 }
                 .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)

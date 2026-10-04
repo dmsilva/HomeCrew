@@ -31,8 +31,16 @@ struct ChoreEditor: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Tarefa", text: $draft.title)
-                        .font(Theme.Typography.cardTitle)
+                    HStack(spacing: Theme.Spacing.m) {
+                        Image(systemName: Chore.symbol(for: draft.title))
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(Color.hcNight)
+                            .frame(width: 48, height: 48)
+                            .background(Color(draft.assignee?.palette.soft ?? Theme.Palette.muted), in: Circle())
+                            .accessibilityHidden(true)
+                        TextField("Tarefa", text: $draft.title)
+                            .font(Theme.Typography.display(26))
+                    }
                 }
 
                 Section {
@@ -71,6 +79,7 @@ struct ChoreEditor: View {
                     }
                 }
             }
+            .editorStyle()
             .navigationTitle(isNew ? Text("Nova tarefa") : Text("Editar"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -112,10 +121,7 @@ struct ChoreEditor: View {
         return Button {
             draft.assignee = isSelected ? nil : member
         } label: {
-            MemberAvatar(member: member, size: 44)
-                .overlay {
-                    Circle().strokeBorder(Color.hcAccent, lineWidth: isSelected ? 3 : 0)
-                }
+            SelectableAvatar(member: member, isSelected: isSelected)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(member.name ?? ""))
@@ -164,10 +170,10 @@ struct WeekdayPicker: View {
                     if isOn { selection.remove(weekday) } else { selection.insert(weekday) }
                 } label: {
                     Text(symbols[weekday - 1])
-                        .font(Theme.Typography.caption.weight(.semibold))
-                        .foregroundStyle(isOn ? Color.white : Color.hcInk)
-                        .frame(width: 34, height: 34)
-                        .background(isOn ? Color.hcAccent : Color.hcAccentSoft, in: Circle())
+                        .font(Theme.Typography.text(15, weight: .heavy))
+                        .foregroundStyle(isOn ? Color.hcLime : Color.hcInk)
+                        .frame(width: 38, height: 38)
+                        .background(isOn ? Color.hcNight : Color.hcMuted, in: Circle())
                         .frame(maxWidth: .infinity, minHeight: Theme.minimumTapTarget)
                         .contentShape(Rectangle())
                 }
