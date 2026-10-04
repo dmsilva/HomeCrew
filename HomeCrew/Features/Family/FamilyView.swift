@@ -2,9 +2,7 @@ import CoreData
 import SwiftUI
 
 struct FamilyView: View {
-    @Environment(\.managedObjectContext) private var context
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
-    @State private var presentedShare: SharePresentation?
 
     private let persistence = PersistenceController.shared
 
@@ -29,55 +27,126 @@ struct FamilyView: View {
                         .frame(minHeight: Theme.minimumTapTarget)
                     }
                 } else {
-                    List(families, id: \.objectID) { family in
-                        FamilyRow(family: family, onSave: persistence.save) {
-                            Task { await present(shareFor: family) }
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
+                            ForEach(families, id: \.objectID) { family in
+                                FamilySection(family: family, persistence: persistence)
+                            }
                         }
-                        .listRowBackground(Color.hcCard)
+                        .padding(Theme.Spacing.l)
                     }
-                    .scrollContentBackground(.hidden)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.hcBackground.ignoresSafeArea())
             .navigationTitle(AppTab.family.title)
-            .sheet(item: $presentedShare) { presentation in
-                CloudSharingView(share: presentation.share, container: persistence.cloudKitContainer)
-                    .ignoresSafeArea()
+        }
+    }
+}
+
+/// One family: its name, a card per person, and a card to add someone.
+private struct FamilySection: View {
+    @ObservedObject var family: Family
+    let persistence: PersistenceController
+
+    @State private var editing: EditorTarget?
+    @State private var presentedShare: SharePresentation?
+    @State private var isRenaming = false
+    @State private var newName = ""
+
+    private let columns = [GridItem(.adaptive(minimum: 150), spacing: Theme.Spacing.m)]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack {
+                Text(family.name ?? "")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcSecondaryInk)
+                Spacer()
+                Menu {
+                    Button {
+                        newName = family.name ?? ""
+                        isRenaming = true
+                    } label: {
+                        Label("Mudar nome", systemImage: "pencil")
+                    }
+                    Button {
+                        Task { await presentShare() }
+                    } label: {
+                        Label("Partilhar", systemImage: "person.crop.circle.badge.plus")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+                }
+                .accessibilityLabel(Text("Opções da família"))
             }
+
+            LazyVGrid(columns: columns, spacing: Theme.Spacing.m) {
+                ForEach(family.sortedMembers, id: \.objectID) { member in
+                    Button { editing = .existing(member) } label: { MemberCard(member: member) }
+                        .buttonStyle(.plain)
+                }
+                Button { editing = .new } label: { AddMemberCard() }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(Text("Adicionar membro"))
+            }
+        }
+        .sheet(item: $editing) { target in
+            MemberEditor(target: target, family: family, persistence: persistence)
+        }
+        .sheet(item: $presentedShare) { presentation in
+            CloudSharingView(share: presentation.share, container: persistence.cloudKitContainer)
+                .ignoresSafeArea()
+        }
+        .alert("Mudar nome", isPresented: $isRenaming) {
+            TextField("Nome da família", text: $newName)
+            Button("Cancelar", role: .cancel) {}
+            Button("Guardar") { persistence.rename(family, to: newName) }
         }
     }
 
     @MainActor
-    private func present(shareFor family: Family) async {
+    private func presentShare() async {
         if let share = try? await persistence.share(family) {
             presentedShare = SharePresentation(share: share)
         }
     }
 }
 
-private struct FamilyRow: View {
-    @ObservedObject var family: Family
-    let onSave: () -> Void
-    let onShare: () -> Void
+private struct MemberCard: View {
+    @ObservedObject var member: Member
 
     var body: some View {
-        HStack(spacing: Theme.Spacing.m) {
-            TextField("Nome da família", text: Binding(
-                get: { family.name ?? "" },
-                set: { family.name = $0 }
-            ))
-            .font(Theme.Typography.cardTitle)
-            .foregroundStyle(Color.hcInk)
-            .onSubmit(onSave)
-
-            Button(action: onShare) {
-                Image(systemName: "person.crop.circle.badge.plus")
-                    .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+        VStack(spacing: Theme.Spacing.s) {
+            MemberAvatar(member: member)
+            Text(member.name ?? "")
+                .font(Theme.Typography.cardTitle)
+                .foregroundStyle(Color.hcInk)
+                .lineLimit(1)
+            if member.kind == .child, let age = member.age(on: .now) {
+                Text("\(age) anos")
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Color.hcSecondaryInk)
+            } else {
+                Image(systemName: "person.fill")
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Color.hcSecondaryInk)
+                    .accessibilityLabel(Text("Adulto"))
             }
-            .buttonStyle(.borderless)
-            .accessibilityLabel(Text("Partilhar"))
         }
+        .frame(maxWidth: .infinity, minHeight: 150)
+        .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+    }
+}
+
+private struct AddMemberCard: View {
+    var body: some View {
+        Image(systemName: "plus")
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(Color.hcAccent)
+            .frame(maxWidth: .infinity, minHeight: 150)
+            .background(Color.hcAccentSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
     }
 }
 

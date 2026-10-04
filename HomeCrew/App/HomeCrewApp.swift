@@ -13,7 +13,9 @@ struct HomeCrewApp: App {
 }
 
 struct RootTabView: View {
+    @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
     @State private var selection: AppTab = .today
+    @State private var isWaitingForInvite = false
 
     var body: some View {
         TabView(selection: $selection) {
@@ -24,6 +26,20 @@ struct RootTabView: View {
             }
         }
         .tint(.hcAccent)
+        .fullScreenCover(isPresented: needsFirstRun) {
+            FirstRunView(
+                onCreate: { PersistenceController.shared.createFamily(named: $0) },
+                onWaitForInvite: { isWaitingForInvite = true }
+            )
+        }
+    }
+
+    /// Closes on its own once a family exists, whether created here or arriving through an invitation.
+    private var needsFirstRun: Binding<Bool> {
+        Binding(
+            get: { families.isEmpty && !isWaitingForInvite },
+            set: { if !$0 { isWaitingForInvite = true } }
+        )
     }
 
     @ViewBuilder
