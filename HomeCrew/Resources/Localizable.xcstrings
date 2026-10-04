@@ -83,6 +83,16 @@
         }
       }
     },
+    "Ainda sem adultos": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda sem adultos"
+          }
+        }
+      }
+    },
     "Ainda sem membros": {
       "localizations": {
         "pt-PT": {
@@ -473,6 +483,16 @@
         }
       }
     },
+    "Quem sou eu?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quem sou eu?"
+          }
+        }
+      }
+    },
     "Remover": {
       "localizations": {
         "pt-PT": {
@@ -589,6 +609,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Semanal"
+          }
+        }
+      }
+    },
+    "Só eu": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Só eu"
           }
         }
       }
