@@ -26,7 +26,8 @@ struct HomeTabBar: View {
         .padding(.horizontal, Theme.Spacing.s)
         .frame(height: Self.height)
         .frame(maxWidth: .infinity)
-        .background(Color.hcNight, in: Capsule())
+        // On Família's night background the bar lifts to a lighter night so it stays visible.
+        .background(selection == .family ? Color(UIColor(hex: 0x2A2650)) : Color.hcNight, in: Capsule())
         .padding(.horizontal, Theme.Spacing.l)
         .padding(.bottom, Theme.Spacing.xs)
     }

@@ -1,6 +1,9 @@
 import CoreData
 import SwiftUI
 
+/// The family as big colour circles on night (Direção E): drives this week on each adult, activity icons
+/// on each child, a coral ring and the latest temperature on whoever is ill, and the week's drives split
+/// between the adults at the bottom.
 struct FamilyView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
 
@@ -9,16 +12,19 @@ struct FamilyView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if families.isEmpty {
+                if let family = families.first {
+                    ScrollView {
+                        FamilySection(family: family, persistence: persistence)
+                            .padding(.horizontal, 20)
+                            .padding(.top, Theme.Spacing.l)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                } else {
                     ContentUnavailableView {
                         Image(systemName: AppTab.family.systemImage)
                             .font(Theme.Typography.heroIcon)
-                            .foregroundStyle(Color.hcAccent)
+                            .foregroundStyle(Color.hcLime)
                             .accessibilityHidden(true)
-                    } description: {
-                        Text("Ainda sem membros")
-                            .font(Theme.Typography.body)
-                            .foregroundStyle(Color.hcSecondaryInk)
                     } actions: {
                         Button("Criar família") {
                             persistence.createFamily(named: String(localized: "A nossa família"))
@@ -26,25 +32,16 @@ struct FamilyView: View {
                         .buttonStyle(.borderedProminent)
                         .frame(minHeight: Theme.minimumTapTarget)
                     }
-                } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-                            ForEach(families, id: \.objectID) { family in
-                                FamilySection(family: family, persistence: persistence)
-                            }
-                        }
-                        .padding(Theme.Spacing.l)
-                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.hcBackground.ignoresSafeArea())
-            .navigationTitle(AppTab.family.title)
+            .background(Color.hcNight.ignoresSafeArea())
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 }
 
-/// One family: its name, a card per person, and a card to add someone.
+/// One family: a menu on the title, a "+" to add someone, a circle per person and the drives bar.
 private struct FamilySection: View {
     @ObservedObject var family: Family
     let persistence: PersistenceController
@@ -54,16 +51,16 @@ private struct FamilySection: View {
     @State private var isRenaming = false
     @State private var isInviting = false
     @State private var newName = ""
+    @State private var isShowingCustody = false
 
-    private let columns = [GridItem(.adaptive(minimum: 150), spacing: Theme.Spacing.m)]
+    @FetchRequest(fetchRequest: Activity.all()) private var activities: FetchedResults<Activity>
+
+    private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+        let drives = weekDrives
+        VStack(alignment: .leading, spacing: 22) {
             HStack {
-                Text(family.name ?? "")
-                    .font(Theme.Typography.cardTitle)
-                    .foregroundStyle(Color.hcSecondaryInk)
-                Spacer()
                 Menu {
                     Button {
                         newName = family.name ?? ""
@@ -81,36 +78,53 @@ private struct FamilySection: View {
                     } label: {
                         Label("Gerir acessos", systemImage: "person.2.badge.gearshape")
                     }
+                    if family.sortedMembers.contains(where: { $0.kind == .child }) {
+                        Button {
+                            isShowingCustody = true
+                        } label: {
+                            Label("Guarda", systemImage: "calendar")
+                        }
+                    }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
-                        .frame(minWidth: Theme.minimumTapTarget, minHeight: Theme.minimumTapTarget)
+                    Text("Família")
+                        .font(Theme.Typography.display(34))
+                        .foregroundStyle(.white)
                 }
                 .accessibilityLabel(Text("Opções da família"))
+                .accessibilityIdentifier("family-header")
+
+                Spacer()
+
+                Button { editing = .new } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 48, height: 48)
+                        .background(Color.hcAccent, in: Circle())
+                }
+                .accessibilityLabel(Text("Adicionar membro"))
             }
 
-            LazyVGrid(columns: columns, spacing: Theme.Spacing.m) {
+            LazyVGrid(columns: columns, spacing: 26) {
                 ForEach(family.sortedMembers, id: \.objectID) { member in
-                    Button { editing = .existing(member) } label: { MemberCard(member: member) }
-                        .buttonStyle(.plain)
-                }
-                Button { editing = .new } label: { AddMemberCard() }
+                    Button { editing = .existing(member) } label: {
+                        MemberBubble(
+                            member: member,
+                            drives: member.kind == .adult ? drives[member.objectID, default: 0] : nil,
+                            symbols: member.kind == .child ? symbols(for: member) : []
+                        )
+                    }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(Text("Adicionar membro"))
+                }
             }
 
-            if family.sortedMembers.contains(where: { $0.kind == .child }) {
-                NavigationLink {
-                    CustodyView(family: family)
-                } label: {
-                    Label("Guarda", systemImage: "calendar")
-                        .font(Theme.Typography.cardTitle)
-                        .foregroundStyle(Color.hcInk)
-                        .frame(maxWidth: .infinity, minHeight: Theme.minimumTapTarget, alignment: .leading)
-                        .padding(.horizontal, Theme.Spacing.l)
-                        .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
-                }
-                .buttonStyle(.plain)
+            let adults = family.adults.filter { drives[$0.objectID, default: 0] > 0 }
+            if adults.count >= 2 {
+                DrivesBalance(adults: Array(adults.prefix(2)), drives: drives)
             }
+        }
+        .navigationDestination(isPresented: $isShowingCustody) {
+            CustodyView(family: family)
         }
         .sheet(item: $editing) { target in
             MemberEditor(target: target, family: family, persistence: persistence)
@@ -135,6 +149,25 @@ private struct FamilySection: View {
         }
     }
 
+    /// How many times each adult takes or brings someone this week.
+    private var weekDrives: [NSManagedObjectID: Int] {
+        var counts: [NSManagedObjectID: Int] = [:]
+        let familyActivities = activities.filter { $0.family == family }
+        for day in ActivitySchedule.week(containing: .now) {
+            for occurrence in ActivitySchedule.occurrences(of: familyActivities, on: day) where !occurrence.isCancelled {
+                for driver in [occurrence.dropOff, occurrence.pickUp].compactMap({ $0 }) {
+                    counts[driver.objectID, default: 0] += 1
+                }
+            }
+        }
+        return counts
+    }
+
+    /// The child's activities as their icons, each once.
+    private func symbols(for child: Member) -> [String] {
+        activities.filter { $0.child == child }.map(\.symbol).uniqued()
+    }
+
     @MainActor
     private func presentShare(for role: Role) async {
         if let share = try? await persistence.share(family) {
@@ -143,39 +176,122 @@ private struct FamilySection: View {
     }
 }
 
-private struct MemberCard: View {
+/// A member as a big circle of their colour with their initial.
+/// Adults carry a count of this week's drives; children their activity icons; whoever is ill a coral ring
+/// and their latest temperature.
+private struct MemberBubble: View {
     @ObservedObject var member: Member
+    let drives: Int?
+    let symbols: [String]
+
+    private let size: CGFloat = 132
 
     var body: some View {
-        VStack(spacing: Theme.Spacing.s) {
-            MemberAvatar(member: member)
-            Text(member.name ?? "")
-                .font(Theme.Typography.cardTitle)
-                .foregroundStyle(Color.hcInk)
+        let episode = member.activeEpisode
+        VStack(spacing: 10) {
+            Text(member.initial)
+                .font(Theme.Typography.display(52))
+                .foregroundStyle(Color.hcNight)
+                .frame(width: size, height: size)
+                .background(Color(member.palette.soft), in: Circle())
+                .padding(episode == nil ? 0 : 5)
+                .overlay {
+                    if episode != nil { Circle().strokeBorder(Color.hcWarning, lineWidth: 4) }
+                }
+                .overlay(alignment: .bottomLeading) {
+                    if let drives, drives > 0 {
+                        Text(verbatim: "\(drives)")
+                            .font(Theme.Typography.text(15, weight: .heavy))
+                            .foregroundStyle(Color.hcNight)
+                            .frame(minWidth: 38, minHeight: 38)
+                            .background(Color.white, in: Circle())
+                            .overlay { Circle().strokeBorder(Color.hcNight, lineWidth: 3) }
+                            .offset(x: -4, y: -2)
+                            .accessibilityLabel(Text("\(drives) boleias esta semana"))
+                    }
+                }
+                .overlay(alignment: .topTrailing) {
+                    if let episode {
+                        fever(episode)
+                    } else if !symbols.isEmpty {
+                        VStack(spacing: 4) {
+                            ForEach(symbols.prefix(3), id: \.self) { symbol in
+                                Image(systemName: symbol)
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .foregroundStyle(Color.hcNight)
+                                    .frame(width: 34, height: 34)
+                                    .background(Color.white, in: Circle())
+                                    .overlay { Circle().strokeBorder(Color.hcNight, lineWidth: 2) }
+                            }
+                        }
+                        .offset(x: 6, y: 4)
+                        .accessibilityHidden(true)
+                    }
+                }
+            Text(nameLine)
+                .font(Theme.Typography.text(17, weight: .heavy))
+                .foregroundStyle(.white)
                 .lineLimit(1)
-            if member.kind == .child, let age = member.age(on: .now) {
-                Text("\(age) anos")
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(Color.hcSecondaryInk)
-            } else {
-                Image(systemName: "person.fill")
-                    .font(Theme.Typography.caption)
-                    .foregroundStyle(Color.hcSecondaryInk)
-                    .accessibilityLabel(Text("Adulto"))
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+    }
+
+    private var nameLine: String {
+        let name = member.name ?? ""
+        if member.kind == .child, let age = member.age(on: .now) {
+            return "\(name) · \(age)"
+        }
+        return name
+    }
+
+    private func fever(_ episode: IllnessEpisode) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "thermometer.medium")
+                .font(.system(size: 14, weight: .bold))
+            if let reading = episode.latestReading {
+                Text(verbatim: "\(Int(reading.celsius.rounded(.down)))°")
+                    .font(Theme.Typography.text(15, weight: .heavy))
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 150)
-        .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .foregroundStyle(Color.hcNight)
+        .padding(.horizontal, 12)
+        .frame(height: 40)
+        .background(Color.hcWarning, in: Capsule())
+        .overlay { Capsule().strokeBorder(Color.hcNight, lineWidth: 3) }
+        .offset(x: 10, y: -4)
+        .accessibilityLabel(Text("Doente"))
     }
 }
 
-private struct AddMemberCard: View {
+/// This week's drives split between two adults, as one bar in their colours.
+private struct DrivesBalance: View {
+    let adults: [Member]
+    let drives: [NSManagedObjectID: Int]
+
     var body: some View {
-        Image(systemName: "plus")
-            .font(.title2.weight(.semibold))
-            .foregroundStyle(Color.hcAccent)
-            .frame(maxWidth: .infinity, minHeight: 150)
-            .background(Color.hcAccentSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        let first = adults[0]
+        let second = adults[1]
+        let a = drives[first.objectID, default: 0]
+        let b = drives[second.objectID, default: 0]
+        HStack(spacing: 10) {
+            MemberAvatar(member: first, size: 40)
+            GeometryReader { proxy in
+                let total = max(a + b, 1)
+                let width = proxy.size.width - 4
+                HStack(spacing: 4) {
+                    Color(first.palette.soft).frame(width: width * CGFloat(a) / CGFloat(total))
+                    Color(second.palette.soft)
+                }
+                .clipShape(Capsule())
+            }
+            .frame(height: 16)
+            MemberAvatar(member: second, size: 40)
+        }
+        .padding(.top, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Boleias esta semana: \(first.name ?? "") \(a), \(second.name ?? "") \(b)"))
     }
 }
 
