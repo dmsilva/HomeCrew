@@ -83,6 +83,16 @@
         }
       }
     },
+    "Agora não": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agora não"
+          }
+        }
+      }
+    },
     "Ainda sem adultos": {
       "localizations": {
         "pt-PT": {
@@ -159,6 +169,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Atividades"
+          }
+        }
+      }
+    },
+    "Calendário do iPhone": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendário do iPhone"
           }
         }
       }
@@ -473,6 +493,16 @@
         }
       }
     },
+    "Permitir": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permitir"
+          }
+        }
+      }
+    },
     "Por fazer": {
       "localizations": {
         "pt-PT": {
@@ -623,6 +653,16 @@
         }
       }
     },
+    "Só leitura. O HomeCrew nunca altera os teus eventos.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Só leitura. O HomeCrew nunca altera os teus eventos."
+          }
+        }
+      }
+    },
     "Tarefa": {
       "localizations": {
         "pt-PT": {
@@ -689,6 +729,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uma vez"
+          }
+        }
+      }
+    },
+    "Ver o teu Calendário aqui?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ver o teu Calendário aqui?"
           }
         }
       }

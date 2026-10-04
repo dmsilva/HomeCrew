@@ -114,6 +114,38 @@ final class TodayDigestTests: XCTestCase {
         XCTAssertFalse(all.isEmpty)
     }
 
+    func testCalendarEventsMixWithActivitiesByTimeAllDayFirst() {
+        let football = activity("Futebol", at: 17)
+        let dentist = ExternalEvent(
+            id: "d", title: "Dentista", start: at(hour: 9), end: at(hour: 10), isAllDay: false, color: nil
+        )
+        let dinner = ExternalEvent(
+            id: "j", title: "Jantar", start: at(hour: 20), end: at(hour: 22), isAllDay: false, color: nil
+        )
+        let holiday = ExternalEvent(
+            id: "h", title: "Feriado", start: at(hour: 0), end: at(hour: 23), isAllDay: true, color: nil
+        )
+
+        let digest = TodayDigest.build(
+            day: tuesday, activities: [football], chores: [], externalEvents: [dinner, dentist, holiday], calendar: calendar
+        )
+
+        XCTAssertEqual(digest.agenda.map(\.id), ["external-h", "external-d", "activity-\(digest.activities[0].id)", "external-j"])
+    }
+
+    func testOnlyMineKeepsCalendarEvents() {
+        let event = ExternalEvent(id: "d", title: "Dentista", start: at(hour: 9), end: at(hour: 10), isAllDay: false, color: nil)
+
+        let digest = TodayDigest.build(day: tuesday, activities: [], chores: [], externalEvents: [event], me: dad, calendar: calendar)
+
+        XCTAssertEqual(digest.externalEvents, [event])
+        XCTAssertFalse(digest.isEmpty)
+    }
+
+    private func at(hour: Int) -> Date {
+        calendar.date(bySettingHour: hour, minute: 0, second: 0, of: tuesday)!
+    }
+
     func testEmptyDay() {
         XCTAssertTrue(TodayDigest.build(day: tuesday, activities: [], chores: [], calendar: calendar).isEmpty)
     }

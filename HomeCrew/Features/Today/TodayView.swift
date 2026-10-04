@@ -10,7 +10,9 @@ struct TodayView: View {
     /// Which adult uses this iPhone, chosen once; until accounts map to members (invitations ticket).
     @AppStorage("meMemberID") private var meMemberID = ""
     @AppStorage("onlyMine") private var onlyMine = false
+    @AppStorage("calendarOfferDismissed") private var calendarOfferDismissed = false
     @State private var isChoosingMe = false
+    @StateObject private var deviceCalendar = DeviceCalendar()
 
     private let persistence = PersistenceController.shared
 
@@ -20,6 +22,7 @@ struct TodayView: View {
             day: today,
             activities: Array(activities),
             chores: Array(chores),
+            externalEvents: deviceCalendar.events,
             me: onlyMine ? me : nil
         )
 
@@ -29,12 +32,21 @@ struct TodayView: View {
                     if !digest.alerts.isEmpty {
                         alertsCard(digest.alerts)
                     }
-                    if !digest.activities.isEmpty {
-                        card(systemImage: "figure.run") {
-                            ForEach(digest.activities) { occurrence in
-                                ActivityRow(occurrence: occurrence)
+                    if !digest.agenda.isEmpty {
+                        card(systemImage: "calendar") {
+                            ForEach(digest.agenda) { item in
+                                switch item {
+                                case .activity(let occurrence): ActivityRow(occurrence: occurrence)
+                                case .external(let event): ExternalEventRow(event: event)
+                                }
                             }
                         }
+                    }
+                    if deviceCalendar.access == .notAsked && !calendarOfferDismissed {
+                        CalendarOfferCard(
+                            onAllow: { Task { await deviceCalendar.requestAccess() } },
+                            onDismiss: { calendarOfferDismissed = true }
+                        )
                     }
                     if !digest.chores.isEmpty {
                         card(systemImage: "checklist") {
@@ -54,6 +66,7 @@ struct TodayView: View {
             }
             .background(Color.hcBackground.ignoresSafeArea())
             .navigationTitle(AppTab.today.title)
+            .onAppear { deviceCalendar.day = today }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -125,6 +138,74 @@ struct TodayView: View {
         .padding(Theme.Spacing.l)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.hcWarningSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+    }
+}
+
+/// An event from the iPhone's calendar: same layout as an activity, but a calendar glyph in the
+/// calendar's own colour marks it as coming from outside HomeCrew.
+struct ExternalEventRow: View {
+    let event: ExternalEvent
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Group {
+                if event.isAllDay {
+                    Image(systemName: "sun.max")
+                } else {
+                    Text(event.start, format: .dateTime.hour().minute())
+                }
+            }
+            .font(Theme.Typography.caption.monospacedDigit())
+            .foregroundStyle(Color.hcSecondaryInk)
+            .frame(width: 48, alignment: .leading)
+
+            Image(systemName: "calendar")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(event.color.map { Color(cgColor: $0) } ?? Color.hcSecondaryInk)
+                .frame(width: 36, height: 36)
+                .background(Color.hcBackground, in: RoundedRectangle(cornerRadius: Theme.Radius.control))
+                .accessibilityLabel(Text("Calendário do iPhone"))
+
+            Text(event.title)
+                .font(Theme.Typography.body)
+                .foregroundStyle(Color.hcInk)
+                .lineLimit(1)
+            Spacer()
+        }
+    }
+}
+
+/// Asks once, with a reason, before touching the Calendar; Today works the same without it.
+struct CalendarOfferCard: View {
+    let onAllow: () -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        HStack(alignment: .top, spacing: Theme.Spacing.m) {
+            Image(systemName: "calendar.badge.plus")
+                .font(.title2)
+                .foregroundStyle(Color.hcAccent)
+            VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+                Text("Ver o teu Calendário aqui?")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                Text("Só leitura. O HomeCrew nunca altera os teus eventos.")
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Color.hcSecondaryInk)
+                Button("Permitir", action: onAllow)
+                    .buttonStyle(.borderedProminent)
+                    .frame(minHeight: Theme.minimumTapTarget)
+            }
+            Spacer()
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .foregroundStyle(Color.hcSecondaryInk)
+                    .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)
+            }
+            .accessibilityLabel(Text("Agora não"))
+        }
+        .padding(Theme.Spacing.l)
+        .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
     }
 }
 
