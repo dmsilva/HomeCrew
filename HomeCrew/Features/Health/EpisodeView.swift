@@ -43,6 +43,10 @@ struct EpisodeView: View {
                 .listRowBackground(Color.hcCard)
             }
 
+            if episode.isActive || !episode.sortedMedications.isEmpty {
+                MedicationSection(episode: episode)
+            }
+
             Section {
                 SymptomGrid(selected: episode.symptoms, isEditable: episode.isActive) { symptom, present in
                     persistence.setSymptom(symptom, present: present, in: episode)

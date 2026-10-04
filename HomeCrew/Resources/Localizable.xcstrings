@@ -53,6 +53,16 @@
         }
       }
     },
+    "A dose e o intervalo são os indicados pelo médico.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A dose e o intervalo são os indicados pelo médico."
+          }
+        }
+      }
+    },
     "A nossa família": {
       "localizations": {
         "pt-PT": {
@@ -69,6 +79,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abrir episódio"
+          }
+        }
+      }
+    },
+    "Adicionar medicamento": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar medicamento"
           }
         }
       }
@@ -323,6 +343,36 @@
         }
       }
     },
+    "De %lld em %lld h": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "De %lld em %lld h"
+          }
+        }
+      }
+    },
+    "Dei agora": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dei agora"
+          }
+        }
+      }
+    },
+    "Dei agora a primeira": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dei agora a primeira"
+          }
+        }
+      }
+    },
     "Dia": {
       "localizations": {
         "pt-PT": {
@@ -349,6 +399,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Doenças crónicas"
+          }
+        }
+      }
+    },
+    "Dose (ex.: 5 ml)": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dose (ex.: 5 ml)"
+          }
+        }
+      }
+    },
+    "Doses dadas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doses dadas"
           }
         }
       }
@@ -453,6 +523,16 @@
         }
       }
     },
+    "Hora da dose": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora da dose"
+          }
+        }
+      }
+    },
     "Início": {
       "localizations": {
         "pt-PT": {
@@ -499,6 +579,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Material a levar"
+          }
+        }
+      }
+    },
+    "Medicamento": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medicamento"
+          }
+        }
+      }
+    },
+    "Medicação": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medicação"
           }
         }
       }
@@ -633,6 +733,16 @@
         }
       }
     },
+    "Parar medicamento": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parar medicamento"
+          }
+        }
+      }
+    },
     "Partilhar": {
       "localizations": {
         "pt-PT": {
@@ -693,6 +803,16 @@
         }
       }
     },
+    "Próxima dose %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Próxima dose %@"
+          }
+        }
+      }
+    },
     "Quem sou eu?": {
       "localizations": {
         "pt-PT": {
@@ -749,6 +869,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Repor este dia"
+          }
+        }
+      }
+    },
+    "Responsável": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Responsável"
           }
         }
       }

@@ -16,6 +16,7 @@ struct RootTabView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
     @State private var selection: AppTab = .today
     @State private var isWaitingForInvite = false
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         TabView(selection: $selection) {
@@ -26,6 +27,12 @@ struct RootTabView: View {
             }
         }
         .tint(.hcAccent)
+        .onChange(of: scenePhase) { _, phase in
+            // Catches what changed while away, such as who uses this iPhone.
+            if phase == .active {
+                Task { await DoseReminderCenter.shared.refresh() }
+            }
+        }
         .fullScreenCover(isPresented: needsFirstRun) {
             FirstRunView(
                 onCreate: { PersistenceController.shared.createFamily(named: $0) },

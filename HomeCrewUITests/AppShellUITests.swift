@@ -157,6 +157,40 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Rita"].waitForExistence(timeout: 5))
     }
 
+    func testAddingAMedicationAndGivingADose() {
+        createFamily()
+        app.tabBars.firstMatch.buttons["Família"].tap()
+        app.buttons["Adicionar membro"].tap()
+        let name = app.textFields["Nome"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Rita")
+        app.buttons["Guardar"].tap()
+
+        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
+        app.buttons["Abrir episódio"].tap()
+        let episode = app.descendants(matching: .any).matching(identifier: "active-episode").firstMatch
+        XCTAssertTrue(episode.waitForExistence(timeout: 5))
+        episode.tap()
+
+        let add = app.buttons["Adicionar medicamento"]
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+        let medicine = app.textFields["Medicamento"]
+        XCTAssertTrue(medicine.waitForExistence(timeout: 5))
+        medicine.tap()
+        medicine.typeText("Bru")
+        app.buttons["Brufen"].tap()
+        app.buttons["Guardar"].tap()
+
+        XCTAssertTrue(app.staticTexts["Brufen"].waitForExistence(timeout: 5))
+        let give = app.buttons["Dei agora"].firstMatch
+        XCTAssertTrue(give.exists)
+        give.tap()
+        XCTAssertTrue(app.images["hourglass"].waitForExistence(timeout: 5))
+    }
+
     private func createFamily() {
         let create = app.buttons["Criar família"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")
