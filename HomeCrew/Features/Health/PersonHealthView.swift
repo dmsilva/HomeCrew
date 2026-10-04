@@ -100,6 +100,7 @@ struct HealthRecordEditor: View {
             Form {
                 Section {
                     field("exclamationmark.triangle", "Alergias", text: $draft.allergies)
+                        .accessibilityIdentifier("allergies")
                 } footer: {
                     Text("Separa com vírgulas.")
                 }

@@ -120,7 +120,8 @@ final class AppShellUITests: XCTestCase {
         app.tabBars.firstMatch.buttons["Saúde"].tap()
         app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
         app.buttons["Editar"].tap()
-        let allergies = app.textFields["Alergias"]
+        // A multi-line field shows up as a text view, so look it up by identifier.
+        let allergies = app.descendants(matching: .any).matching(identifier: "allergies").firstMatch
         XCTAssertTrue(allergies.waitForExistence(timeout: 5))
         allergies.tap()
         allergies.typeText("Amendoim")
