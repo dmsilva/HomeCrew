@@ -52,6 +52,7 @@ private struct FamilySection: View {
     @State private var editing: EditorTarget?
     @State private var presentedShare: SharePresentation?
     @State private var isRenaming = false
+    @State private var isInviting = false
     @State private var newName = ""
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: Theme.Spacing.m)]
@@ -71,9 +72,14 @@ private struct FamilySection: View {
                         Label("Mudar nome", systemImage: "pencil")
                     }
                     Button {
-                        Task { await presentShare() }
+                        isInviting = true
                     } label: {
-                        Label("Partilhar", systemImage: "person.crop.circle.badge.plus")
+                        Label("Convidar", systemImage: "person.crop.circle.badge.plus")
+                    }
+                    Button {
+                        Task { await presentShare(for: .parent) }
+                    } label: {
+                        Label("Gerir acessos", systemImage: "person.2.badge.gearshape")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -96,8 +102,17 @@ private struct FamilySection: View {
             MemberEditor(target: target, family: family, persistence: persistence)
         }
         .sheet(item: $presentedShare) { presentation in
-            CloudSharingView(share: presentation.share, container: persistence.cloudKitContainer)
+            CloudSharingView(share: presentation.share, container: persistence.cloudKitContainer, role: presentation.role)
                 .ignoresSafeArea()
+        }
+        .sheet(isPresented: $isInviting) {
+            InviteSheet(family: family) { role in
+                Task {
+                    // Let the invite form close before Apple's sharing sheet opens.
+                    try? await Task.sleep(for: .milliseconds(600))
+                    await presentShare(for: role)
+                }
+            }
         }
         .alert("Mudar nome", isPresented: $isRenaming) {
             TextField("Nome da família", text: $newName)
@@ -107,9 +122,9 @@ private struct FamilySection: View {
     }
 
     @MainActor
-    private func presentShare() async {
+    private func presentShare(for role: Role) async {
         if let share = try? await persistence.share(family) {
-            presentedShare = SharePresentation(share: share)
+            presentedShare = SharePresentation(share: share, role: role)
         }
     }
 }

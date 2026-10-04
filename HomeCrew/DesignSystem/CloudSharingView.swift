@@ -6,10 +6,12 @@ import UIKit
 struct CloudSharingView: UIViewControllerRepresentable {
     let share: CKShare
     let container: CKContainer
+    /// Guests are invited read-only; everyone else can make changes.
+    var role: Role = .parent
 
     func makeUIViewController(context: Context) -> UICloudSharingController {
         let controller = UICloudSharingController(share: share, container: container)
-        controller.availablePermissions = [.allowReadWrite, .allowPrivate]
+        controller.availablePermissions = [role == .guest ? .allowReadOnly : .allowReadWrite, .allowPrivate]
         controller.modalPresentationStyle = .formSheet
         return controller
     }
@@ -21,4 +23,5 @@ struct CloudSharingView: UIViewControllerRepresentable {
 struct SharePresentation: Identifiable {
     let id = UUID()
     let share: CKShare
+    var role: Role = .parent
 }

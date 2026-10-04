@@ -67,6 +67,11 @@ final class Member: NSManagedObject {
     @NSManaged var episodes: NSSet?
     @NSManaged var responsibleMedications: NSSet?
     @NSManaged var givenDoses: NSSet?
+    @NSManaged var roleValue: String?
+    @NSManaged var accountID: String?
+    @NSManaged var careWeekdayMask: Int16
+    @NSManaged var caredChildren: NSSet?
+    @NSManaged var carers: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -134,6 +139,9 @@ enum HomeCrewModel {
             attribute("usualMedication", .stringAttributeType),
             attribute("pediatricianName", .stringAttributeType),
             attribute("pediatricianPhone", .stringAttributeType),
+            attribute("roleValue", .stringAttributeType),
+            attribute("accountID", .stringAttributeType),
+            attribute("careWeekdayMask", .integer16AttributeType, default: 0),
         ]
         chore.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -215,6 +223,7 @@ enum HomeCrewModel {
         link(medication, "doses", .cascadeDeleteRule, many: dose, "medication")
         link(member, "responsibleMedications", .nullifyDeleteRule, many: medication, "responsible")
         link(member, "givenDoses", .nullifyDeleteRule, many: dose, "givenBy")
+        manyToMany(member, "caredChildren", member, "carers")
 
         let model = NSManagedObjectModel()
         model.entities = [family, member, chore, completion, activity, exception, episode, reading, medication, dose]
@@ -243,6 +252,16 @@ enum HomeCrewModel {
         owner.inverseRelationship = children
         parent.properties.append(children)
         child.properties.append(owner)
+    }
+
+    /// A many-to-many relationship and its inverse, nullified on both sides.
+    private static func manyToMany(_ a: NSEntityDescription, _ aToB: String, _ b: NSEntityDescription, _ bToA: String) {
+        let forward = relationship(aToB, to: b, toMany: true, deleteRule: .nullifyDeleteRule)
+        let backward = relationship(bToA, to: a, toMany: true, deleteRule: .nullifyDeleteRule)
+        forward.inverseRelationship = backward
+        backward.inverseRelationship = forward
+        a.properties.append(forward)
+        b.properties.append(backward)
     }
 
     private static func attribute(_ name: String, _ type: NSAttributeType, default value: Any? = nil) -> NSAttributeDescription {

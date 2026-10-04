@@ -55,18 +55,19 @@ struct TodayDigest: Equatable {
         alerts: [TodayAlert] = [],
         externalEvents: [ExternalEvent] = [],
         me: Member? = nil,
+        access: AccessPolicy = .full,
         calendar: Calendar = .current
     ) -> TodayDigest {
-        var occurrences = ActivitySchedule.occurrences(of: activities, on: day, calendar: calendar)
-        var dueChores = chores.filter { $0.occurs(on: day, calendar: calendar) }
-        var shownAlerts = alerts
+        var occurrences = access.filter(ActivitySchedule.occurrences(of: activities, on: day, calendar: calendar), calendar: calendar)
+        var dueChores = access.filter(chores.filter { $0.occurs(on: day, calendar: calendar) }, on: day, calendar: calendar)
+        var shownAlerts = alerts.filter { access.canSee($0.member) }
 
         if let me {
             occurrences = occurrences.filter {
                 $0.activity.child == me || $0.dropOff == me || $0.pickUp == me
             }
             dueChores = dueChores.filter { $0.assignee == me }
-            shownAlerts = alerts.filter { $0.member == nil || $0.member == me }
+            shownAlerts = shownAlerts.filter { $0.member == nil || $0.member == me }
         }
 
         // Stable partition: still-to-do first, keeping the chores' own order within each group.

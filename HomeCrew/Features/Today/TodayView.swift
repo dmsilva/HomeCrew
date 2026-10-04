@@ -14,6 +14,7 @@ struct TodayView: View {
     @AppStorage("calendarOfferDismissed") private var calendarOfferDismissed = false
     @State private var isChoosingMe = false
     @StateObject private var deviceCalendar = DeviceCalendar()
+    @Environment(\.access) private var access
 
     private let persistence = PersistenceController.shared
 
@@ -25,7 +26,8 @@ struct TodayView: View {
             chores: Array(chores),
             alerts: TodayAlert.illness(Array(episodes)),
             externalEvents: deviceCalendar.events,
-            me: onlyMine ? me : nil
+            me: onlyMine ? me : nil,
+            access: access
         )
 
         NavigationStack {

@@ -11,6 +11,7 @@ struct AgendaView: View {
     @State private var section = Segment.activities
     @State private var editingActivity: ActivityEditorTarget?
     @State private var editingChore: ChoreEditorTarget?
+    @Environment(\.access) private var access
 
     private let persistence = PersistenceController.shared
 
@@ -37,16 +38,18 @@ struct AgendaView: View {
             .navigationTitle(AppTab.agenda.title)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        switch section {
-                        case .activities: editingActivity = .new
-                        case .chores: editingChore = .new
+                    if access.canEdit {
+                        Button {
+                            switch section {
+                            case .activities: editingActivity = .new
+                            case .chores: editingChore = .new
+                            }
+                        } label: {
+                            Image(systemName: "plus")
                         }
-                    } label: {
-                        Image(systemName: "plus")
+                        .accessibilityLabel(section == .activities ? Text("Nova atividade") : Text("Nova tarefa"))
+                        .disabled(families.isEmpty)
                     }
-                    .accessibilityLabel(section == .activities ? Text("Nova atividade") : Text("Nova tarefa"))
-                    .disabled(families.isEmpty)
                 }
             }
             .sheet(item: $editingActivity) { target in
@@ -68,9 +71,11 @@ struct ChoresListView: View {
     @FetchRequest(fetchRequest: Chore.all()) private var chores: FetchedResults<Chore>
     let onEdit: (Chore) -> Void
 
+    @Environment(\.access) private var access
     private let persistence = PersistenceController.shared
 
     var body: some View {
+        let chores = self.chores.filter { access.canSee($0.assignee) }
         if chores.isEmpty {
             EmptyHint(systemImage: "checklist", message: "Sem tarefas")
         } else {
@@ -79,13 +84,16 @@ struct ChoresListView: View {
                     ChoreRow(chore: chore, day: .now) {
                         persistence.toggleDone(chore, on: .now)
                     }
+                    .disabled(!access.canEdit)
                     .contentShape(Rectangle())
-                    .onTapGesture { onEdit(chore) }
+                    .onTapGesture { if access.canEdit { onEdit(chore) } }
                     .listRowBackground(Color.hcCard)
                 }
+                // onDelete only exists on the ForEach itself, so it has to come before any other modifier.
                 .onDelete { offsets in
                     offsets.map { chores[$0] }.forEach { persistence.delete($0) }
                 }
+                .deleteDisabled(!access.canEdit)
             }
             .scrollContentBackground(.hidden)
         }

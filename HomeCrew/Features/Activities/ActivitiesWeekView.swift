@@ -5,6 +5,7 @@ import SwiftUI
 struct ActivitiesWeekView: View {
     @FetchRequest(fetchRequest: Activity.all()) private var activities: FetchedResults<Activity>
     @State private var weekOffset = 0
+    @Environment(\.access) private var access
     let onEdit: (Activity) -> Void
 
     var body: some View {
@@ -17,7 +18,7 @@ struct ActivitiesWeekView: View {
             } else {
                 List {
                     ForEach(days, id: \.self) { day in
-                        let occurrences = ActivitySchedule.occurrences(of: Array(activities), on: day)
+                        let occurrences = access.filter(ActivitySchedule.occurrences(of: Array(activities), on: day))
                         if !occurrences.isEmpty {
                             Section {
                                 ForEach(occurrences) { occurrence in
