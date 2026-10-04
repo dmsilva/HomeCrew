@@ -2,6 +2,7 @@ import XCTest
 
 final class AppShellUITests: XCTestCase {
     override func setUp() {
+        super.setUp()
         continueAfterFailure = false
     }
 

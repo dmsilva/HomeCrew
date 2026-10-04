@@ -3,8 +3,7 @@ import SwiftUI
 struct TodayView: View {
     var body: some View {
         EmptyStateScreen(
-            title: AppTab.today.title,
-            systemImage: AppTab.today.systemImage,
+            tab: .today,
             message: "Nada para hoje"
         )
     }

@@ -3,8 +3,7 @@ import SwiftUI
 struct FamilyView: View {
     var body: some View {
         EmptyStateScreen(
-            title: AppTab.family.title,
-            systemImage: AppTab.family.systemImage,
+            tab: .family,
             message: "Ainda sem membros"
         )
     }

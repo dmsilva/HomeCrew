@@ -3,8 +3,7 @@ import SwiftUI
 struct AgendaView: View {
     var body: some View {
         EmptyStateScreen(
-            title: AppTab.agenda.title,
-            systemImage: AppTab.agenda.systemImage,
+            tab: .agenda,
             message: "Sem atividades"
         )
     }

@@ -1,62 +1,12 @@
 {
   "sourceLanguage": "pt-PT",
   "strings": {
-    "Hoje": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoje"
-          }
-        }
-      }
-    },
     "Agenda": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Agenda"
-          }
-        }
-      }
-    },
-    "Família": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Família"
-          }
-        }
-      }
-    },
-    "Saúde": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saúde"
-          }
-        }
-      }
-    },
-    "Nada para hoje": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nada para hoje"
-          }
-        }
-      }
-    },
-    "Sem atividades": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sem atividades"
           }
         }
       }
@@ -71,12 +21,62 @@
         }
       }
     },
-    "Todos bem": {
+    "Família": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
-            "value": "Todos bem"
+            "value": "Família"
+          }
+        }
+      }
+    },
+    "Hoje": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoje"
+          }
+        }
+      }
+    },
+    "Nada para hoje": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada para hoje"
+          }
+        }
+      }
+    },
+    "Saúde": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saúde"
+          }
+        }
+      }
+    },
+    "Sem atividades": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem atividades"
+          }
+        }
+      }
+    },
+    "Sem episódios": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem episódios"
           }
         }
       }

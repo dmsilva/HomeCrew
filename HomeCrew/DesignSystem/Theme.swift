@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 /// Design tokens for Direção A · Clara: the native iOS look picked for the MVP.
-/// Every screen reads colours, radii and spacing from here, never from literals.
+/// Every screen reads colours, type, radii and spacing from here, never from literals.
 enum Theme {
     enum Palette {
         static let background = UIColor(light: 0xF2F2F7, dark: 0x000000)
@@ -12,17 +12,27 @@ enum Theme {
         static let separator = UIColor(light: 0xE4E4EB, dark: 0x2C2C30)
         static let accent = UIColor(light: 0x2F55D4, dark: 0x7A95FF)
         static let accentSoft = UIColor(light: 0xE7ECFB, dark: 0x1B2547)
-        /// Health and alerts only; never used for ordinary actions.
+        /// Health only; never used for ordinary actions.
         static let warning = UIColor(light: 0xB4380B, dark: 0xFF8A5C)
         static let warningSoft = UIColor(light: 0xFCEBE3, dark: 0x3A2119)
 
         /// Colours a family member can pick, as (foreground, soft background) pairs.
         static let members: [(foreground: UIColor, soft: UIColor)] = [
-            (UIColor(light: 0x2F55D4, dark: 0x7A95FF), UIColor(light: 0xE7ECFB, dark: 0x1B2547)),
+            (accent, accentSoft),
             (UIColor(light: 0xA3367F, dark: 0xF2A7D8), UIColor(light: 0xF7E6F1, dark: 0x3A1F33)),
             (UIColor(light: 0x0F7B6C, dark: 0x6FD9C6), UIColor(light: 0xDDF2EE, dark: 0x163330)),
             (UIColor(light: 0x8A5A00, dark: 0xFFC870), UIColor(light: 0xFBF0D9, dark: 0x3A2D16)),
         ]
+    }
+
+    /// Text styles, all built on Dynamic Type so they scale with the user's setting.
+    enum Typography {
+        static let screenTitle = Font.largeTitle.weight(.bold)
+        static let cardTitle = Font.headline
+        static let body = Font.body
+        static let caption = Font.footnote
+        /// Big glyph used where a picture replaces a sentence.
+        static let heroIcon = Font.system(size: 56, weight: .regular)
     }
 
     enum Radius {
