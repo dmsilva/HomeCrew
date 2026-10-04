@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "pt-PT",
   "strings": {
+    "%@ – %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ – %@"
+          }
+        }
+      }
+    },
     "%lld anos": {
       "localizations": {
         "pt-PT": {
@@ -19,6 +29,16 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld min": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
           }
         }
       }
@@ -83,12 +103,42 @@
         }
       }
     },
+    "Apagar atividade?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apagar atividade?"
+          }
+        }
+      }
+    },
     "Apagar tarefa?": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Apagar tarefa?"
+          }
+        }
+      }
+    },
+    "Atividade": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atividade"
+          }
+        }
+      }
+    },
+    "Atividades": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atividades"
           }
         }
       }
@@ -213,12 +263,42 @@
         }
       }
     },
+    "Hora": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora"
+          }
+        }
+      }
+    },
     "Início": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Início"
+          }
+        }
+      }
+    },
+    "Local": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local"
+          }
+        }
+      }
+    },
+    "Material a levar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Material a levar"
           }
         }
       }
@@ -259,6 +339,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nome da família"
+          }
+        }
+      }
+    },
+    "Notas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notas"
+          }
+        }
+      }
+    },
+    "Nova atividade": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nova atividade"
           }
         }
       }
@@ -353,6 +453,26 @@
         }
       }
     },
+    "Secção": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Secção"
+          }
+        }
+      }
+    },
+    "Sem atividades": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem atividades"
+          }
+        }
+      }
+    },
     "Sem episódios": {
       "localizations": {
         "pt-PT": {
@@ -373,6 +493,26 @@
         }
       }
     },
+    "Semana anterior": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semana anterior"
+          }
+        }
+      }
+    },
+    "Semana seguinte": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semana seguinte"
+          }
+        }
+      }
+    },
     "Semanal": {
       "localizations": {
         "pt-PT": {
@@ -389,6 +529,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tarefa"
+          }
+        }
+      }
+    },
+    "Tarefas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarefas"
           }
         }
       }

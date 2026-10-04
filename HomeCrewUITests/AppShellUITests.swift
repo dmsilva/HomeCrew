@@ -51,6 +51,7 @@ final class AppShellUITests: XCTestCase {
     func testAddingADailyChoreAndTickingIt() {
         createFamily()
         app.tabBars.firstMatch.buttons["Agenda"].tap()
+        app.buttons["Tarefas"].tap()
 
         let add = app.buttons["Nova tarefa"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
@@ -65,6 +66,28 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Fazer a cama"].waitForExistence(timeout: 5))
         app.buttons["Por fazer"].firstMatch.tap()
         XCTAssertTrue(app.buttons["Feita"].waitForExistence(timeout: 5))
+    }
+
+    func testAddingAWeeklyActivityShowsItInTheWeek() {
+        createFamily()
+        app.tabBars.firstMatch.buttons["Agenda"].tap()
+
+        let add = app.buttons["Nova atividade"]
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+
+        let title = app.textFields["Atividade"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        title.tap()
+        title.typeText("Futebol")
+        // Every day of the week, so it shows up whatever day the test runs.
+        for weekday in 1...7 {
+            app.buttons["weekday-\(weekday)"].tap()
+        }
+        app.buttons["Guardar"].tap()
+
+        let row = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Futebol")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
     }
 
     private func createFamily() {

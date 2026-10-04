@@ -33,6 +33,17 @@ enum Recurrence: Equatable {
     }
 }
 
+/// Calendar weekdays (1 = Sunday … 7 = Saturday) stored as one bit each, so a set fits in one attribute.
+enum WeekdayMask {
+    static func encode(_ weekdays: Set<Int>) -> Int16 {
+        weekdays.filter { (1...7).contains($0) }.reduce(0) { $0 | Int16(1 << ($1 - 1)) }
+    }
+
+    static func decode(_ mask: Int16) -> Set<Int> {
+        Set((1...7).filter { mask & Int16(1 << ($0 - 1)) != 0 })
+    }
+}
+
 /// A household task given to an adult or a child, done once or on a repeat.
 /// Named Chore so it never clashes with Swift's `Task`.
 @objc(Chore)
@@ -58,7 +69,7 @@ final class Chore: NSManagedObject {
         get {
             switch recurrenceValue {
             case "daily": return .daily
-            case "weekly": return .weekly(Self.weekdays(from: weekdayMask))
+            case "weekly": return .weekly(WeekdayMask.decode(weekdayMask))
             default: return .once
             }
         }
@@ -72,7 +83,7 @@ final class Chore: NSManagedObject {
                 weekdayMask = 0
             case .weekly(let weekdays):
                 recurrenceValue = "weekly"
-                weekdayMask = Self.mask(from: weekdays)
+                weekdayMask = WeekdayMask.encode(weekdays)
             }
         }
     }
@@ -84,14 +95,6 @@ final class Chore: NSManagedObject {
     func completion(on day: Date, calendar: Calendar = .current) -> ChoreCompletion? {
         let all = (completions as? Set<ChoreCompletion>) ?? []
         return all.first { $0.occurrenceDate.map { calendar.isDate($0, inSameDayAs: day) } ?? false }
-    }
-
-    static func mask(from weekdays: Set<Int>) -> Int16 {
-        weekdays.filter { (1...7).contains($0) }.reduce(0) { $0 | Int16(1 << ($1 - 1)) }
-    }
-
-    static func weekdays(from mask: Int16) -> Set<Int> {
-        Set((1...7).filter { mask & Int16(1 << ($0 - 1)) != 0 })
     }
 }
 
