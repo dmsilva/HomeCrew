@@ -93,7 +93,7 @@ struct PersonHealthView: View {
             let pastEpisodes = member.episodeHistory.filter { !$0.isActive }
             if !pastEpisodes.isEmpty {
                 Section {
-                    ForEach(pastEpisodes) { episode in
+                    ForEach(pastEpisodes, id: \.objectID) { episode in
                         NavigationLink {
                             EpisodeView(episode: episode)
                         } label: {
