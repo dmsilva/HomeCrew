@@ -11,6 +11,16 @@
         }
       }
     },
+    "%lld": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
+          }
+        }
+      }
+    },
     "%lld anos": {
       "localizations": {
         "pt-PT": {
@@ -109,6 +119,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ainda sem membros"
+          }
+        }
+      }
+    },
+    "Alergias": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alergias"
           }
         }
       }
@@ -283,6 +303,16 @@
         }
       }
     },
+    "Doenças crónicas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doenças crónicas"
+          }
+        }
+      }
+    },
     "Editar": {
       "localizations": {
         "pt-PT": {
@@ -363,6 +393,16 @@
         }
       }
     },
+    "Ligar ao pediatra": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ligar ao pediatra"
+          }
+        }
+      }
+    },
     "Local": {
       "localizations": {
         "pt-PT": {
@@ -379,6 +419,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Material a levar"
+          }
+        }
+      }
+    },
+    "Medicação habitual": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medicação habitual"
           }
         }
       }
@@ -493,12 +543,32 @@
         }
       }
     },
+    "Pediatra": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pediatra"
+          }
+        }
+      }
+    },
     "Permitir": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Permitir"
+          }
+        }
+      }
+    },
+    "Peso (kg)": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso (kg)"
           }
         }
       }
@@ -643,6 +713,16 @@
         }
       }
     },
+    "Separa com vírgulas.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Separa com vírgulas."
+          }
+        }
+      }
+    },
     "Só eu": {
       "localizations": {
         "pt-PT": {
@@ -679,6 +759,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tarefas"
+          }
+        }
+      }
+    },
+    "Telefone": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefone"
           }
         }
       }
