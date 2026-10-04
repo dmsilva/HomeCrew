@@ -177,7 +177,7 @@ final class AppShellUITests: XCTestCase {
         let add = app.buttons["Adicionar medicamento"]
         XCTAssertTrue(add.waitForExistence(timeout: 5))
         add.tap()
-        let medicine = app.textFields["Medicamento"]
+        let medicine = app.textFields["medication-name"]
         XCTAssertTrue(medicine.waitForExistence(timeout: 5))
         medicine.tap()
         medicine.typeText("Bru")
