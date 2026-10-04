@@ -63,6 +63,16 @@
         }
       }
     },
+    "Abrir episódio": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir episódio"
+          }
+        }
+      }
+    },
     "Adicionar membro": {
       "localizations": {
         "pt-PT": {
@@ -193,6 +203,26 @@
         }
       }
     },
+    "Barriga": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barriga"
+          }
+        }
+      }
+    },
+    "Cabeça": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cabeça"
+          }
+        }
+      }
+    },
     "Calendário do iPhone": {
       "localizations": {
         "pt-PT": {
@@ -239,6 +269,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancelar este dia"
+          }
+        }
+      }
+    },
+    "Cansaço": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cansaço"
           }
         }
       }
@@ -333,6 +373,16 @@
         }
       }
     },
+    "Febre": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Febre"
+          }
+        }
+      }
+    },
     "Feita": {
       "localizations": {
         "pt-PT": {
@@ -343,12 +393,42 @@
         }
       }
     },
+    "Garganta": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garganta"
+          }
+        }
+      }
+    },
+    "Gráfico de temperaturas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gráfico de temperaturas"
+          }
+        }
+      }
+    },
     "Guardar": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Guardar"
+          }
+        }
+      }
+    },
+    "Histórico": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Histórico"
           }
         }
       }
@@ -453,6 +533,16 @@
         }
       }
     },
+    "Nariz": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nariz"
+          }
+        }
+      }
+    },
     "Ninguém": {
       "localizations": {
         "pt-PT": {
@@ -533,6 +623,16 @@
         }
       }
     },
+    "Ouvidos": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvidos"
+          }
+        }
+      }
+    },
     "Partilhar": {
       "localizations": {
         "pt-PT": {
@@ -549,6 +649,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pediatra"
+          }
+        }
+      }
+    },
+    "Pele": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pele"
           }
         }
       }
@@ -589,6 +699,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Quem sou eu?"
+          }
+        }
+      }
+    },
+    "Registar temperatura": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registar temperatura"
           }
         }
       }
@@ -683,6 +803,16 @@
         }
       }
     },
+    "Sem temperaturas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem temperaturas"
+          }
+        }
+      }
+    },
     "Semana anterior": {
       "localizations": {
         "pt-PT": {
@@ -773,12 +903,52 @@
         }
       }
     },
+    "Temperatura": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temperatura"
+          }
+        }
+      }
+    },
     "Tenho um convite": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Tenho um convite"
+          }
+        }
+      }
+    },
+    "Terminar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminar"
+          }
+        }
+      }
+    },
+    "Terminar episódio": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminar episódio"
+          }
+        }
+      }
+    },
+    "Terminar episódio?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminar episódio?"
           }
         }
       }
@@ -799,6 +969,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Todos os dias"
+          }
+        }
+      }
+    },
+    "Tosse": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tosse"
           }
         }
       }

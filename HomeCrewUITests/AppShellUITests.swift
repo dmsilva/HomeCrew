@@ -130,6 +130,33 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Amendoim"].waitForExistence(timeout: 5))
     }
 
+    func testAnIllnessEpisodeShowsOnToday() {
+        createFamily()
+        app.tabBars.firstMatch.buttons["Família"].tap()
+        app.buttons["Adicionar membro"].tap()
+        let name = app.textFields["Nome"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("Rita")
+        app.buttons["Guardar"].tap()
+
+        app.tabBars.firstMatch.buttons["Saúde"].tap()
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Rita")).firstMatch.tap()
+        let open = app.buttons["Abrir episódio"]
+        XCTAssertTrue(open.waitForExistence(timeout: 5))
+        open.tap()
+
+        let episode = app.descendants(matching: .any).matching(identifier: "active-episode").firstMatch
+        XCTAssertTrue(episode.waitForExistence(timeout: 5))
+        episode.tap()
+        let cough = app.buttons["symptom-0"]
+        XCTAssertTrue(cough.waitForExistence(timeout: 5))
+        cough.tap()
+
+        app.tabBars.firstMatch.buttons["Hoje"].tap()
+        XCTAssertTrue(app.staticTexts["Rita"].waitForExistence(timeout: 5))
+    }
+
     private func createFamily() {
         let create = app.buttons["Criar família"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")

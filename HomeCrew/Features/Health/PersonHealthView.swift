@@ -6,6 +6,8 @@ struct PersonHealthView: View {
     @ObservedObject var member: Member
     @State private var isEditing = false
 
+    private let persistence = PersistenceController.shared
+
     var body: some View {
         List {
             Section {
@@ -37,6 +39,26 @@ struct PersonHealthView: View {
             }
 
             Section {
+                if let episode = member.activeEpisode {
+                    NavigationLink {
+                        EpisodeView(episode: episode)
+                    } label: {
+                        EpisodeSummary(episode: episode)
+                    }
+                    .accessibilityIdentifier("active-episode")
+                } else {
+                    Button {
+                        persistence.openEpisode(for: member)
+                    } label: {
+                        Label("Abrir episódio", systemImage: "thermometer.medium")
+                            .font(Theme.Typography.cardTitle)
+                            .foregroundStyle(Color.hcWarning)
+                    }
+                }
+            }
+            .listRowBackground(member.activeEpisode == nil ? Color.hcCard : Color.hcWarningSoft)
+
+            Section {
                 if member.weightKg > 0 {
                     row("scalemass", Text(member.weightKg, format: .number.precision(.fractionLength(0...1))) + Text(verbatim: " kg"))
                 }
@@ -64,6 +86,22 @@ struct PersonHealthView: View {
                             .accessibilityLabel(Text("Ligar ao pediatra"))
                         }
                     }
+                }
+                .listRowBackground(Color.hcCard)
+            }
+
+            let pastEpisodes = member.episodeHistory.filter { !$0.isActive }
+            if !pastEpisodes.isEmpty {
+                Section {
+                    ForEach(pastEpisodes, id: \.objectID) { episode in
+                        NavigationLink {
+                            EpisodeView(episode: episode)
+                        } label: {
+                            EpisodeSummary(episode: episode)
+                        }
+                    }
+                } header: {
+                    Label("Histórico", systemImage: "clock.arrow.circlepath")
                 }
                 .listRowBackground(Color.hcCard)
             }
@@ -149,6 +187,37 @@ struct HealthRecordEditor: View {
                 .accessibilityIdentifier(identifier)
         } icon: {
             Image(systemName: systemImage)
+        }
+    }
+}
+
+/// One line per episode: when it started, how long, highest temperature, symptom icons.
+struct EpisodeSummary: View {
+    @ObservedObject var episode: IllnessEpisode
+
+    var body: some View {
+        HStack(spacing: Theme.Spacing.m) {
+            Image(systemName: "thermometer.medium")
+                .font(.title3)
+                .foregroundStyle(episode.isActive ? Color.hcWarning : Color.hcSecondaryInk)
+            VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
+                Text(episode.startedAt ?? .now, format: .dateTime.day().month())
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                HStack(spacing: Theme.Spacing.xs) {
+                    ForEach(Symptom.allCases.filter(episode.symptoms.contains)) { symptom in
+                        Image(systemName: symptom.systemImage)
+                    }
+                }
+                .font(Theme.Typography.caption)
+                .foregroundStyle(Color.hcSecondaryInk)
+            }
+            Spacer()
+            if let highest = episode.highestCelsius {
+                Text(verbatim: highest.formatted(.number.precision(.fractionLength(1))) + "°")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(highest >= IllnessEpisode.feverCelsius ? Color.hcWarning : Color.hcInk)
+            }
         }
     }
 }

@@ -11,6 +11,15 @@ struct MemberAvatar: View {
             .foregroundStyle(Color(member.palette.foreground))
             .frame(width: size, height: size)
             .background(Color(member.palette.soft), in: Circle())
+            .overlay(alignment: .bottomTrailing) {
+                if member.activeEpisode != nil {
+                    Image(systemName: "thermometer.medium")
+                        .font(.system(size: max(size * 0.22, 9), weight: .bold))
+                        .foregroundStyle(.white)
+                        .padding(size * 0.06)
+                        .background(Color.hcWarning, in: Circle())
+                }
+            }
             .accessibilityHidden(true)
     }
 }
