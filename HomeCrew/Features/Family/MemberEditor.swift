@@ -1,3 +1,4 @@
+import CoreData
 import SwiftUI
 
 /// Which member the editor works on; drives `.sheet(item:)`.
@@ -21,6 +22,10 @@ struct MemberEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var draft = MemberDraft()
     @State private var isConfirmingDelete = false
+    @State private var isConfirmingRemoveAccess = false
+    @State private var role: Role = .parent
+    @State private var caredChildren: Set<NSManagedObjectID> = []
+    @State private var careWeekdays: Set<Int> = []
 
     var body: some View {
         NavigationStack {
@@ -48,8 +53,16 @@ struct MemberEditor: View {
                     .frame(maxWidth: .infinity)
                 }
 
-                if case .existing = target {
+                if draft.kind == .adult {
+                    RoleFields(family: family, role: $role, children: $caredChildren, weekdays: $careWeekdays)
+                }
+
+                if case .existing(let member) = target {
                     Section {
+                        if persistence.hasAccess(member) {
+                            Button("Remover acesso", role: .destructive) { isConfirmingRemoveAccess = true }
+                                .frame(maxWidth: .infinity)
+                        }
                         Button("Remover", role: .destructive) { isConfirmingDelete = true }
                             .frame(maxWidth: .infinity)
                     }
@@ -63,6 +76,14 @@ struct MemberEditor: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar", action: save).disabled(!draft.isValid)
+                }
+            }
+            .confirmationDialog("Remover acesso?", isPresented: $isConfirmingRemoveAccess, titleVisibility: .visible) {
+                Button("Remover acesso", role: .destructive) {
+                    if case .existing(let member) = target {
+                        Task { await persistence.removeAccess(of: member) }
+                    }
+                    dismiss()
                 }
             }
             .confirmationDialog("Remover membro?", isPresented: $isConfirmingDelete, titleVisibility: .visible) {
@@ -110,13 +131,23 @@ struct MemberEditor: View {
             draft.colorIndex = family.nextColorIndex
         case .existing(let member):
             draft = MemberDraft(member)
+            role = member.role
+            caredChildren = Set(member.caredChildrenList.map(\.objectID))
+            careWeekdays = member.careWeekdays
         }
     }
 
     private func save() {
+        let member: Member
         switch target {
-        case .new: persistence.addMember(draft, to: family)
-        case .existing(let member): persistence.update(member, with: draft)
+        case .new: member = persistence.addMember(draft, to: family)
+        case .existing(let existing):
+            persistence.update(existing, with: draft)
+            member = existing
+        }
+        if draft.kind == .adult, member.role != role || Set(member.caredChildrenList.map(\.objectID)) != caredChildren
+            || member.careWeekdays != careWeekdays {
+            persistence.setRole(role, children: caredChildren, weekdays: careWeekdays, for: member)
         }
         dismiss()
     }

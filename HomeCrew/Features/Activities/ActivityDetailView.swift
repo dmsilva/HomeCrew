@@ -6,6 +6,7 @@ struct ActivityDetailView: View {
     let day: Date
     let onEdit: (Activity) -> Void
 
+    @Environment(\.access) private var access
     private let persistence = PersistenceController.shared
 
     var body: some View {
@@ -62,30 +63,34 @@ struct ActivityDetailView: View {
             }
             .listRowBackground(Color.hcCard)
 
-            Section {
-                Button(role: isCancelled ? nil : .destructive) {
-                    persistence.setCancelled(!isCancelled, activity, on: day)
-                } label: {
-                    Label(
-                        isCancelled ? LocalizedStringKey("Repor este dia") : LocalizedStringKey("Cancelar este dia"),
-                        systemImage: isCancelled ? "arrow.uturn.backward" : "xmark"
-                    )
-                }
-                if exception != nil && !isCancelled {
-                    Button {
-                        persistence.overrideDrivers(activity, on: day, dropOff: nil, pickUp: nil)
+            if access.canEdit {
+                Section {
+                    Button(role: isCancelled ? nil : .destructive) {
+                        persistence.setCancelled(!isCancelled, activity, on: day)
                     } label: {
-                        Label("Voltar à regra", systemImage: "arrow.uturn.backward")
+                        Label(
+                            isCancelled ? LocalizedStringKey("Repor este dia") : LocalizedStringKey("Cancelar este dia"),
+                            systemImage: isCancelled ? "arrow.uturn.backward" : "xmark"
+                        )
+                    }
+                    if exception != nil && !isCancelled {
+                        Button {
+                            persistence.overrideDrivers(activity, on: day, dropOff: nil, pickUp: nil)
+                        } label: {
+                            Label("Voltar à regra", systemImage: "arrow.uturn.backward")
+                        }
                     }
                 }
+                .listRowBackground(Color.hcCard)
             }
-            .listRowBackground(Color.hcCard)
         }
         .scrollContentBackground(.hidden)
         .background(Color.hcBackground.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button("Editar") { onEdit(activity) }
+            if access.canEdit {
+                Button("Editar") { onEdit(activity) }
+            }
         }
     }
 
@@ -122,6 +127,7 @@ struct ActivityDetailView: View {
             }
             .frame(minHeight: Theme.minimumTapTarget)
         }
+        .disabled(!access.canEdit)
     }
 
     private var timeRange: String {

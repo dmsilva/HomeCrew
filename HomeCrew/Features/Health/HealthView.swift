@@ -5,13 +5,14 @@ import SwiftUI
 struct HealthView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
     @State private var isMakingReport = false
+    @Environment(\.access) private var access
 
     private let columns = [GridItem(.adaptive(minimum: 150), spacing: Theme.Spacing.m)]
 
     var body: some View {
         NavigationStack {
             Group {
-                let members = families.flatMap(\.sortedMembers)
+                let members = families.flatMap(access.visibleMembers)
                 if members.isEmpty {
                     EmptyHint(systemImage: AppTab.health.systemImage, message: "Ainda sem membros")
                 } else {
@@ -34,7 +35,7 @@ struct HealthView: View {
             .background(Color.hcBackground.ignoresSafeArea())
             .navigationTitle(AppTab.health.title)
             .toolbar {
-                if !families.flatMap(\.sortedMembers).isEmpty {
+                if access.canManageFamily, !families.flatMap(\.sortedMembers).isEmpty {
                     Button {
                         isMakingReport = true
                     } label: {

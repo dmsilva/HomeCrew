@@ -403,6 +403,26 @@
         }
       }
     },
+    "Convidado": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convidado"
+          }
+        }
+      }
+    },
+    "Convidar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Convidar"
+          }
+        }
+      }
+    },
     "Cor %lld": {
       "localizations": {
         "pt-PT": {
@@ -439,6 +459,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Criar família"
+          }
+        }
+      }
+    },
+    "Cuidador": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cuidador"
           }
         }
       }
@@ -623,12 +653,32 @@
         }
       }
     },
+    "Filhos e dias": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filhos e dias"
+          }
+        }
+      }
+    },
     "Garganta": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Garganta"
+          }
+        }
+      }
+    },
+    "Gerir acessos": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerir acessos"
           }
         }
       }
@@ -923,6 +973,16 @@
         }
       }
     },
+    "Pai/Mãe": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pai/Mãe"
+          }
+        }
+      }
+    },
     "Parar medicamento": {
       "localizations": {
         "pt-PT": {
@@ -1083,6 +1143,26 @@
         }
       }
     },
+    "Remover acesso": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover acesso"
+          }
+        }
+      }
+    },
+    "Remover acesso?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remover acesso?"
+          }
+        }
+      }
+    },
     "Remover membro?": {
       "localizations": {
         "pt-PT": {
@@ -1149,6 +1229,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sem atividades"
+          }
+        }
+      }
+    },
+    "Sem dias escolhidos, vê todos os dias.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem dias escolhidos, vê todos os dias."
           }
         }
       }
@@ -1429,6 +1519,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "Voltar à regra"
+          }
+        }
+      }
+    },
+    "Vê e edita tudo.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vê e edita tudo."
+          }
+        }
+      }
+    },
+    "Vê só a agenda, sem editar.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vê só a agenda, sem editar."
+          }
+        }
+      }
+    },
+    "Vê só os filhos e os dias escolhidos.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vê só os filhos e os dias escolhidos."
           }
         }
       }
