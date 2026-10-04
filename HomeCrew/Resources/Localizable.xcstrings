@@ -223,6 +223,26 @@
         }
       }
     },
+    "Avisar %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avisar %@"
+          }
+        }
+      }
+    },
+    "Avisar %@ · %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avisar %@ · %@"
+          }
+        }
+      }
+    },
     "Barriga": {
       "localizations": {
         "pt-PT": {
@@ -279,6 +299,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cancelar"
+          }
+        }
+      }
+    },
+    "Cancelar %lld": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar %lld"
+          }
+        }
+      }
+    },
+    "Cancelar estas atividades?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar estas atividades?"
           }
         }
       }
@@ -1009,6 +1049,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tarefa"
+          }
+        }
+      }
+    },
+    "Tarefa para avisar escola ou treinador": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarefa para avisar escola ou treinador"
           }
         }
       }

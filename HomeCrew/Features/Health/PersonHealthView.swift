@@ -5,6 +5,8 @@ import SwiftUI
 struct PersonHealthView: View {
     @ObservedObject var member: Member
     @State private var isEditing = false
+    @State private var affectedActivities: AffectedActivities?
+    @AppStorage("meMemberID") private var meMemberID = ""
 
     private let persistence = PersistenceController.shared
 
@@ -49,6 +51,10 @@ struct PersonHealthView: View {
                 } else {
                     Button {
                         persistence.openEpisode(for: member)
+                        let affected = IllnessAgenda.affected(for: member, from: .now)
+                        if !affected.isEmpty {
+                            affectedActivities = AffectedActivities(occurrences: affected)
+                        }
                     } label: {
                         Label("Abrir episódio", systemImage: "thermometer.medium")
                             .font(Theme.Typography.cardTitle)
@@ -115,6 +121,17 @@ struct PersonHealthView: View {
         .sheet(isPresented: $isEditing) {
             HealthRecordEditor(member: member)
         }
+        .sheet(item: $affectedActivities) { affected in
+            IllnessAgendaSheet(
+                occurrences: affected.occurrences,
+                assignee: member.family?.sortedMembers.first { $0.identifier?.uuidString == meMemberID }
+            )
+        }
+    }
+
+    private struct AffectedActivities: Identifiable {
+        let id = UUID()
+        let occurrences: [ActivityOccurrence]
     }
 
     private func row(_ systemImage: String, _ text: Text) -> some View {
