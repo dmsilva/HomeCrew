@@ -38,6 +38,7 @@ final class CustodyPlan: NSManagedObject {
     @NSManaged var child: Member?
     @NSManaged var parentA: Member?
     @NSManaged var parentB: Member?
+    @NSManaged var swaps: NSSet?
 
     static func all() -> NSFetchRequest<CustodyPlan> {
         let request = NSFetchRequest<CustodyPlan>(entityName: "CustodyPlan")
@@ -64,9 +65,28 @@ final class CustodyPlan: NSManagedObject {
         return cycle[index] ? .a : .b
     }
 
-    /// Who has the child that day.
+    /// Who has the child that day: the rule, unless an accepted swap covers the day.
     func custodian(on day: Date, calendar: Calendar = .current) -> Member? {
-        house(on: day, calendar: calendar) == .a ? parentA : parentB
+        var house = house(on: day, calendar: calendar)
+        if swap(covering: day, calendar: calendar) != nil {
+            house = house == .a ? .b : .a
+        }
+        return house == .a ? parentA : parentB
+    }
+
+    /// The latest accepted swap that includes `day`.
+    func swap(covering day: Date, status: CustodySwap.Status = .accepted, calendar: Calendar = .current) -> CustodySwap? {
+        sortedSwaps.first { $0.status == status && $0.covers(day, calendar: calendar) }
+    }
+
+    /// Newest first, for the history.
+    var sortedSwaps: [CustodySwap] {
+        ((swaps as? Set<CustodySwap>) ?? []).sorted { ($0.createdAt ?? .distantPast) > ($1.createdAt ?? .distantPast) }
+    }
+
+    /// The other parent in this plan.
+    func otherParent(than member: Member?) -> Member? {
+        member == parentA ? parentB : member == parentB ? parentA : nil
     }
 }
 
@@ -133,6 +153,85 @@ extension PersistenceController {
 
     func removeCustody(of child: Member) {
         ((child.custodyPlans as? Set<CustodyPlan>) ?? []).forEach(viewContext.delete)
+        save()
+    }
+}
+
+/// A request to hand one or more days to the other house; the other parent accepts or declines.
+@objc(CustodySwap)
+final class CustodySwap: NSManagedObject {
+    enum Status: String {
+        case pending, accepted, declined
+    }
+
+    @NSManaged var identifier: UUID?
+    @NSManaged var firstDay: Date?
+    @NSManaged var lastDay: Date?
+    @NSManaged var statusValue: String?
+    @NSManaged var createdAt: Date?
+    @NSManaged var respondedAt: Date?
+    @NSManaged var plan: CustodyPlan?
+    @NSManaged var requester: Member?
+
+    static func all() -> NSFetchRequest<CustodySwap> {
+        let request = NSFetchRequest<CustodySwap>(entityName: "CustodySwap")
+        request.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+        return request
+    }
+
+    var status: Status {
+        get { Status(rawValue: statusValue ?? "") ?? .pending }
+        set { statusValue = newValue.rawValue }
+    }
+
+    /// Whoever has to answer: the other parent in the plan.
+    var responder: Member? { plan?.otherParent(than: requester) }
+
+    func covers(_ day: Date, calendar: Calendar = .current) -> Bool {
+        guard let firstDay, let lastDay else { return false }
+        let day = calendar.startOfDay(for: day)
+        return calendar.startOfDay(for: firstDay) <= day && day <= calendar.startOfDay(for: lastDay)
+    }
+
+    var dayCount: Int {
+        guard let firstDay, let lastDay else { return 0 }
+        let calendar = Calendar.current
+        return (calendar.dateComponents([.day], from: calendar.startOfDay(for: firstDay), to: calendar.startOfDay(for: lastDay)).day ?? 0) + 1
+    }
+}
+
+extension PersistenceController {
+    /// Asks the other parent to swap the days from `first` to `last`; nothing changes until they accept.
+    @discardableResult
+    func requestSwap(in plan: CustodyPlan, from first: Date, to last: Date, by requester: Member?, at date: Date = .now) -> CustodySwap {
+        let swap = CustodySwap(context: viewContext)
+        if let store = plan.objectID.persistentStore {
+            viewContext.assign(swap, to: store)
+        }
+        swap.identifier = UUID()
+        swap.firstDay = min(first, last)
+        swap.lastDay = max(first, last)
+        swap.status = .pending
+        swap.createdAt = date
+        swap.requester = requester
+        swap.plan = plan
+        save()
+        return swap
+    }
+
+    func respond(to swap: CustodySwap, accept: Bool, at date: Date = .now) {
+        guard swap.status == .pending else { return }
+        swap.status = accept ? .accepted : .declined
+        swap.respondedAt = date
+        // The calendar views observe the plan, not the swap.
+        swap.plan?.objectWillChange.send()
+        save()
+    }
+
+    /// Withdraws a request that has not been answered yet.
+    func withdraw(_ swap: CustodySwap) {
+        guard swap.status == .pending else { return }
+        viewContext.delete(swap)
         save()
     }
 }

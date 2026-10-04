@@ -75,6 +75,7 @@ final class Member: NSManagedObject {
     @NSManaged var custodyPlans: NSSet?
     @NSManaged var custodyPlansAsA: NSSet?
     @NSManaged var custodyPlansAsB: NSSet?
+    @NSManaged var requestedSwaps: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -122,6 +123,7 @@ enum HomeCrewModel {
         let medication = entity("Medication", Medication.self)
         let dose = entity("DoseGiven", DoseGiven.self)
         let custody = entity("CustodyPlan", CustodyPlan.self)
+        let swap = entity("CustodySwap", CustodySwap.self)
 
         family.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -212,6 +214,14 @@ enum HomeCrewModel {
             attribute("customCycle", .stringAttributeType),
             attribute("createdAt", .dateAttributeType),
         ]
+        swap.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("firstDay", .dateAttributeType),
+            attribute("lastDay", .dateAttributeType),
+            attribute("statusValue", .stringAttributeType),
+            attribute("createdAt", .dateAttributeType),
+            attribute("respondedAt", .dateAttributeType),
+        ]
         dose.properties = [
             attribute("identifier", .UUIDAttributeType),
             attribute("givenAt", .dateAttributeType),
@@ -239,9 +249,11 @@ enum HomeCrewModel {
         link(member, "custodyPlans", .cascadeDeleteRule, many: custody, "child")
         link(member, "custodyPlansAsA", .nullifyDeleteRule, many: custody, "parentA")
         link(member, "custodyPlansAsB", .nullifyDeleteRule, many: custody, "parentB")
+        link(custody, "swaps", .cascadeDeleteRule, many: swap, "plan")
+        link(member, "requestedSwaps", .nullifyDeleteRule, many: swap, "requester")
 
         let model = NSManagedObjectModel()
-        model.entities = [family, member, chore, completion, activity, exception, episode, reading, medication, dose, custody]
+        model.entities = [family, member, chore, completion, activity, exception, episode, reading, medication, dose, custody, swap]
         return model
     }
 

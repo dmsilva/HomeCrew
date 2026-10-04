@@ -7,6 +7,8 @@ struct CustodyView: View {
     @State private var childID: NSManagedObjectID?
     @State private var monthOffset = 0
     @State private var isEditing = false
+    @State private var isRequestingSwap = false
+    @AppStorage("meMemberID") private var meMemberID = ""
 
     var body: some View {
         let children = family.sortedMembers.filter { $0.kind == .child }
@@ -37,6 +39,16 @@ struct CustodyView: View {
                         HouseLegend(plan: plan)
                         MonthHeader(month: month, onPrevious: { monthOffset -= 1 }, onNext: { monthOffset += 1 }, onToday: { monthOffset = 0 })
                         CustodyMonthGrid(plan: plan, month: month)
+                        Button {
+                            isRequestingSwap = true
+                        } label: {
+                            Label("Pedir troca", systemImage: "arrow.left.arrow.right")
+                                .font(Theme.Typography.cardTitle)
+                                .frame(maxWidth: .infinity, minHeight: Theme.minimumTapTarget)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(Color.hcAccent)
+                        SwapList(plan: plan, me: family.member(withID: meMemberID))
                     } else {
                         Button {
                             isEditing = true
@@ -65,6 +77,11 @@ struct CustodyView: View {
         .sheet(isPresented: $isEditing) {
             if let child {
                 CustodyPlanEditor(child: child, family: family)
+            }
+        }
+        .sheet(isPresented: $isRequestingSwap) {
+            if let plan = child?.custodyPlan {
+                SwapRequestSheet(plan: plan, me: family.member(withID: meMemberID))
             }
         }
     }
@@ -153,6 +170,16 @@ struct CustodyMonthGrid: View {
                         .overlay {
                             if isToday {
                                 RoundedRectangle(cornerRadius: 8).strokeBorder(Color.hcInk, lineWidth: 2)
+                            } else if plan.swap(covering: day, status: .pending, calendar: calendar) != nil {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .strokeBorder(Color.hcSecondaryInk, style: StrokeStyle(lineWidth: 1.5, dash: [3, 3]))
+                            }
+                        }
+                        .overlay(alignment: .topTrailing) {
+                            if plan.swap(covering: day, calendar: calendar) != nil {
+                                Image(systemName: "arrow.left.arrow.right")
+                                    .font(.system(size: 8, weight: .bold))
+                                    .padding(3)
                             }
                         }
                         .accessibilityElement(children: .ignore)

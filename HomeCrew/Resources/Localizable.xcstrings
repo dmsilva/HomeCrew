@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "pt-PT",
   "strings": {
+    "%@ recebe o pedido.": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ recebe o pedido."
+          }
+        }
+      }
+    },
     "%@ – %@": {
       "localizations": {
         "pt-PT": {
@@ -46,6 +56,28 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld anos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld dias": {
+      "localizations": {
+        "pt-PT": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dia"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld dias"
                 }
               }
             }
@@ -139,6 +171,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Abrir episódio"
+          }
+        }
+      }
+    },
+    "Aceitar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceitar"
+          }
+        }
+      }
+    },
+    "Aceite": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aceite"
           }
         }
       }
@@ -1123,6 +1175,36 @@
         }
       }
     },
+    "Pedido de troca · %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pedido de troca · %@"
+          }
+        }
+      }
+    },
+    "Pedir": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pedir"
+          }
+        }
+      }
+    },
+    "Pedir troca": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pedir troca"
+          }
+        }
+      }
+    },
     "Pele": {
       "localizations": {
         "pt-PT": {
@@ -1203,12 +1285,42 @@
         }
       }
     },
+    "Quem pede": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quem pede"
+          }
+        }
+      }
+    },
     "Quem sou eu?": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Quem sou eu?"
+          }
+        }
+      }
+    },
+    "Recusada": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recusada"
+          }
+        }
+      }
+    },
+    "Recusar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recusar"
           }
         }
       }
@@ -1309,6 +1421,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Responsável"
+          }
+        }
+      }
+    },
+    "Retirar pedido": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retirar pedido"
           }
         }
       }
@@ -1623,6 +1745,36 @@
         }
       }
     },
+    "Troca aceite · %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Troca aceite · %@"
+          }
+        }
+      }
+    },
+    "Troca recusada · %@": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Troca recusada · %@"
+          }
+        }
+      }
+    },
+    "Trocas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trocas"
+          }
+        }
+      }
+    },
     "Uma vez": {
       "localizations": {
         "pt-PT": {
@@ -1699,6 +1851,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "em curso"
+          }
+        }
+      }
+    },
+    "À espera": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À espera"
           }
         }
       }
