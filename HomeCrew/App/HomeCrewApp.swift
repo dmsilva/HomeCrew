@@ -41,6 +41,7 @@ struct RootTabView: View {
                 Task {
                     await DoseReminderCenter.shared.refresh()
                     await AgendaReminderCenter.shared.refresh()
+                    WidgetSync.shared.scheduleWrite()
                 }
             }
         }
