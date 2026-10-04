@@ -9,6 +9,8 @@ struct EpisodeView: View {
     @State private var isAddingTemperature = false
     @State private var isConfirmingEnd = false
     @State private var notes = ""
+    @State private var medicationEditor: MedicationEditorTarget?
+    @AppStorage("meMemberID") private var meMemberID = ""
 
     private let persistence = PersistenceController.shared
 
@@ -44,7 +46,7 @@ struct EpisodeView: View {
             }
 
             if episode.isActive || !episode.sortedMedications.isEmpty {
-                MedicationSection(episode: episode)
+                MedicationSection(episode: episode, me: me) { medicationEditor = .new }
             }
 
             Section {
@@ -89,12 +91,19 @@ struct EpisodeView: View {
             }
             .presentationDetents([.medium])
         }
+        .sheet(item: $medicationEditor) { target in
+            MedicationEditor(episode: episode, target: target, me: me)
+        }
         .confirmationDialog("Terminar episódio?", isPresented: $isConfirmingEnd, titleVisibility: .visible) {
             Button("Terminar") {
                 persistence.end(episode)
                 dismiss()
             }
         }
+    }
+
+    private var me: Member? {
+        episode.member?.family?.sortedMembers.first { $0.identifier?.uuidString == meMemberID }
     }
 
     private func deleteReadings(at offsets: IndexSet) {

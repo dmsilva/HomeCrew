@@ -1,10 +1,11 @@
 import SwiftUI
 
 /// The medication section of an episode: each medicine with a countdown to its next dose and "Dei agora".
+/// The editor sheet lives on the screen's List: a sheet attached to a row inside a List may never present.
 struct MedicationSection: View {
     @ObservedObject var episode: IllnessEpisode
-    @AppStorage("meMemberID") private var meMemberID = ""
-    @State private var editorTarget: MedicationEditorTarget?
+    let me: Member?
+    let onAdd: () -> Void
 
     private let persistence = PersistenceController.shared
 
@@ -21,7 +22,7 @@ struct MedicationSection: View {
             }
             if episode.isActive {
                 Button {
-                    editorTarget = .new
+                    onAdd()
                 } label: {
                     Label("Adicionar medicamento", systemImage: "plus")
                 }
@@ -30,13 +31,6 @@ struct MedicationSection: View {
             Label("Medicação", systemImage: "pills")
         }
         .listRowBackground(Color.hcCard)
-        .sheet(item: $editorTarget) { target in
-            MedicationEditor(episode: episode, target: target, me: me)
-        }
-    }
-
-    private var me: Member? {
-        episode.member?.family?.sortedMembers.first { $0.identifier?.uuidString == meMemberID }
     }
 }
 
