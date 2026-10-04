@@ -137,28 +137,33 @@ struct EpisodeView: View {
                     persistence.giveDose(of: medication, by: me)
                 }
             }
-            if episode.isActive && access.canManageEpisode {
-                Button { medicationEditor = .new } label: {
-                    Image(systemName: "pills.fill")
-                        .font(.system(size: 20, weight: .bold))
-                        .overlay(alignment: .bottomTrailing) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 14, weight: .bold))
-                                .offset(x: 8, y: 6)
-                        }
-                        .frame(maxWidth: .infinity, minHeight: 56)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: Theme.Radius.card)
-                                .strokeBorder(Color.hcNight, style: StrokeStyle(lineWidth: 2, dash: [6, 5]))
-                        }
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("Adicionar medicamento"))
+            if episode.isActive && access.canManageEpisode && shown.isEmpty {
+                addMedicationButton(height: 88)
             }
         }
     }
 
+    private func addMedicationButton(height: CGFloat) -> some View {
+        Button { medicationEditor = .new } label: {
+            Image(systemName: "pills.fill")
+                .font(.system(size: 20, weight: .bold))
+                .overlay(alignment: .bottomTrailing) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 14, weight: .bold))
+                        .offset(x: 8, y: 6)
+                }
+                .frame(maxWidth: .infinity, minHeight: height)
+                .overlay {
+                    RoundedRectangle(cornerRadius: Theme.Radius.card)
+                        .strokeBorder(Color.hcNight, style: StrokeStyle(lineWidth: 2, dash: [6, 5]))
+                }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("Adicionar medicamento"))
+    }
+
     /// The symptoms marked so far as dark squares, and a dashed "+" to change them.
+    /// Once a medicine is running, adding another one sits here too, as a dashed pill tile.
     private var symptoms: some View {
         let marked = Symptom.allCases.filter(episode.symptoms.contains)
         return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4), spacing: 10) {
@@ -183,6 +188,10 @@ struct EpisodeView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text("Sintomas"))
                 .accessibilityIdentifier("symptoms-edit")
+
+                if !episode.activeMedications.isEmpty {
+                    addMedicationButton(height: 64)
+                }
             }
         }
     }
@@ -326,7 +335,7 @@ struct CareMedicationRow: View {
                             .font(.system(size: 26, weight: .heavy))
                             .foregroundStyle(Color.hcNight)
                             .frame(width: 88, height: 88)
-                            .background(isDue ? Color.hcLime : Color.hcLime.opacity(0.55), in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+                            .background(Color.hcLime, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(Text("Dei agora"))
