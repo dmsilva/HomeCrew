@@ -8,7 +8,6 @@ extension PersistenceController {
 
         let family = createFamily(named: "Silva")
         let calendar = Calendar.current
-        let everyDay = Set(1...7)
 
         func member(_ name: String, _ kind: Member.Kind, age: Int, color: Int16) -> Member {
             var draft = MemberDraft()
@@ -24,22 +23,34 @@ extension PersistenceController {
         let leonor = member("Leonor", .child, age: 5, color: 3)
         UserDefaults.standard.set(daniel.identifier?.uuidString, forKey: "meMemberID")
 
-        func activity(_ title: String, _ symbol: String, _ child: Member, at minutes: Int, place: String) {
+        // Two weekdays each plus today, so the week looks like a real one and Today is never empty.
+        let today = calendar.component(.weekday, from: now)
+        @discardableResult
+        func activity(
+            _ title: String, _ symbol: String, _ child: Member, at minutes: Int, place: String,
+            on weekdays: Set<Int>, bring: String
+        ) -> Activity {
             var draft = ActivityDraft()
             draft.title = title
             draft.symbolName = symbol
             draft.child = child
             draft.dropOff = daniel
             draft.pickUp = sofia
-            draft.weekdays = everyDay
+            draft.weekdays = weekdays.union([today])
             draft.startMinutes = minutes
             draft.location = place
+            draft.equipment = bring
             draft.startDate = calendar.date(byAdding: .day, value: -14, to: now) ?? now
-            addActivity(draft, to: family)
+            return addActivity(draft, to: family)
         }
-        activity("Natação", "figure.pool.swim", tomas, at: 9 * 60 + 30, place: "Piscina municipal")
-        activity("Futebol", "soccerball", tomas, at: 11 * 60, place: "Campo do Sporting")
-        activity("Música", "music.note", leonor, at: 17 * 60, place: "Academia")
+        // Calendar weekdays: 1 = Sunday … 7 = Saturday.
+        activity("Natação", "figure.pool.swim", tomas, at: 9 * 60 + 30, place: "Piscina municipal", on: [2, 4], bring: "Toalha, touca")
+        activity("Futebol", "soccerball", tomas, at: 11 * 60, place: "Campo do Sporting", on: [3, 5], bring: "Chuteiras, água")
+        let music = activity("Música", "music.note", leonor, at: 17 * 60, place: "Academia", on: [4, 6], bring: "Partitura")
+        // Leonor is ill, so her next music lesson after today is called off.
+        if let next = (1...7).lazy.compactMap({ calendar.date(byAdding: .day, value: $0, to: now) }).first(where: { music.occurs(on: $0) }) {
+            setCancelled(true, music, on: next)
+        }
 
         func chore(_ title: String, _ assignee: Member) {
             var draft = ChoreDraft()
@@ -47,7 +58,13 @@ extension PersistenceController {
             draft.assignee = assignee
             draft.recurrence = .daily
             draft.startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
-            addChore(draft, to: family)
+            let added = addChore(draft, to: family)
+            // Most earlier days done, one forgotten, so the week grid shows both.
+            for daysAgo in 1...6 where daysAgo != 3 {
+                if let day = calendar.date(byAdding: .day, value: -daysAgo, to: now) {
+                    toggleDone(added, on: day, by: assignee)
+                }
+            }
         }
         chore("Compras", sofia)
         chore("Arrumar o quarto", tomas)

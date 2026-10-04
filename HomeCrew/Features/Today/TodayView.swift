@@ -295,10 +295,10 @@ struct DayRings: View {
         return (0...1).contains(value) ? value : nil
     }
 
-    /// "12 min", "1h12", "3h".
+    /// "12m", "1h12", "3h".
     static func countdown(from now: Date, to start: Date) -> String {
         let minutes = max(Int(start.timeIntervalSince(now) / 60), 0)
-        if minutes < 60 { return "\(minutes) min" }
+        if minutes < 60 { return "\(minutes)m" }
         let hours = minutes / 60, rest = minutes % 60
         return rest == 0 ? "\(hours)h" : String(format: "%dh%02d", hours, rest)
     }
