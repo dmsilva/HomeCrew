@@ -73,6 +73,26 @@
         }
       }
     },
+    "Apagar": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apagar"
+          }
+        }
+      }
+    },
+    "Apagar tarefa?": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apagar tarefa?"
+          }
+        }
+      }
+    },
     "Cancelar": {
       "localizations": {
         "pt-PT": {
@@ -123,6 +143,26 @@
         }
       }
     },
+    "Dia": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dia"
+          }
+        }
+      }
+    },
+    "Diária": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diária"
+          }
+        }
+      }
+    },
     "Editar": {
       "localizations": {
         "pt-PT": {
@@ -143,6 +183,16 @@
         }
       }
     },
+    "Feita": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feita"
+          }
+        }
+      }
+    },
     "Guardar": {
       "localizations": {
         "pt-PT": {
@@ -159,6 +209,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hoje"
+          }
+        }
+      }
+    },
+    "Início": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Início"
           }
         }
       }
@@ -203,6 +263,16 @@
         }
       }
     },
+    "Nova tarefa": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nova tarefa"
+          }
+        }
+      }
+    },
     "Novo membro": {
       "localizations": {
         "pt-PT": {
@@ -233,6 +303,16 @@
         }
       }
     },
+    "Por fazer": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Por fazer"
+          }
+        }
+      }
+    },
     "Remover": {
       "localizations": {
         "pt-PT": {
@@ -253,6 +333,16 @@
         }
       }
     },
+    "Repetição": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repetição"
+          }
+        }
+      }
+    },
     "Saúde": {
       "localizations": {
         "pt-PT": {
@@ -263,22 +353,42 @@
         }
       }
     },
-    "Sem atividades": {
-      "localizations": {
-        "pt-PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sem atividades"
-          }
-        }
-      }
-    },
     "Sem episódios": {
       "localizations": {
         "pt-PT": {
           "stringUnit": {
             "state": "translated",
             "value": "Sem episódios"
+          }
+        }
+      }
+    },
+    "Sem tarefas": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem tarefas"
+          }
+        }
+      }
+    },
+    "Semanal": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semanal"
+          }
+        }
+      }
+    },
+    "Tarefa": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tarefa"
           }
         }
       }
@@ -299,6 +409,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tipo"
+          }
+        }
+      }
+    },
+    "Todos os dias": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos os dias"
+          }
+        }
+      }
+    },
+    "Uma vez": {
+      "localizations": {
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma vez"
           }
         }
       }

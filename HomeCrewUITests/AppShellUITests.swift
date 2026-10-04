@@ -48,6 +48,25 @@ final class AppShellUITests: XCTestCase {
         XCTAssertTrue(card.waitForExistence(timeout: 5))
     }
 
+    func testAddingADailyChoreAndTickingIt() {
+        createFamily()
+        app.tabBars.firstMatch.buttons["Agenda"].tap()
+
+        let add = app.buttons["Nova tarefa"]
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+
+        let title = app.textFields["Tarefa"]
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
+        title.tap()
+        title.typeText("Fazer a cama")
+        app.buttons["Guardar"].tap()
+
+        XCTAssertTrue(app.staticTexts["Fazer a cama"].waitForExistence(timeout: 5))
+        app.buttons["Por fazer"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Feita"].waitForExistence(timeout: 5))
+    }
+
     private func createFamily() {
         let create = app.buttons["Criar família"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), "First launch should offer to create a family")
