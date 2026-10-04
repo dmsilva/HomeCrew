@@ -13,9 +13,10 @@ final class AppShellTests: XCTestCase {
         }
     }
 
-    func testRadiiMatchDirectionA() {
-        XCTAssertEqual(Theme.Radius.card, 18)
-        XCTAssertEqual(Theme.Radius.control, 12)
+    func testRadiiMatchDirectionE() {
+        XCTAssertEqual(Theme.Radius.hero, 32)
+        XCTAssertEqual(Theme.Radius.card, 22)
+        XCTAssertEqual(Theme.Radius.control, 14)
     }
 
     func testTapTargetIsAtLeast44Points() {
@@ -34,12 +35,12 @@ final class AppShellTests: XCTestCase {
         }
     }
 
-    func testAccentIsTheDirectionABlueInLightMode() {
+    func testAccentIsTheDirectionEVioletInLightMode() {
         let light = UITraitCollection(userInterfaceStyle: .light)
-        XCTAssertEqual(Theme.Palette.accent.resolvedColor(with: light), UIColor(hex: 0x2F55D4))
+        XCTAssertEqual(Theme.Palette.accent.resolvedColor(with: light), UIColor(hex: 0x4B2BFF))
     }
 
-    func testFourMemberColoursAreAvailable() {
-        XCTAssertEqual(Theme.Palette.members.count, 4)
+    func testSixMemberColoursAreAvailable() {
+        XCTAssertEqual(Theme.Palette.members.count, 6)
     }
 }

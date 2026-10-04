@@ -325,7 +325,7 @@ struct ActivityTile: View {
             Image(systemName: activity.symbol)
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundStyle(isNext ? Color(activity.child?.palette.soft ?? Theme.Palette.lime) : ink)
-            Text(occurrence.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute())
+            Text(occurrence.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
                 .font(Theme.Typography.text(16, weight: .heavy))
                 .foregroundStyle(isSick && !isNext ? Color.hcNight : (isNext ? .white : .hcInk))
                 .strikethrough(occurrence.isCancelled)
@@ -370,7 +370,7 @@ struct ExternalEventTile: View {
                 if event.isAllDay {
                     Image(systemName: "sun.max")
                 } else {
-                    Text(event.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute())
+                    Text(event.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
                 }
             }
             .font(Theme.Typography.text(16, weight: .heavy))
