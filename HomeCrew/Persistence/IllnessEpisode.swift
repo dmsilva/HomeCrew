@@ -46,6 +46,7 @@ final class IllnessEpisode: NSManagedObject {
     @NSManaged var notes: String?
     @NSManaged var member: Member?
     @NSManaged var readings: NSSet?
+    @NSManaged var medications: NSSet?
 
     static func active() -> NSFetchRequest<IllnessEpisode> {
         let request = NSFetchRequest<IllnessEpisode>(entityName: "IllnessEpisode")
