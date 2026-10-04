@@ -173,6 +173,7 @@ struct WeekdayPicker: View {
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(Calendar.current.weekdaySymbols[weekday - 1]))
+                .accessibilityIdentifier("weekday-\(weekday)")
                 .accessibilityAddTraits(isOn ? .isSelected : [])
             }
         }

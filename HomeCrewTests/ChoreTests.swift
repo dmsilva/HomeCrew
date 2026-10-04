@@ -52,8 +52,8 @@ final class RecurrenceTests: XCTestCase {
 
     func testWeekdayMaskRoundTrips() {
         let weekdays: Set<Int> = [1, 4, 7]
-        XCTAssertEqual(Chore.weekdays(from: Chore.mask(from: weekdays)), weekdays)
-        XCTAssertEqual(Chore.mask(from: [0, 8]), 0, "Out-of-range weekdays are dropped")
+        XCTAssertEqual(WeekdayMask.decode(WeekdayMask.encode(weekdays)), weekdays)
+        XCTAssertEqual(WeekdayMask.encode([0, 8]), 0, "Out-of-range weekdays are dropped")
     }
 }
 

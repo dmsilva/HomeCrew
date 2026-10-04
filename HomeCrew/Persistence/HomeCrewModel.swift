@@ -9,6 +9,7 @@ final class Family: NSManagedObject {
     @NSManaged var createdAt: Date?
     @NSManaged var members: NSSet?
     @NSManaged var chores: NSSet?
+    @NSManaged var activities: NSSet?
 
     static func all() -> NSFetchRequest<Family> {
         let request = NSFetchRequest<Family>(entityName: "Family")
@@ -49,6 +50,7 @@ final class Member: NSManagedObject {
     @NSManaged var family: Family?
     @NSManaged var assignedChores: NSSet?
     @NSManaged var completions: NSSet?
+    @NSManaged var activities: NSSet?
 
     var kind: Kind {
         get { Kind(rawValue: kindValue ?? "") ?? .adult }
@@ -89,6 +91,7 @@ enum HomeCrewModel {
         let member = entity("Member", Member.self)
         let chore = entity("Chore", Chore.self)
         let completion = entity("ChoreCompletion", ChoreCompletion.self)
+        let activity = entity("Activity", Activity.self)
 
         family.properties = [
             attribute("identifier", .UUIDAttributeType),
@@ -120,14 +123,30 @@ enum HomeCrewModel {
             attribute("pointsAwarded", .integer16AttributeType, default: 0),
         ]
 
+        activity.properties = [
+            attribute("identifier", .UUIDAttributeType),
+            attribute("title", .stringAttributeType),
+            attribute("symbolName", .stringAttributeType),
+            attribute("weekdayMask", .integer16AttributeType, default: 0),
+            attribute("startMinutes", .integer16AttributeType, default: 0),
+            attribute("durationMinutes", .integer16AttributeType, default: 60),
+            attribute("location", .stringAttributeType),
+            attribute("equipment", .stringAttributeType),
+            attribute("notes", .stringAttributeType),
+            attribute("startDate", .dateAttributeType),
+            attribute("createdAt", .dateAttributeType),
+        ]
+
         link(family, "members", .cascadeDeleteRule, many: member, "family")
         link(family, "chores", .cascadeDeleteRule, many: chore, "family")
         link(member, "assignedChores", .nullifyDeleteRule, many: chore, "assignee")
         link(chore, "completions", .cascadeDeleteRule, many: completion, "chore")
         link(member, "completions", .nullifyDeleteRule, many: completion, "completedBy")
+        link(family, "activities", .cascadeDeleteRule, many: activity, "family")
+        link(member, "activities", .nullifyDeleteRule, many: activity, "child")
 
         let model = NSManagedObjectModel()
-        model.entities = [family, member, chore, completion]
+        model.entities = [family, member, chore, completion, activity]
         return model
     }
 
