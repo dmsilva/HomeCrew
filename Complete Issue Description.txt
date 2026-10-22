@@ -1,0 +1,31 @@
+Failed to tap "tab-family" Button: No matches found for Elements matching predicate '"tab-family" IN identifiers' from input {(
+    Button, identifier: 'tab-create', label: 'Criar',
+    Button, label: 'Hoje',
+    Button, label: 'Agenda',
+    Button,
+    Button, label: 'Família',
+    Button, label: 'Saúde',
+    Button, identifier: 'today-header', label: 'Família',
+    Button, label: 'Leonor doente',
+    Button, identifier: 'today-summary', label: 'Ouvir o resumo',
+    Button, label: 'Natação, Tomás, 9:30',
+    Button, label: 'Futebol, Tomás, 11:00',
+    Button, label: 'Música, Leonor, 17:00',
+    Button, label: 'Ver o teu Calendário aqui',
+    Button, identifier: 'xmark', label: 'Agora não',
+    Button, identifier: 'chore-Compras', label: 'Compras, Sofia', value: Por fazer,
+    Button, identifier: 'chore-Arrumar o quarto', label: 'Arrumar o quarto, Tomás', value: Por fazer,
+    Button, identifier: 'chore-Roupa', label: 'Roupa, Daniel', value: Por fazer,
+    Button,
+    Button, label: 'Compras',
+    Button, label: 'Arrumar o quarto',
+    Button, label: 'Roupa'
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 14;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 1108101562369;
+}
+See test report attachments for more detail.

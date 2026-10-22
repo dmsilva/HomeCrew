@@ -1,0 +1,104 @@
+Application, 0x1058b9190, pid: 16015, label: 'HomeCrew' <App element pid: 16015>
+  Window (Main), 0x1058c5900, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4371669520.4>
+    Other, 0x1058ba8a0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4368435280.5>
+      Other, 0x1058ba9c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4368435792.6>
+        Other, 0x1058c52c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370482320.7>
+          Other, 0x1058b8d70, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4369111456.8>
+            Other, 0x1058afe90, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370709088.9>
+              Other, 0x1058affb0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370606752.15>
+                Other, 0x10583c6b0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4371981904.21>
+                  Other, 0x10583c7d0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370616336.32>
+                    Other, 0x1058c4460, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370892704.35>
+                      Other, 0x1058c4580, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370891920.36>
+                        Other, 0x1058c46a0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4372289680.37>
+                          Other, 0x1058c4ca0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4372145040.38>
+                            Other, 0x1058c4dc0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4372368384.39>
+                              Other, 0x1058c4ee0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4372117792.40>
+                                Other, 0x1058c5f40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4370970336.41>
+                                  ScrollView, 0x1058c6060, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 16015, elementOrHash.elementID: 4388246528.42>
+                                    Other, 0x1058c6180, {{0.0, 62.0}, {402.0, 742.3}} <AX element pid: 16015, elementOrHash.elementID: 4370833504.43>
+                                      StaticText, 0x1058c62a0, {{18.0, 70.0}, {212.0, 14.3}}, identifier: 'today-header', label: 'QUINTA-FEIRA, 22 DE OUTUBRO' <AX element pid: 16015, elementOrHash.elementID: 4370894560.45>
+                                      StaticText, 0x1058c63c0, {{18.0, 88.3}, {206.0, 33.0}}, identifier: 'today-header', label: 'Bom dia, Daniel' <AX element pid: 16015, elementOrHash.elementID: 4370890080.46>
+                                      Button, 0x1058c64e0, {{278.0, 70.0}, {106.0, 44.0}}, identifier: 'today-header', label: 'Família' <AX element pid: 16015, elementOrHash.elementID: 4370899008.47>
+                                        Button, 0x1058c6600, {{278.0, 70.0}, {106.0, 44.0}} <AX element pid: 16015, elementOrHash.elementID: 4368653568.64>
+                                          Other, 0x1058c6720, {{278.0, 70.0}, {106.0, 44.0}} <AX element pid: 16015, elementOrHash.elementID: 4370977760.93>
+                                            StaticText, 0x1058c6840, {{278.0, 75.0}, {34.0, 34.0}}, label: 'D' <AX element pid: 16015, elementOrHash.elementID: 4370971536.104>
+                                            StaticText, 0x1058c6960, {{302.0, 75.0}, {34.0, 34.0}}, label: 'S' <AX element pid: 16015, elementOrHash.elementID: 4370972992.105>
+                                            StaticText, 0x1058c6a80, {{326.0, 75.0}, {34.0, 34.0}}, label: 'T' <AX element pid: 16015, elementOrHash.elementID: 4370974096.106>
+                                            StaticText, 0x1058c6ba0, {{363.0, 83.8}, {8.0, 16.3}}, label: 'L' <AX element pid: 16015, elementOrHash.elementID: 4370975200.107>
+                                            Image, 0x1058c6cc0, {{377.0, 74.0}, {6.7, 10.3}}, identifier: 'thermometer.medium', label: 'thermometer.medium' <AX element pid: 16015, elementOrHash.elementID: 4370975632.108>
+                                      Button, 0x1058c6de0, {{18.0, 139.3}, {366.0, 68.0}}, label: 'Leonor doente' <AX element pid: 16015, elementOrHash.elementID: 4370924272.48>
+                                        StaticText, 0x1058c6f00, {{47.3, 163.7}, {9.3, 19.3}}, label: 'L' <AX element pid: 16015, elementOrHash.elementID: 4370894992.65>
+                                        Image, 0x1058c7020, {{64.0, 152.3}, {7.7, 12.0}}, identifier: 'thermometer.medium', label: 'thermometer.medium' <AX element pid: 16015, elementOrHash.elementID: 4370915568.66>
+                                        StaticText, 0x1058c7140, {{84.0, 155.2}, {49.7, 18.0}}, label: 'Leonor' <AX element pid: 16015, elementOrHash.elementID: 4370917696.67>
+                                        Image, 0x1058c7260, {{85.7, 176.3}, {8.3, 14.3}}, identifier: 'thermometer.medium', label: 'thermometer.medium' <AX element pid: 16015, elementOrHash.elementID: 4370918128.68>
+                                        StaticText, 0x1058c7380, {{98.0, 175.5}, {44.0, 15.7}}, label: 'Doente' <AX element pid: 16015, elementOrHash.elementID: 4370918560.69>
+                                        StaticText, 0x1058c74a0, {{146.0, 175.5}, {40.7, 15.7}}, label: '· 38,2°' <AX element pid: 16015, elementOrHash.elementID: 4370919344.70>
+                                        Image, 0x1058c75c0, {{363.0, 168.0}, {6.3, 10.7}}, identifier: 'chevron.right', label: 'Seguinte' <AX element pid: 16015, elementOrHash.elementID: 4370920128.71>
+                                      StaticText, 0x1058c76e0, {{84.0, 239.3}, {64.0, 18.0}}, identifier: 'today-summary', label: 'O teu dia' <AX element pid: 16015, elementOrHash.elementID: 4370927344.49>
+                                      Button, 0x1058c7800, {{339.3, 254.3}, {17.7, 14.0}}, identifier: 'today-summary', label: 'Ouvir o resumo' <AX element pid: 16015, elementOrHash.elementID: 4370928208.50>
+                                      StaticText, 0x1058c7920, {{84.0, 261.3}, {216.7, 31.3}}, identifier: 'today-summary', label: '3 atividades hoje. A seguir: Futebol às 11:00. 3 tarefas por fazer.' <AX element pid: 16015, elementOrHash.elementID: 4370927776.51>
+                                      StaticText, 0x1058c7a40, {{18.0, 324.7}, {37.3, 20.3}}, label: 'Hoje' <AX element pid: 16015, elementOrHash.elementID: 4370929776.52>
+                                      Button, 0x1058c7b60, {{18.0, 355.0}, {366.0, 62.0}}, label: 'Natação, Tomás, 9:30' <AX element pid: 16015, elementOrHash.elementID: 4370933712.53>
+                                        StaticText, 0x1058c7c80, {{32.0, 377.5}, {40.7, 17.0}}, label: '09:30' <AX element pid: 16015, elementOrHash.elementID: 4370930880.72>
+                                        StaticText, 0x1058c7da0, {{104.0, 368.2}, {59.7, 18.0}}, label: 'Natação' <AX element pid: 16015, elementOrHash.elementID: 4370931312.73>
+                                        StaticText, 0x1058c7ec0, {{104.0, 388.2}, {104.7, 15.7}}, label: 'Piscina municipal' <AX element pid: 16015, elementOrHash.elementID: 4370931744.74>
+                                        StaticText, 0x1058c7fe0, {{304.0, 379.3}, {35.7, 13.3}}, label: 'Tomás' <AX element pid: 16015, elementOrHash.elementID: 4370932176.75>
+                                        Image, 0x1058c8100, {{363.0, 380.7}, {6.3, 10.7}}, identifier: 'chevron.right', label: 'Seguinte' <AX element pid: 16015, elementOrHash.elementID: 4370932608.76>
+                                      Button, 0x1058c8220, {{18.0, 418.0}, {366.0, 62.0}}, label: 'Futebol, Tomás, 11:00' <AX element pid: 16015, elementOrHash.elementID: 4370938624.54>
+                                        StaticText, 0x1058c8340, {{32.0, 440.5}, {42.0, 17.0}}, label: '11:00' <AX element pid: 16015, elementOrHash.elementID: 4370934144.77>
+                                        StaticText, 0x1058c8460, {{104.0, 431.2}, {54.0, 18.0}}, label: 'Futebol' <AX element pid: 16015, elementOrHash.elementID: 4370934816.78>
+                                        StaticText, 0x1058c8580, {{104.0, 451.2}, {117.7, 15.7}}, label: 'Campo do Sporting' <AX element pid: 16015, elementOrHash.elementID: 4370935600.79>
+                                        StaticText, 0x1058c86a0, {{304.0, 442.3}, {35.7, 13.3}}, label: 'Tomás' <AX element pid: 16015, elementOrHash.elementID: 4370936384.80>
+                                        Image, 0x1058c87c0, {{363.0, 443.7}, {6.3, 10.7}}, identifier: 'chevron.right', label: 'Seguinte' <AX element pid: 16015, elementOrHash.elementID: 4370937168.81>
+                                      Button, 0x1058c88e0, {{18.0, 481.0}, {366.0, 62.0}}, label: 'Música, Leonor, 17:00' <AX element pid: 16015, elementOrHash.elementID: 4370943536.55>
+                                        StaticText, 0x1058c8a00, {{32.0, 503.5}, {40.7, 17.0}}, label: '17:00' <AX element pid: 16015, elementOrHash.elementID: 4370939056.82>
+                                        StaticText, 0x1058c8b20, {{104.0, 494.2}, {51.0, 18.0}}, label: 'Música' <AX element pid: 16015, elementOrHash.elementID: 4370939728.83>
+                                        StaticText, 0x1058c8c40, {{104.0, 514.2}, {59.3, 15.7}}, label: 'Academia' <AX element pid: 16015, elementOrHash.elementID: 4370940512.84>
+                                        StaticText, 0x1058c8d60, {{300.3, 505.3}, {39.3, 13.3}}, label: 'Doente' <AX element pid: 16015, elementOrHash.elementID: 4370941296.85>
+                                        Image, 0x1058c8e80, {{363.0, 506.7}, {6.3, 10.7}}, identifier: 'chevron.right', label: 'Seguinte' <AX element pid: 16015, elementOrHash.elementID: 4370942080.86>
+                                      Button, 0x1058c8fa0, {{32.0, 557.0}, {294.0, 22.0}}, label: 'Ver o teu Calendário aqui' <AX element pid: 16015, elementOrHash.elementID: 4370947376.56>
+                                        Image, 0x1058c90c0, {{34.3, 558.3}, {22.7, 19.3}}, identifier: 'calendar.badge.plus', label: 'Adicionar Ao Calendário' <AX element pid: 16015, elementOrHash.elementID: 4370945168.87>
+                                        StaticText, 0x1058c91e0, {{88.0, 559.0}, {218.7, 18.0}}, label: 'Ver aqui o Calendário do iPhone' <AX element pid: 16015, elementOrHash.elementID: 4370945600.88>
+                                      Button, 0x1058c9300, {{349.0, 563.0}, {10.0, 10.0}}, identifier: 'xmark', label: 'Agora não' <AX element pid: 16015, elementOrHash.elementID: 4370949104.57>
+                                      StaticText, 0x1058c9420, {{18.0, 610.0}, {112.3, 20.3}}, label: 'Não esquecer' <AX element pid: 16015, elementOrHash.elementID: 4370949536.58>
+                                      StaticText, 0x1058c9540, {{363.7, 614.0}, {20.3, 15.7}}, label: '0 de 3 tarefas feitas' <AX element pid: 16015, elementOrHash.elementID: 4370951344.59>
+                                      Button, 0x1058c9660, {{18.0, 640.3}, {366.0, 48.0}}, identifier: 'chore-Compras', label: 'Compras, Sofia', value: Por fazer <AX element pid: 16015, elementOrHash.elementID: 4370956848.60>
+                                        Button, 0x1058c9780, {{18.0, 640.3}, {366.0, 48.0}}, label: 'Compras' <AX element pid: 16015, elementOrHash.elementID: 4370955792.89>
+                                          Image, 0x1058c98a0, {{34.0, 653.3}, {22.0, 22.0}}, identifier: 'circle', label: 'circle' <AX element pid: 16015, elementOrHash.elementID: 4370951776.94>
+                                          StaticText, 0x1058c99c0, {{70.0, 655.3}, {62.3, 18.0}}, label: 'Compras' <AX element pid: 16015, elementOrHash.elementID: 4370952208.95>
+                                          StaticText, 0x1058c9ae0, {{344.0, 651.3}, {26.0, 26.0}}, label: 'S' <AX element pid: 16015, elementOrHash.elementID: 4370952992.96>
+                                      Button, 0x1058c9c00, {{18.0, 689.3}, {366.0, 48.0}}, identifier: 'chore-Arrumar o quarto', label: 'Arrumar o quarto, Tomás', value: Por fazer <AX element pid: 16015, elementOrHash.elementID: 4370962672.61>
+                                        Button, 0x1058c9d20, {{18.0, 689.3}, {366.0, 48.0}}, label: 'Arrumar o quarto' <AX element pid: 16015, elementOrHash.elementID: 4370961616.90>
+                                          Image, 0x1058c9e40, {{34.0, 702.3}, {22.0, 22.0}}, identifier: 'circle', label: 'circle' <AX element pid: 16015, elementOrHash.elementID: 4370957952.97>
+                                          StaticText, 0x105ac8630, {{70.0, 704.3}, {117.3, 18.0}}, label: 'Arrumar o quarto' <AX element pid: 16015, elementOrHash.elementID: 4370958384.98>
+                                          StaticText, 0x105abe750, {{344.0, 700.3}, {26.0, 26.0}}, label: 'T' <AX element pid: 16015, elementOrHash.elementID: 4370958816.99>
+                                      Button, 0x1059838b0, {{18.0, 738.3}, {366.0, 48.0}}, identifier: 'chore-Roupa', label: 'Roupa, Daniel', value: Por fazer <AX element pid: 16015, elementOrHash.elementID: 4370968496.62>
+                                        Button, 0x1059868d0, {{18.0, 738.3}, {366.0, 48.0}}, label: 'Roupa' <AX element pid: 16015, elementOrHash.elementID: 4370967440.91>
+                                          Image, 0x105981690, {{34.0, 751.3}, {22.0, 22.0}}, identifier: 'circle', label: 'circle' <AX element pid: 16015, elementOrHash.elementID: 4370963776.100>
+                                          StaticText, 0x1059876a0, {{70.0, 753.3}, {43.7, 18.0}}, label: 'Roupa' <AX element pid: 16015, elementOrHash.elementID: 4370964208.101>
+                                          StaticText, 0x1059819e0, {{344.0, 749.3}, {26.0, 26.0}}, label: 'D' <AX element pid: 16015, elementOrHash.elementID: 4370964640.102>
+                                    Other, 0x105981d40, {{369.0, 55.7}, {30.0, 762.3}}, label: 'Barra de deslocação vertical, 1 página', value: 0% <AX element pid: 16015, elementOrHash.elementID: 4371676496.44>
+                                      Other, 0x105983f50, {{396.0, 94.3}, {3.0, 720.7}} <AX element pid: 16015, elementOrHash.elementID: 4372400992.63>
+                                    Other, 0x105986c50, {{369.0, 55.7}, {30.0, 762.3}}, label: 'Barra de deslocação vertical, 1 página', value: 0% <AX element pid: 16015, elementOrHash.elementID: 4371676496.44>
+                                      Other, 0x105985e40, {{396.0, 94.3}, {3.0, 720.7}} <AX element pid: 16015, elementOrHash.elementID: 4372400992.63>
+            Other, 0x1059831e0, {{8.0, 786.0}, {77.3, 44.0}}, identifier: 'tab-today', label: 'Hoje', Selected <AX element pid: 16015, elementOrHash.elementID: 4369084352.10>
+              Button, 0x105984990, {{8.0, 786.0}, {77.3, 44.0}}, label: 'Hoje' <AX element pid: 16015, elementOrHash.elementID: 4369083296.16>
+                Image, 0x105988470, {{35.0, 789.7}, {23.3, 20.7}}, identifier: 'house.fill', label: 'Casa' <AX element pid: 16015, elementOrHash.elementID: 4369080384.22>
+                StaticText, 0x105984d20, {{34.1, 814.8}, {25.0, 13.3}}, label: 'Hoje' <AX element pid: 16015, elementOrHash.elementID: 4369081168.23>
+            Other, 0x105985780, {{85.3, 786.0}, {77.0, 44.0}}, identifier: 'tab-agenda', label: 'Agenda' <AX element pid: 16015, elementOrHash.elementID: 4369089072.11>
+              Button, 0x105985ad0, {{85.3, 786.0}, {77.0, 44.0}}, label: 'Agenda' <AX element pid: 16015, elementOrHash.elementID: 4369088016.17>
+                Image, 0x105987d70, {{114.0, 791.0}, {19.7, 18.0}}, identifier: 'calendar', label: 'Calendário' <AX element pid: 16015, elementOrHash.elementID: 4369085456.24>
+                StaticText, 0x105985430, {{103.8, 814.8}, {40.0, 13.3}}, label: 'Agenda' <AX element pid: 16015, elementOrHash.elementID: 4369085888.25>
+            Button, 0x1059842c0, {{162.3, 784.0}, {77.3, 48.0}}, identifier: 'tab-create', label: 'Criar' <AX element pid: 16015, elementOrHash.elementID: 4369092032.12>
+              Button, 0x105987a00, {{162.3, 784.0}, {77.3, 48.0}} <AX element pid: 16015, elementOrHash.elementID: 4370744000.18>
+                Other, 0x1059808e0, {{162.3, 784.0}, {77.3, 48.0}} <AX element pid: 16015, elementOrHash.elementID: 4369120272.27>
+                  Image, 0x105983530, {{162.3, 784.0}, {77.3, 48.0}}, identifier: 'plus', label: 'Adicionar' <AX element pid: 16015, elementOrHash.elementID: 4368453056.34>
+            Other, 0x105988f50, {{239.7, 786.0}, {77.0, 44.0}}, identifier: 'tab-family', label: 'Família' <AX element pid: 16015, elementOrHash.elementID: 4369105280.13>
+              Button, 0x105980c50, {{239.7, 786.0}, {77.0, 44.0}}, label: 'Família' <AX element pid: 16015, elementOrHash.elementID: 4369102624.19>
+                Image, 0x105982b00, {{264.7, 790.0}, {28.7, 19.7}}, identifier: 'person.2', label: 'person.2' <AX element pid: 16015, elementOrHash.elementID: 4369101760.28>
+                StaticText, 0x105986570, {{260.0, 814.8}, {36.3, 13.3}}, label: 'Família' <AX element pid: 16015, elementOrHash.elementID: 4369102192.29>
+            Other, 0x105986fd0, {{316.7, 786.0}, {77.3, 44.0}}, identifier: 'tab-health', label: 'Saúde' <AX element pid: 16015, elementOrHash.elementID: 4369110352.14>
+              Button, 0x105984610, {{316.7, 786.0}, {77.3, 44.0}}, label: 'Saúde' <AX element pid: 16015, elementOrHash.elementID: 4369109296.20>
+                Image, 0x105983c00, {{345.7, 791.0}, {19.7, 18.0}}, identifier: 'heart', label: 'Gostar' <AX element pid: 16015, elementOrHash.elementID: 4369106736.30>
+                StaticText, 0x105985090, {{338.9, 814.8}, {33.0, 13.3}}, label: 'Saúde' <AX element pid: 16015, elementOrHash.elementID: 4369107168.31>

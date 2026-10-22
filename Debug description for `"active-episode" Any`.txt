@@ -1,0 +1,5 @@
+Query chain:
+ →Find: Target Application 'com.dmsilva.homecrew'
+  ↪︎Find: Descendants matching type Any
+    ↪︎Find: Elements matching predicate '"active-episode" IN identifiers'
+      ↪︎Find: First Match

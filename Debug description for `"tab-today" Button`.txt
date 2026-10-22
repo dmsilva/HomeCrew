@@ -1,0 +1,4 @@
+Query chain:
+ →Find: Target Application 'com.dmsilva.homecrew'
+  ↪︎Find: Descendants matching type Button
+    ↪︎Find: Elements matching predicate '"tab-today" IN identifiers'
