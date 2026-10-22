@@ -58,8 +58,6 @@ struct RootTabView: View {
         }
         .environment(\.access, access)
         .tint(.hcAccent)
-        // Família is drawn on night, so the clock and battery need to be light there.
-        .preferredColorScheme(selection == .family ? .dark : nil)
         .onAppear { keepSelectionVisible(in: access) }
         .task(id: joinedOnly) { await recogniseAccount() }
         .onChange(of: access) { _, newAccess in keepSelectionVisible(in: newAccess) }

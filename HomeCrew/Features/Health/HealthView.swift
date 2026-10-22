@@ -1,14 +1,14 @@
 import CoreData
 import SwiftUI
 
-/// Everyone as a colour circle (Direção E): whoever is ill gets a coral ring and their latest temperature,
-/// allergies a small coral badge. Tap a person for their record; the ill go straight to care mode.
+/// Everyone as a card: whoever is ill says so with their latest temperature, allergies show as a small
+/// rose mark. Tap a person for their record.
 struct HealthView: View {
     @FetchRequest(fetchRequest: Family.all()) private var families: FetchedResults<Family>
     @State private var isMakingReport = false
     @Environment(\.access) private var access
 
-    private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
+    private let columns = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
 
     var body: some View {
         NavigationStack {
@@ -17,18 +17,20 @@ struct HealthView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     HStack {
                         Text("Saúde")
-                            .font(Theme.Typography.display(34))
+                            .font(Theme.Typography.screenTitle)
                             .foregroundStyle(Color.hcInk)
                             .accessibilityAddTraits(.isHeader)
                             .accessibilityIdentifier("health-header")
                         Spacer()
                         if access.canManageFamily, !members.isEmpty {
                             Button { isMakingReport = true } label: {
-                                Image(systemName: "doc.text.fill")
-                                    .font(.system(size: 20, weight: .bold))
+                                Image(systemName: "doc.text")
+                                    .font(.system(size: 17))
                                     .foregroundStyle(Color.hcInk)
-                                    .frame(width: 48, height: 48)
-                                    .overlay { Circle().strokeBorder(Color.hcInk, lineWidth: 2) }
+                                    .frame(width: 38, height: 38)
+                                    .background(Color.hcCard, in: Circle())
+                                    .overlay { Circle().strokeBorder(Color.hcSeparator, lineWidth: 1) }
+                                    .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)
                             }
                             .accessibilityLabel(Text("PDF para o médico"))
                         }
@@ -38,7 +40,8 @@ struct HealthView: View {
                     if members.isEmpty {
                         EmptyHint(systemImage: AppTab.health.systemImage, message: "Ainda sem membros")
                     } else {
-                        LazyVGrid(columns: columns, spacing: 24) {
+                        SectionHeader(title: "Escolhe uma pessoa")
+                        LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(members, id: \.objectID) { member in
                                 NavigationLink {
                                     PersonHealthView(member: member)
@@ -65,56 +68,49 @@ struct HealthView: View {
 private struct HealthBubble: View {
     @ObservedObject var member: Member
 
-    private let size: CGFloat = 116
-
     var body: some View {
         let episode = member.activeEpisode
-        VStack(spacing: 10) {
-            Text(member.initial)
-                .font(Theme.Typography.display(46))
-                .foregroundStyle(Color.hcNight)
-                .frame(width: size, height: size)
-                .background(Color(member.palette.soft), in: Circle())
-                .padding(episode == nil ? 0 : 5)
-                .overlay {
-                    if episode != nil { Circle().strokeBorder(Color.hcWarning, lineWidth: 4) }
-                }
-                .overlay(alignment: .topTrailing) {
+        HStack(spacing: 10) {
+            MemberAvatar(member: member, size: 42)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(member.name ?? "")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                    .lineLimit(1)
+                Group {
                     if let episode {
-                        HStack(spacing: 4) {
+                        HStack(spacing: 3) {
                             Image(systemName: "thermometer.medium")
-                                .font(.system(size: 13, weight: .bold))
                             if let reading = episode.latestReading {
                                 Text(verbatim: reading.celsius.formatted(.number.precision(.fractionLength(1))) + "°")
-                                    .font(Theme.Typography.text(14, weight: .heavy))
+                            } else {
+                                Text("Doente")
                             }
                         }
-                        .foregroundStyle(Color.hcNight)
-                        .padding(.horizontal, 10)
-                        .frame(height: 36)
-                        .background(Color.hcWarning, in: Capsule())
-                        .overlay { Capsule().strokeBorder(Color.hcBackground, lineWidth: 3) }
-                        .offset(x: 12, y: -4)
+                        .foregroundStyle(Color.hcWarning)
+                    } else if let age = member.age(on: .now) {
+                        Text("\(age) anos")
+                            .foregroundStyle(Color.hcSecondaryInk)
                     }
                 }
-                .overlay(alignment: .bottomLeading) {
-                    if member.hasAllergies {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(Color.hcWarning)
-                            .frame(width: 36, height: 36)
-                            .background(Color.white, in: Circle())
-                            .overlay { Circle().strokeBorder(Color.hcBackground, lineWidth: 3) }
-                            .offset(x: -2, y: 0)
-                            .accessibilityLabel(Text("Alergias"))
-                    }
-                }
-            Text(member.name ?? "")
-                .font(Theme.Typography.text(17, weight: .heavy))
-                .foregroundStyle(Color.hcInk)
-                .lineLimit(1)
+                .font(Theme.Typography.caption)
+            }
+            Spacer(minLength: 0)
+            if member.hasAllergies {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color.hcWarning)
+                    .accessibilityLabel(Text("Alergias"))
+            }
+            Chevron()
         }
-        .frame(maxWidth: .infinity)
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(episode == nil ? Color.hcCard : Color.hcWarningSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .overlay {
+            RoundedRectangle(cornerRadius: Theme.Radius.card)
+                .strokeBorder(episode == nil ? Color.hcSeparator : Color.clear, lineWidth: 1)
+        }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }

@@ -21,10 +21,18 @@ enum AppTab: String, CaseIterable, Identifiable {
     /// SF Symbol shown in the tab bar.
     var systemImage: String {
         switch self {
-        case .today: "circle.circle"
+        case .today: "house"
         case .agenda: "calendar"
-        case .family: "person.2.fill"
-        case .health: "thermometer.medium"
+        case .family: "person.2"
+        case .health: "heart"
+        }
+    }
+
+    /// The filled version shown while the tab is selected.
+    var selectedSystemImage: String {
+        switch self {
+        case .agenda: "calendar"
+        default: "\(systemImage).fill"
         }
     }
 }

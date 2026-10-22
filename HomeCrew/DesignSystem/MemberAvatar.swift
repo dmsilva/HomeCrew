@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// A member's initial on their colour: how the app shows "whose is this" without words.
-/// A coral thermometer badge marks someone with an open illness episode.
+/// A rose thermometer badge marks someone with an open illness episode.
 struct MemberAvatar: View {
     @ObservedObject var member: Member
     var size: CGFloat = 56
@@ -10,7 +10,7 @@ struct MemberAvatar: View {
 
     var body: some View {
         Text(member.initial)
-            .font(Theme.Typography.text(size * 0.42, weight: .heavy))
+            .font(Theme.Typography.text(size * 0.4, weight: .semibold))
             .foregroundStyle(Color(member.palette.foreground))
             .frame(width: size, height: size)
             .background(Color(member.palette.soft), in: Circle())
@@ -23,7 +23,7 @@ struct MemberAvatar: View {
                 if member.activeEpisode != nil {
                     Image(systemName: "thermometer.medium")
                         .font(.system(size: max(size * 0.26, 9), weight: .bold))
-                        .foregroundStyle(Color.hcNight)
+                        .foregroundStyle(.white)
                         .frame(width: max(size * 0.55, 16), height: max(size * 0.55, 16))
                         .background(Color.hcWarning, in: Circle())
                         .offset(x: size * 0.15, y: -size * 0.15)
@@ -33,7 +33,7 @@ struct MemberAvatar: View {
     }
 }
 
-/// An avatar that can be picked: a dark ring around it and a lime tick when chosen.
+/// An avatar that can be picked: a green ring around it and a tick when chosen.
 struct SelectableAvatar: View {
     @ObservedObject var member: Member
     let isSelected: Bool
@@ -60,7 +60,7 @@ struct SelectableAvatar: View {
 }
 
 extension View {
-    /// Forms drawn on the app's lilac background with white rows and the violet tint, like the rest of Direção E.
+    /// Forms drawn on the app's cream background with white rows and the green tint, like the rest of the app.
     func editorStyle() -> some View {
         scrollContentBackground(.hidden)
             .background(Color.hcBackground.ignoresSafeArea())

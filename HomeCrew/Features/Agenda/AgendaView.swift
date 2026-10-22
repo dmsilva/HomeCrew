@@ -1,8 +1,8 @@
 import CoreData
 import SwiftUI
 
-/// The week (Direção E): activities or chores as a grid of days, switched by two icons.
-/// Swipe sideways for another week; tap the title to come back to this one.
+/// The week: a day at a time for activities, or the chores as a grid of days, switched at the top.
+/// Swipe sideways or use the arrows for another week; "Hoje" comes back to this one.
 struct AgendaView: View {
     enum Segment: Hashable {
         case activities, chores
@@ -59,48 +59,69 @@ struct AgendaView: View {
     }
 
     private func header(_ days: [Date]) -> some View {
-        HStack {
-            Button {
-                withAnimation(.snappy) { weekOffset = 0 }
-            } label: {
-                Group {
-                    if weekOffset == 0 {
-                        Text("Semana")
-                    } else if let first = days.first, let last = days.last {
-                        Text(verbatim: "\(first.formatted(.dateTime.day()))–\(last.formatted(.dateTime.day().month(.abbreviated)))")
-                    }
+        VStack(alignment: .leading, spacing: Theme.Spacing.m) {
+            HStack {
+                Text("Agenda")
+                    .font(Theme.Typography.screenTitle)
+                    .foregroundStyle(Color.hcInk)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("agenda-header")
+                Spacer()
+                HStack(spacing: 6) {
+                    segmentButton(.activities, label: "Atividades")
+                    segmentButton(.chores, label: "Tarefas")
                 }
-                .font(Theme.Typography.display(weekOffset == 0 ? 34 : 26))
-                .foregroundStyle(Color.hcInk)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("agenda-header")
-            .accessibilityHint(weekOffset == 0 ? Text("") : Text("Voltar a esta semana"))
-
-            Spacer()
-
-            HStack(spacing: 0) {
-                segmentButton(.activities, systemImage: "soccerball", label: "Atividades")
-                segmentButton(.chores, systemImage: "checkmark", label: "Tarefas")
+            HStack(spacing: Theme.Spacing.s) {
+                if let first = days.first {
+                    Text(first, format: .dateTime.month(.wide).year())
+                        .font(Theme.Typography.sectionTitle)
+                        .foregroundStyle(Color.hcInk)
+                        .textCase(nil)
+                }
+                Spacer()
+                if weekOffset != 0 {
+                    Button("Hoje") { withAnimation(.snappy) { weekOffset = 0 } }
+                        .font(Theme.Typography.text(13, weight: .semibold))
+                        .foregroundStyle(Color.hcAccent)
+                        .accessibilityHint(Text("Voltar a esta semana"))
+                }
+                weekArrow("chevron.left", label: "Semana anterior", step: -1)
+                weekArrow("chevron.right", label: "Semana seguinte", step: 1)
             }
-            .padding(4)
-            .background(Color.hcMuted, in: Capsule())
         }
         .padding(.top, Theme.Spacing.l)
     }
 
-    private func segmentButton(_ segment: Segment, systemImage: String, label: LocalizedStringKey) -> some View {
+    private func weekArrow(_ systemImage: String, label: LocalizedStringKey, step: Int) -> some View {
+        Button {
+            withAnimation(.snappy) { weekOffset += step }
+        } label: {
+            Image(systemName: systemImage)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(Color.hcInk)
+                .frame(width: 36, height: 36)
+                .background(Color.hcCard, in: Circle())
+                .overlay { Circle().strokeBorder(Color.hcSeparator, lineWidth: 1) }
+                .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(label))
+    }
+
+    private func segmentButton(_ segment: Segment, label: LocalizedStringKey) -> some View {
         let isOn = section == segment
         return Button {
             section = segment
         } label: {
-            Image(systemName: systemImage)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(isOn ? Color.hcLime : Color.hcInk)
-                .frame(width: 44, height: 44)
-                .background(isOn ? Color.hcNight : Color.clear, in: Circle())
+            Text(label)
+                .font(Theme.Typography.text(13, weight: .semibold))
+                .foregroundStyle(isOn ? Color.white : Color.hcInk)
+                .padding(.horizontal, 14)
+                .frame(height: 34)
+                .background(isOn ? Color.hcAccent : Color.hcCard, in: Capsule())
+                .overlay { Capsule().strokeBorder(isOn ? Color.clear : Color.hcSeparator, lineWidth: 1) }
+                .frame(minHeight: Theme.minimumTapTarget)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text(label))
@@ -109,7 +130,7 @@ struct AgendaView: View {
 }
 
 /// The chores as a grid: a row per chore with its icon on the assignee's colour, a square per day it is due.
-/// Today's square (and earlier ones) can be ticked; a dark square with a lime tick is done.
+/// Today's square (and earlier ones) can be ticked; a green square with a white tick is done.
 struct ChoresWeekView: View {
     @FetchRequest(fetchRequest: Chore.all()) private var allChores: FetchedResults<Chore>
     let days: [Date]
@@ -127,17 +148,18 @@ struct ChoresWeekView: View {
         } else {
             let done = chores.reduce(0) { total, chore in total + days.filter { chore.completion(on: $0) != nil }.count }
             let due = chores.reduce(0) { total, chore in total + days.filter { chore.occurs(on: $0) }.count }
-            VStack(alignment: .trailing, spacing: Theme.Spacing.l) {
+            VStack(alignment: .leading, spacing: 10) {
+                SectionHeader(title: "Esta semana") {
+                    Text(verbatim: "\(done)/\(due)")
+                        .monospacedDigit()
+                        .accessibilityLabel(Text("\(done) de \(due) feitas esta semana"))
+                }
                 WeekGrid(days: days, rowCount: chores.count) { row in
                     choreIcon(chores[row])
                 } cell: { row, column in
                     dayCell(chores[row], day: days[column])
                 }
-                Text(verbatim: "\(done)/\(due)")
-                    .font(Theme.Typography.display(28))
-                    .foregroundStyle(Color.hcInk)
-                    .monospacedDigit()
-                    .accessibilityLabel(Text("\(done) de \(due) feitas esta semana"))
+                .card(padding: 12)
             }
         }
     }
@@ -147,8 +169,8 @@ struct ChoresWeekView: View {
             if access.canEdit { onEdit(chore) }
         } label: {
             Image(systemName: chore.symbol)
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(Color.hcNight)
+                .font(.system(size: 16, weight: .regular))
+                .foregroundStyle(Color(chore.assignee?.palette.foreground ?? Theme.Palette.ink))
                 .frame(width: 40, height: 40)
                 .background(Color(chore.assignee?.palette.soft ?? Theme.Palette.muted), in: Circle())
         }
@@ -172,16 +194,16 @@ struct ChoresWeekView: View {
                 if !isDue {
                     shape.fill(Color.hcMuted)
                 } else if isDone {
-                    shape.fill(Color.hcNight)
+                    shape.fill(Color.hcAccent)
                     Image(systemName: "checkmark")
-                        .font(.system(size: 18, weight: .heavy))
-                        .foregroundStyle(Color.hcLime)
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
                 } else {
-                    shape.fill(isFuture ? Color.hcCard : colour.opacity(0.35))
-                    shape.strokeBorder(colour, lineWidth: 3)
+                    shape.fill(isFuture ? Color.hcCard : colour.opacity(0.5))
+                    shape.strokeBorder(colour, lineWidth: 2)
                 }
             }
-            .frame(height: 48)
+            .frame(height: 40)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
@@ -202,7 +224,7 @@ struct EmptyHint: View {
         ContentUnavailableView {
             Image(systemName: systemImage)
                 .font(Theme.Typography.heroIcon)
-                .foregroundStyle(Color.hcAccent)
+                .foregroundStyle(Color.hcSecondaryInk)
                 .accessibilityHidden(true)
         } description: {
             Text(message)

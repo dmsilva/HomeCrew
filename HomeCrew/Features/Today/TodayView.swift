@@ -1,8 +1,9 @@
+import AVFoundation
 import CoreData
 import SwiftUI
 
-/// The day at a glance, drawn rather than written (Direção E): who is home, a ring per person with their
-/// activities around the clock, the activities as big icons, and the chores as circles to tick.
+/// The day at a glance: a greeting, whoever is ill, a short summary of the day, the day's activities in time
+/// order, and the small chores not to forget.
 struct TodayView: View {
     @FetchRequest(fetchRequest: Activity.all()) private var activities: FetchedResults<Activity>
     @FetchRequest(fetchRequest: Chore.all()) private var chores: FetchedResults<Chore>
@@ -67,12 +68,19 @@ struct TodayView: View {
             VStack(alignment: .leading, spacing: 18) {
                 header(now: now, people: people)
                     .accessibilityIdentifier("today-header")
-                DayRings(people: people, occurrences: digest.activities, next: next, now: now)
-                if !digest.agenda.isEmpty || showsCalendarOffer {
-                    agendaGrid(digest.agenda, next: next, now: now)
+                ForEach(people.filter { $0.activeEpisode != nil }, id: \.objectID) { person in
+                    if let episode = person.activeEpisode {
+                        NavigationLink(value: episode) {
+                            IllnessRow(member: person, episode: episode)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text("\(person.name ?? "") doente"))
+                    }
                 }
+                DaySummaryCard(digest: digest, next: next, now: now)
+                agendaSection(digest.agenda, next: next, now: now)
                 if !digest.chores.isEmpty {
-                    ChoreCircles(chores: digest.chores, day: now) { chore in
+                    ChoreChecklist(chores: digest.chores, day: now) { chore in
                         persistence.toggleDone(chore, on: now, by: me)
                     }
                 }
@@ -86,58 +94,63 @@ struct TodayView: View {
     // MARK: Header
 
     private func header(now: Date, people: [Member]) -> some View {
-        HStack {
-            Text(Self.dayTitle(now))
-                .font(Theme.Typography.display(34))
-                .foregroundStyle(Color.hcInk)
-            Spacer()
-            HStack(spacing: -12) {
-                Menu {
-                    Toggle(isOn: Binding(get: { onlyMine && me != nil }, set: { wanted in
-                        if me == nil { isChoosingMe = true } else { onlyMine = wanted }
-                    })) {
-                        Label("Só eu", systemImage: "person")
-                    }
-                    Button { isChoosingMe = true } label: { Label("Quem sou eu?", systemImage: "person.crop.circle.badge.questionmark") }
-                    Button { isShowingNotificationSettings = true } label: { Label("Notificações", systemImage: "bell") }
-                } label: {
-                    HStack(spacing: -12) {
-                        ForEach(people.filter { $0.activeEpisode == nil }.prefix(5), id: \.objectID) { person in
-                            MemberAvatar(member: person, size: 40, outlined: true)
-                        }
-                    }
-                    .overlay(alignment: .bottomTrailing) {
-                        if onlyMine, me != nil {
-                            Image(systemName: "person.fill")
-                                .font(.system(size: 9, weight: .bold))
-                                .foregroundStyle(.white)
-                                .frame(width: 18, height: 18)
-                                .background(Color.hcAccent, in: Circle())
-                        }
-                    }
-                }
-                .accessibilityLabel(Text(onlyMine ? "Só eu" : "Família"))
-                .accessibilityIdentifier("today-people")
-
-                ForEach(people.filter { $0.activeEpisode != nil }, id: \.objectID) { person in
-                    if let episode = person.activeEpisode {
-                        NavigationLink(value: episode) {
-                            MemberAvatar(member: person, size: 40, outlined: true)
-                        }
-                        .accessibilityLabel(Text("\(person.name ?? "") doente"))
-                    }
-                }
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(Self.dateLine(now))
+                    .font(Theme.Typography.overline)
+                    .tracking(0.6)
+                    .foregroundStyle(Color.hcSecondaryInk)
+                Text(Self.greeting(at: now, name: me?.name))
+                    .font(Theme.Typography.screenTitle)
+                    .foregroundStyle(Color.hcInk)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
+            Spacer()
+            Menu {
+                Toggle(isOn: Binding(get: { onlyMine && me != nil }, set: { wanted in
+                    if me == nil { isChoosingMe = true } else { onlyMine = wanted }
+                })) {
+                    Label("Só eu", systemImage: "person")
+                }
+                Button { isChoosingMe = true } label: { Label("Quem sou eu?", systemImage: "person.crop.circle.badge.questionmark") }
+                Button { isShowingNotificationSettings = true } label: { Label("Notificações", systemImage: "bell") }
+            } label: {
+                HStack(spacing: -10) {
+                    ForEach(people.prefix(4), id: \.objectID) { person in
+                        MemberAvatar(member: person, size: 34, outlined: true)
+                    }
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    if onlyMine, me != nil {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 9, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 18, height: 18)
+                            .background(Color.hcAccent, in: Circle())
+                    }
+                }
+                .frame(minHeight: Theme.minimumTapTarget)
+            }
+            .accessibilityLabel(Text(onlyMine ? "Só eu" : "Família"))
+            .accessibilityIdentifier("today-people")
         }
     }
 
-    /// "Dom 4": short weekday and the day, nothing else.
-    static func dayTitle(_ date: Date, calendar: Calendar = .current) -> String {
-        let symbols = DateFormatter()
-        symbols.locale = Locale(identifier: "pt_PT")
-        let weekday = symbols.shortWeekdaySymbols[calendar.component(.weekday, from: date) - 1]
-            .replacingOccurrences(of: ".", with: "")
-        return weekday.prefix(1).uppercased() + weekday.dropFirst() + " \(calendar.component(.day, from: date))"
+    /// "QUARTA-FEIRA, 22 DE OUTUBRO".
+    static func dateLine(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "pt_PT")
+        formatter.setLocalizedDateFormatFromTemplate("EEEEdMMMM")
+        return formatter.string(from: date).uppercased()
+    }
+
+    /// "Bom dia, Daniel", "Boa tarde" or "Boa noite", by the hour.
+    static func greeting(at date: Date, name: String?, calendar: Calendar = .current) -> String {
+        let hour = calendar.component(.hour, from: date)
+        let hello = hour < 12 ? String(localized: "Bom dia") : hour < 20 ? String(localized: "Boa tarde") : String(localized: "Boa noite")
+        guard let first = name?.split(separator: " ").first else { return hello }
+        return "\(hello), \(first)"
     }
 
     // MARK: Agenda
@@ -146,28 +159,41 @@ struct TodayView: View {
         deviceCalendar.access == .notAsked && !calendarOfferDismissed
     }
 
-    private func agendaGrid(_ agenda: [AgendaItem], next: ActivityOccurrence?, now: Date) -> some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4), spacing: 10) {
-            ForEach(agenda) { item in
-                switch item {
-                case .activity(let occurrence):
-                    NavigationLink {
-                        ActivityDetailView(activity: occurrence.activity, day: now) { editingActivity = .existing($0) }
-                    } label: {
-                        ActivityTile(occurrence: occurrence, isNext: occurrence.id == next?.id, isPast: occurrence.start < now)
+    private func agendaSection(_ agenda: [AgendaItem], next: ActivityOccurrence?, now: Date) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(title: "Hoje")
+            VStack(spacing: 0) {
+                if agenda.isEmpty {
+                    Text("Nada marcado para hoje")
+                        .font(Theme.Typography.body)
+                        .foregroundStyle(Color.hcSecondaryInk)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(14)
+                }
+                ForEach(Array(agenda.enumerated()), id: \.element.id) { index, item in
+                    if index > 0 { RowDivider() }
+                    switch item {
+                    case .activity(let occurrence):
+                        NavigationLink {
+                            ActivityDetailView(activity: occurrence.activity, day: now) { editingActivity = .existing($0) }
+                        } label: {
+                            AgendaRow(occurrence: occurrence, isNext: occurrence.id == next?.id, isPast: occurrence.start < now)
+                        }
+                        .buttonStyle(.plain)
+                    case .external(let event):
+                        ExternalEventRow(event: event)
                     }
-                    .buttonStyle(.plain)
-                case .external(let event):
-                    ExternalEventTile(event: event)
+                }
+                if showsCalendarOffer {
+                    RowDivider()
+                    CalendarOfferRow {
+                        Task { await deviceCalendar.requestAccess() }
+                    } onDismiss: {
+                        calendarOfferDismissed = true
+                    }
                 }
             }
-            if showsCalendarOffer {
-                CalendarOfferTile {
-                    Task { await deviceCalendar.requestAccess() }
-                } onDismiss: {
-                    calendarOfferDismissed = true
-                }
-            }
+            .card(padding: 0)
         }
     }
 
@@ -187,164 +213,160 @@ struct TodayView: View {
     }
 }
 
-/// One ring per person on the violet card, 7:00 at the top round to 22:00: a solid arc while they are at an
-/// activity, a short arc when they take or bring someone, a dashed coral ring while they are ill.
-/// The middle shows the next activity's icon and how long until it starts.
-struct DayRings: View {
-    let people: [Member]
-    let occurrences: [ActivityOccurrence]
-    let next: ActivityOccurrence?
-    let now: Date
-    var calendar: Calendar = .current
-
-    static let dayStartHour = 7
-    static let dayEndHour = 22
-    private static let lineWidth: CGFloat = 16
-    private static let gap: CGFloat = 8
-    private static let size: CGFloat = 250
-    private static let driveMinutes = 20.0
+/// Someone ill, on rose, with their latest temperature; opens the episode.
+struct IllnessRow: View {
+    @ObservedObject var member: Member
+    @ObservedObject var episode: IllnessEpisode
 
     var body: some View {
-        let rings = Array(people.prefix(5).enumerated())
-        ZStack {
-            ForEach(rings, id: \.element.objectID) { index, person in
-                ring(for: person, diameter: Self.size - CGFloat(index) * 2 * (Self.lineWidth + Self.gap))
+        HStack(spacing: 12) {
+            MemberAvatar(member: member, size: 40)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(member.name ?? "")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                HStack(spacing: 4) {
+                    Image(systemName: "thermometer.medium")
+                    Text("Doente")
+                    if let reading = episode.latestReading {
+                        Text(verbatim: "· " + reading.celsius.formatted(.number.precision(.fractionLength(1))) + "°")
+                    }
+                }
+                .font(Theme.Typography.caption)
+                .foregroundStyle(Color.hcWarning)
             }
-            if let fraction = fraction(of: now), !rings.isEmpty {
-                nowDot(at: fraction)
-            }
-            center
+            Spacer()
+            Chevron()
         }
-        .frame(width: Self.size, height: Self.size)
-        .frame(maxWidth: .infinity)
-        .frame(height: 290)
-        .background(Color.hcAccent, in: RoundedRectangle(cornerRadius: Theme.Radius.hero))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilitySummary)
-    }
-
-    private func ring(for person: Member, diameter: CGFloat) -> some View {
-        let colour = Color(person.palette.soft)
-        return ZStack {
-            Circle()
-                .stroke(Color.white.opacity(0.16), lineWidth: Self.lineWidth)
-            if person.activeEpisode != nil {
-                Circle()
-                    .stroke(Color.hcWarning, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round, dash: [3, 10]))
-            }
-            ForEach(Array(segments(for: person).enumerated()), id: \.offset) { _, segment in
-                Circle()
-                    .trim(from: segment.lowerBound, to: segment.upperBound)
-                    .stroke(colour, style: StrokeStyle(lineWidth: Self.lineWidth, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-            }
-        }
-        .frame(width: diameter, height: diameter)
-    }
-
-    private func nowDot(at fraction: Double) -> some View {
-        let radius = Self.size / 2
-        let angle = fraction * 2 * .pi - .pi / 2
-        return Circle()
-            .fill(Color.white)
-            .frame(width: 20, height: 20)
-            .offset(x: cos(angle) * radius, y: sin(angle) * radius)
-    }
-
-    @ViewBuilder
-    private var center: some View {
-        VStack(spacing: 4) {
-            if let next {
-                Image(systemName: next.activity.symbol)
-                    .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(Color.hcLime)
-                Text(Self.countdown(from: now, to: next.start))
-                    .font(Theme.Typography.display(30))
-                    .foregroundStyle(.white)
-                    .monospacedDigit()
-            } else {
-                Image(systemName: "checkmark")
-                    .font(.system(size: 34, weight: .heavy))
-                    .foregroundStyle(Color.hcLime)
-            }
-        }
-    }
-
-    /// Parts of the day, as fractions of the ring, when this person is busy.
-    func segments(for person: Member) -> [ClosedRange<Double>] {
-        occurrences.filter { !$0.isCancelled }.flatMap { occurrence -> [ClosedRange<Double>] in
-            let start = occurrence.start
-            let end = start.addingTimeInterval(Double(occurrence.activity.durationMinutes) * 60)
-            var parts: [(Date, Date)] = []
-            if occurrence.activity.child == person { parts.append((start, end)) }
-            if occurrence.dropOff == person { parts.append((start.addingTimeInterval(-Self.driveMinutes * 60), start)) }
-            if occurrence.pickUp == person { parts.append((end, end.addingTimeInterval(Self.driveMinutes * 60))) }
-            return parts.compactMap { from, to in
-                guard let low = fraction(of: from, clamped: true), let high = fraction(of: to, clamped: true), high > low else { return nil }
-                return low...high
-            }
-        }
-    }
-
-    /// Where a moment falls on the ring; nil outside the day unless clamped.
-    func fraction(of date: Date, clamped: Bool = false) -> Double? {
-        let dayStart = calendar.date(bySettingHour: Self.dayStartHour, minute: 0, second: 0, of: now) ?? now
-        let span = Double(Self.dayEndHour - Self.dayStartHour) * 3600
-        let value = date.timeIntervalSince(dayStart) / span
-        if clamped { return min(max(value, 0), 1) }
-        return (0...1).contains(value) ? value : nil
-    }
-
-    /// "12m", "1h12", "3h".
-    static func countdown(from now: Date, to start: Date) -> String {
-        let minutes = max(Int(start.timeIntervalSince(now) / 60), 0)
-        if minutes < 60 { return "\(minutes)m" }
-        let hours = minutes / 60, rest = minutes % 60
-        return rest == 0 ? "\(hours)h" : String(format: "%dh%02d", hours, rest)
-    }
-
-    private var accessibilitySummary: Text {
-        guard let next else { return Text("Nada mais hoje") }
-        return Text("\(next.activity.title ?? "") daqui a \(Self.countdown(from: now, to: next.start))")
+        .padding(14)
+        .background(Color.hcWarningSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .contentShape(Rectangle())
     }
 }
 
-/// An activity as a square: its icon, the time, and a dot per adult who takes and brings.
-/// The next one is dark; a sick child's activity is coral; past ones fade.
-struct ActivityTile: View {
+/// The day in one or two sentences on soft green, with a button to hear it read aloud.
+struct DaySummaryCard: View {
+    let digest: TodayDigest
+    let next: ActivityOccurrence?
+    let now: Date
+
+    @State private var speaker = AVSpeechSynthesizer()
+
+    var body: some View {
+        let summary = Self.summary(digest: digest, next: next, now: now)
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: Calendar.current.component(.hour, from: now) < 18 ? "sun.max.fill" : "moon.stars.fill")
+                .font(.system(size: 18))
+                .foregroundStyle(Color(UIColor(hex: 0xD99A2B)))
+                .frame(width: 40, height: 40)
+                .background(Color.hcCard, in: RoundedRectangle(cornerRadius: Theme.Radius.control))
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("O teu dia")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                Text(summary)
+                    .font(Theme.Typography.caption)
+                    .foregroundStyle(Color.hcSecondaryInk)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+            Button {
+                speak(summary)
+            } label: {
+                Image(systemName: "speaker.wave.2")
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.hcAccent)
+                    .frame(width: Theme.minimumTapTarget, height: Theme.minimumTapTarget)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Ouvir o resumo"))
+        }
+        .padding(14)
+        .background(Color.hcAccentSoft, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .accessibilityIdentifier("today-summary")
+    }
+
+    private func speak(_ text: String) {
+        if speaker.isSpeaking {
+            speaker.stopSpeaking(at: .immediate)
+            return
+        }
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "pt-PT")
+        speaker.speak(utterance)
+    }
+
+    /// "3 atividades hoje. A seguir: Natação às 09:30. 2 tarefas por fazer."
+    static func summary(digest: TodayDigest, next: ActivityOccurrence?, now: Date) -> String {
+        let count = digest.activities.filter { !$0.isCancelled }.count
+        var parts: [String] = []
+        switch count {
+        case 0: parts.append(String(localized: "Sem atividades hoje."))
+        case 1: parts.append(String(localized: "1 atividade hoje."))
+        default: parts.append(String(localized: "\(count) atividades hoje."))
+        }
+        if let next {
+            let time = next.start.formatted(.dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
+            parts.append(String(localized: "A seguir: \(next.activity.title ?? "") às \(time)."))
+        } else if count > 0 {
+            parts.append(String(localized: "Já não há mais nada hoje."))
+        }
+        let pending = digest.chores.filter { $0.completion(on: now) == nil }.count
+        if pending == 1 {
+            parts.append(String(localized: "1 tarefa por fazer."))
+        } else if pending > 1 {
+            parts.append(String(localized: "\(pending) tarefas por fazer."))
+        }
+        return parts.joined(separator: " ")
+    }
+}
+
+/// An activity as a row: the time, a bar in the child's colour, the title and place, and the child's name on
+/// their colour. The next one has its time in green; a sick child's activity says so; past ones fade.
+struct AgendaRow: View {
     let occurrence: ActivityOccurrence
     let isNext: Bool
     let isPast: Bool
 
     var body: some View {
         let activity = occurrence.activity
-        let isSick = activity.child?.activeEpisode != nil
-        let background: Color = isNext ? .hcNight : isSick ? .hcWarning : .hcCard
-        let ink: Color = isNext ? .white : .hcNight
-        VStack(spacing: 6) {
-            Image(systemName: activity.symbol)
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundStyle(isNext ? Color(activity.child?.palette.soft ?? Theme.Palette.lime) : ink)
+        let child = activity.child
+        let isSick = child?.activeEpisode != nil
+        HStack(spacing: 12) {
             Text(occurrence.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
-                .font(Theme.Typography.text(16, weight: .heavy))
-                .foregroundStyle(isSick && !isNext ? Color.hcNight : (isNext ? .white : .hcInk))
-                .strikethrough(occurrence.isCancelled)
-            HStack(spacing: 3) {
-                ForEach([occurrence.dropOff, occurrence.pickUp].compactMap { $0 }.uniqued(), id: \.objectID) { adult in
-                    Circle().fill(Color(adult.palette.soft)).frame(width: 10, height: 10)
+                .font(Theme.Typography.text(14, weight: isNext ? .bold : .semibold))
+                .foregroundStyle(isNext ? Color.hcAccent : Color.hcInk)
+                .monospacedDigit()
+                .frame(width: 44, alignment: .leading)
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color(child?.palette.foreground ?? Theme.Palette.accent))
+                .frame(width: 4, height: 38)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(activity.title ?? "")
+                    .font(Theme.Typography.cardTitle)
+                    .foregroundStyle(Color.hcInk)
+                    .strikethrough(occurrence.isCancelled)
+                    .lineLimit(1)
+                if let place = activity.location, !place.isEmpty {
+                    Text(place)
+                        .font(Theme.Typography.caption)
+                        .foregroundStyle(Color.hcSecondaryInk)
+                        .lineLimit(1)
                 }
             }
-            .frame(height: 10)
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 104)
-        .background(background, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
-        .overlay {
-            if !isNext && !isSick {
-                RoundedRectangle(cornerRadius: Theme.Radius.card).strokeBorder(Color.hcInk, lineWidth: 2)
+            Spacer(minLength: 4)
+            if isSick {
+                Pill("Doente", foreground: .hcWarning, background: .hcWarningSoft)
+            } else if let child {
+                Pill(verbatim: child.name ?? "", foreground: Color(child.palette.foreground), background: Color(child.palette.soft))
             }
+            Chevron()
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .opacity(isPast || occurrence.isCancelled ? 0.45 : 1)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(accessibilityText)
         .accessibilityAddTraits(.isButton)
@@ -357,15 +379,12 @@ struct ActivityTile: View {
     }
 }
 
-/// An event from the iPhone's calendar, as a tile with a calendar glyph in the calendar's own colour.
-struct ExternalEventTile: View {
+/// An event from the iPhone's calendar, as a row with a bar in the calendar's own colour.
+struct ExternalEventRow: View {
     let event: ExternalEvent
 
     var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: "calendar")
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundStyle(event.color.map { Color(cgColor: $0) } ?? Color.hcInk)
+        HStack(spacing: 12) {
             Group {
                 if event.isAllDay {
                     Image(systemName: "sun.max")
@@ -373,93 +392,115 @@ struct ExternalEventTile: View {
                     Text(event.start, format: .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits))
                 }
             }
-            .font(Theme.Typography.text(16, weight: .heavy))
+            .font(Theme.Typography.text(14, weight: .semibold))
             .foregroundStyle(Color.hcInk)
-            Color.clear.frame(height: 10)
+            .monospacedDigit()
+            .frame(width: 44, alignment: .leading)
+            RoundedRectangle(cornerRadius: 2)
+                .fill(event.color.map { Color(cgColor: $0) } ?? Color.hcSecondaryInk)
+                .frame(width: 4, height: 38)
+            Text(event.title)
+                .font(Theme.Typography.cardTitle)
+                .foregroundStyle(Color.hcInk)
+                .lineLimit(1)
+            Spacer(minLength: 4)
+            Image(systemName: "calendar")
+                .font(.system(size: 13))
+                .foregroundStyle(Color.hcSecondaryInk)
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 104)
-        .background(Color.hcMuted, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(event.title), \(event.start.formatted(date: .omitted, time: .shortened))"))
     }
 }
 
-/// A dashed tile that offers, once, to show the iPhone's calendar here.
-struct CalendarOfferTile: View {
+/// A row that offers, once, to show the iPhone's calendar here.
+struct CalendarOfferRow: View {
     let onAllow: () -> Void
     let onDismiss: () -> Void
 
     var body: some View {
-        Button(action: onAllow) {
-            Image(systemName: "calendar.badge.plus")
-                .font(.system(size: 26, weight: .semibold))
-                .foregroundStyle(Color.hcInk)
-                .frame(maxWidth: .infinity)
-                .frame(height: 104)
-                .overlay {
-                    RoundedRectangle(cornerRadius: Theme.Radius.card)
-                        .strokeBorder(Color.hcInk, style: StrokeStyle(lineWidth: 2, dash: [5, 5]))
+        HStack(spacing: 12) {
+            Button(action: onAllow) {
+                HStack(spacing: 12) {
+                    Image(systemName: "calendar.badge.plus")
+                        .font(.system(size: 18))
+                        .foregroundStyle(Color.hcAccent)
+                        .frame(width: 44, alignment: .leading)
+                    Text("Ver aqui o Calendário do iPhone")
+                        .font(Theme.Typography.body)
+                        .foregroundStyle(Color.hcAccent)
+                    Spacer(minLength: 0)
                 }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Ver o teu Calendário aqui"))
+            .accessibilityHint(Text("Só leitura"))
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.hcSecondaryInk)
+                    .frame(width: 32, height: 32)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("Agora não"))
         }
-        .buttonStyle(.plain)
-        .contextMenu {
-            Button("Agora não", action: onDismiss)
-        }
-        .accessibilityLabel(Text("Ver o teu Calendário aqui"))
-        .accessibilityHint(Text("Só leitura"))
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
     }
 }
 
-/// Today's chores as circles: tap to tick. A dot in the person's colour says whose it is; done ones turn dark.
-struct ChoreCircles: View {
+/// Today's chores as a checklist: tap to tick, whose it is on the right.
+struct ChoreChecklist: View {
     let chores: [Chore]
     let day: Date
     let onToggle: (Chore) -> Void
 
     var body: some View {
         let done = chores.filter { $0.completion(on: day) != nil }.count
-        HStack(spacing: Theme.Spacing.m) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: Theme.Spacing.m) {
-                    ForEach(chores, id: \.objectID) { chore in
-                        circle(for: chore)
-                    }
-                }
-                .padding(4)
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(title: "Não esquecer") {
+                Text(verbatim: "\(done)/\(chores.count)")
+                    .monospacedDigit()
+                    .accessibilityLabel(Text("\(done) de \(chores.count) tarefas feitas"))
             }
-            Text(verbatim: "\(done)/\(chores.count)")
-                .font(Theme.Typography.display(22))
-                .foregroundStyle(Color.hcInk)
-                .monospacedDigit()
-                .accessibilityLabel(Text("\(done) de \(chores.count) tarefas feitas"))
+            VStack(spacing: 0) {
+                ForEach(Array(chores.enumerated()), id: \.element.objectID) { index, chore in
+                    if index > 0 { RowDivider() }
+                    row(for: chore)
+                }
+            }
+            .card(padding: 0)
         }
     }
 
-    private func circle(for chore: Chore) -> some View {
+    private func row(for chore: Chore) -> some View {
         let isDone = chore.completion(on: day) != nil
         return Button { onToggle(chore) } label: {
-            Image(systemName: isDone ? "checkmark" : chore.symbol)
-                .font(.system(size: 22, weight: isDone ? .heavy : .semibold))
-                .foregroundStyle(isDone ? Color.hcLime : Color.hcInk)
-                .frame(width: 58, height: 58)
-                .background(isDone ? Color.hcNight : Color.hcCard, in: Circle())
-                .overlay {
-                    if !isDone { Circle().strokeBorder(Color.hcInk, lineWidth: 2) }
+            HStack(spacing: 12) {
+                Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 22))
+                    .foregroundStyle(isDone ? Color.hcAccent : Color.hcSecondaryInk)
+                Text(chore.title ?? "")
+                    .font(Theme.Typography.body)
+                    .foregroundStyle(isDone ? Color.hcSecondaryInk : Color.hcInk)
+                    .strikethrough(isDone)
+                Spacer()
+                if let assignee = chore.assignee {
+                    MemberAvatar(member: assignee, size: 26)
                 }
-                .overlay(alignment: .bottomTrailing) {
-                    if let assignee = chore.assignee, !isDone {
-                        Circle()
-                            .fill(Color(assignee.palette.soft))
-                            .frame(width: 18, height: 18)
-                            .overlay { Circle().strokeBorder(Color.hcBackground, lineWidth: 2) }
-                            .offset(x: 2, y: 2)
-                    }
-                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text("\(chore.title ?? ""), \(chore.assignee?.name ?? "")"))
         .accessibilityValue(isDone ? Text("Feita") : Text("Por fazer"))
+        .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier("chore-\(chore.title ?? "")")
     }
 }
